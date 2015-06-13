@@ -69,7 +69,7 @@
             * Copyrights
             * API documentation
         -->
-        <ProductName Condition=" '$(ProductName)' == '' ">MogrificationCascade</ProductName>
+        <ProductName Condition=" '$(ProductName)' == '' ">Metamorphic</ProductName>
 
         <!--
             The name of the product that can be used as part of a file path. This is for instance used for:
@@ -77,7 +77,7 @@
             * SourceMonitor
             * Deployment directory naming
         -->
-        <ProductNameInFilePath Condition=" '$(ProductNameInFilePath)' == '' ">MogrificationCascade</ProductNameInFilePath>
+        <ProductNameInFilePath Condition=" '$(ProductNameInFilePath)' == '' ">Metamorphic</ProductNameInFilePath>
 
         <!--
             The description of the product. This is for instance used for:
@@ -92,7 +92,7 @@
             * Finding the correct assemblies and namespaces for unit testing and coverage reporting
             * Generated code files that contain namespaces
         -->
-        <ProductNamespace Condition=" '$(ProductNamespace)' == '' ">MogrificationCascade</ProductNamespace>
+        <ProductNamespace Condition=" '$(ProductNamespace)' == '' ">Metamorphic</ProductNamespace>
 
         <!--
             The first year the product was available / created. This is for instance used for:
@@ -150,13 +150,13 @@
             The github repository that contains the source code for the current product. Used when getting the release notes
             from the github issues. The correct format is <USERNAME>/<REPOSITORYNAME>
         -->
-        <GitHubRepositoryName Condition=" '$(GitHubRepositoryName)' == '' ">MogrificationCascade</GitHubRepositoryName>
+        <GitHubRepositoryName Condition=" '$(GitHubRepositoryName)' == '' ">Metamorphic</GitHubRepositoryName>
 
         <!--
             The full URL to the GIT repository. Can include the '%GitHubToken%' environment variable for authenticated
             connection to the repository, e.g. https://%GitHubToken%:@github.com/MyUser/MyProject.git
         -->
-        <GitRemoteRepository Condition=" '$(GitRemoteRepository)' == '' ">https://github.com/pvandervelde/MogrificationCascade.git</GitRemoteRepository>
+        <GitRemoteRepository Condition=" '$(GitRemoteRepository)' == '' ">https://github.com/pvandervelde/Metamorphic.git</GitRemoteRepository>
 
         <!--
             A flag indicating whether or not the workspace is a GIT workspace or not. If no value is provided then
@@ -716,13 +716,13 @@
         The solution path allows build templates, e.g. '$(DirSrc)\${CompanyName}\${ProductName}\MySolution.sln'
     -->
     <ItemGroup>
-        <SolutionsToBuild Include="$(DirSrc)\MogrificationCascade.sln">
+        <SolutionsToBuild Include="$(DirSrc)\Metamorphic.sln">
             <Configuration>$(TestConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
             <Properties></Properties>
         </SolutionsToBuild>
-        <SolutionsToBuild Include="$(DirSrc)\myproject.sln">
+        <SolutionsToBuild Include="$(DirSrc)\Metamorphic.sln">
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
