@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Metamorphic.Core;
 using Metamorphic.Server.Nuclei;
 using Metamorphic.Server.Nuclei.ExceptionHandling;
 using Metamorphic.Server.Properties;

@@ -105,13 +105,13 @@
             * Copyrights
             * API documentation
         -->
-        <CompanyName Condition=" '$(CompanyName)' == '' ">P. van der Velde</CompanyName>
+        <CompanyName Condition=" '$(CompanyName)' == '' ">Metamorphic</CompanyName>
 
         <!--
             The name of the company that can be used as a part of a file path. This is for instance used for:
             * Installer file paths
         -->
-        <CompanyNameInFilePath Condition=" '$(CompanyNameInFilePath)' == '' ">pvandervelde</CompanyNameInFilePath>
+        <CompanyNameInFilePath Condition=" '$(CompanyNameInFilePath)' == '' ">metamorphic</CompanyNameInFilePath>
 
         <!--
             The URL of the company website. This is for instance used for:
@@ -791,7 +791,7 @@
             manifest file is placed in the same directory as the Visual Studio project and will be named
             <ProjectOutputName>.manifest, e.g. MyCoolApp.exe.manifest.
         -->
-        <ShouldGenerateApplicationManifest>true</ShouldGenerateApplicationManifest>
+        <ShouldGenerateApplicationManifest>false</ShouldGenerateApplicationManifest>
 
         <!--
             A flag that indicates whether the current project is a Test project. The value will be set in the Visual
@@ -868,8 +868,8 @@
         <!--
             A flag that indicates whether or not the assemblies should be strong named during the compilation process.
         -->
-        <ShouldSign Condition=" '$(ShouldSign)' == '' ">true</ShouldSign>
-        <SignAssembly Condition="$(ShouldSign)">true</SignAssembly>
+        <ShouldSign Condition=" '$(ShouldSign)' == '' ">false</ShouldSign>
+        <SignAssembly Condition="$(ShouldSign)">false</SignAssembly>
         <DelaySign Condition="$(ShouldSign)">false</DelaySign>
         <!--
             The full path of the key file that will be used to sign the assemblies during the compilation process.

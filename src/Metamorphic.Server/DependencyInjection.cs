@@ -20,6 +20,7 @@ namespace Metamorphic.Server
         /// <returns>The container.</returns>
         public static IContainer CreateContainer()
         {
+            throw new NotImplementedException();
         }
     }
 }

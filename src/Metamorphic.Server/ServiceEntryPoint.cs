@@ -43,11 +43,6 @@ namespace Metamorphic.Server
         private volatile bool m_IsDisposed;
 
         /// <summary>
-        /// A flag that indicates that the current service is stopping the application.
-        /// </summary>
-        private bool m_IsStopping;
-
-        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -88,7 +83,6 @@ namespace Metamorphic.Server
             lock (m_Lock)
             {
                 hasBeenStopped = m_HasBeenStopped;
-                m_IsStopping = true;
             }
 
             if (hasBeenStopped)
@@ -99,8 +93,6 @@ namespace Metamorphic.Server
             try
             {
                 // Do what ever we need to do to stop the service here
-                foobar();
-
                 m_Diagnostics.Log(
                     LevelToLog.Info,
                     ServerConstants.LogPrefix,
