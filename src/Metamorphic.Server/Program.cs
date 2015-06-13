@@ -5,11 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using Metamorphic.Server.Nuclei;
+using Metamorphic.Server.Nuclei.ExceptionHandling;
+using Metamorphic.Server.Properties;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics.Logging;
+using Topshelf;
+using Topshelf.ServiceConfigurators;
 
 namespace Metamorphic.Server
 {
@@ -17,6 +21,11 @@ namespace Metamorphic.Server
         Justification = "Access modifiers should not be declared on the entry point for a command line application. See FxCop.")]
     static class Program
     {
+        /// <summary>
+        /// The default name for the error log.
+        /// </summary>
+        private const string DefaultErrorFileName = "service.error.{0}.log";
+
         /// <summary>
         /// Defines the error code for a normal application exit (i.e without errors).
         /// </summary>
@@ -27,14 +36,55 @@ namespace Metamorphic.Server
         /// </summary>
         private const int UnhandledExceptionApplicationExitCode = 1;
 
-        /// <summary>
-        /// The default name for the error log.
-        /// </summary>
-        private const string DefaultErrorFileName = "service.error.{0}.log";
-
         [STAThread]
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            int functionReturnResult = -1;
+
+            var processor = new LogBasedExceptionProcessor(
+                LoggerBuilder.ForFile(
+                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
+                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
+            var result = TopLevelExceptionGuard.RunGuarded(
+                () => functionReturnResult = RunApplication(),
+                new ExceptionProcessor[]
+                    {
+                        processor.Process,
+                    });
+
+            return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We're catching the exception and then exiting the application.")]
+        private static int RunApplication()
+        {
+            var host = HostFactory.New(
+                c =>
+                {
+                    c.Service(
+                        (ServiceConfigurator<ServiceEntryPoint> s) =>
+                        {
+                            s.ConstructUsing(() => new ServiceEntryPoint());
+                            s.WhenStarted(m => m.OnStart());
+                            s.WhenStopped(m => m.OnStop());
+                        });
+                    c.RunAsNetworkService();
+                    c.StartAutomatically();
+
+                    c.DependsOnEventLog();
+
+                    c.EnableShutdown();
+
+                    c.SetServiceName(Resources.Service_ServiceName);
+                    c.SetDisplayName(Resources.Service_DisplayName);
+                    c.SetDescription(Resources.Service_Description);
+                });
+
+            var exitCode = host.Run();
+            return (exitCode == TopshelfExitCode.Ok)
+                ? NormalApplicationExitCode
+                : UnhandledExceptionApplicationExitCode;
         }
     }
 }
