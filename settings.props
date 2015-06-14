@@ -1217,7 +1217,9 @@
         All file paths allow build templates, e.g. $(DirBuildDeploy)\myarchive-${VersionSemantic}.zip.
     -->
     <ItemGroup>
+        <!--
         <ArchivePackageSpecs Include="$(DirTemplate)\myarchive.zipspec" />
+        -->
     </ItemGroup>
 
 
