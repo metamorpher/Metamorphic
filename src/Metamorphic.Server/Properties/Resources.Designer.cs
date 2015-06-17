@@ -79,6 +79,96 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cleaning up worker thread..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_CleaningUpWorker {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_CleaningUpWorker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new signal was added to the queue, but the processing of signals is turned off. Signal will not be processed..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New item in signal queue. Starting processing thread..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_NewItemInQueue_StartingThread {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_NewItemInQueue_StartingThread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new signal was added to the queue. The processing thread is already running. Signal should be processed shortly..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signal parameter: Name = {0}; Value = {1}.
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_ProcessSignal_ForParameters {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_ProcessSignal_ForParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing signal of type: {0}.
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_ProcessSignal_WithType {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_ProcessSignal_WithType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure while processing signals. Error was: {0}..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signal queue empty. Stopping signal processing..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_QueueEmpty {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_QueueEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting signal processing..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_StartingSignalProcessing {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_StartingSignalProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopping processing..
+        /// </summary>
+        internal static string Log_Messages_SignalProcessor_StoppingProcessing {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalProcessor_StoppingProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service that provides the core capabilities for Metamorphic.
         /// </summary>
         internal static string Service_Description {

@@ -55,17 +55,6 @@ namespace Metamorphic.Core.Signals
         }
 
         /// <summary>
-        /// Gets the type of signal that has occurred.
-        /// </summary>
-        public string SignalType
-        {
-            get
-            {
-                return m_SignalType;
-            }
-        }
-
-        /// <summary>
         /// Returns a value indicating whether the signal parameter set contains a parameter
         /// with the given name.
         /// </summary>
@@ -110,9 +99,20 @@ namespace Metamorphic.Core.Signals
         /// different parameters for the signal.
         /// </summary>
         /// <returns>The enumerator that can be used to enumerate over the parameters for the signal.</returns>
-        public IEnumerator<KeyValuePair<string, string>> Parameters()
+        public IEnumerable<string> Parameters()
         {
-            return m_Parameters.GetEnumerator();
+            return m_Parameters.Keys;
+        }
+
+        /// <summary>
+        /// Gets the type of signal that has occurred.
+        /// </summary>
+        public string SignalType
+        {
+            get
+            {
+                return m_SignalType;
+            }
         }
     }
 }

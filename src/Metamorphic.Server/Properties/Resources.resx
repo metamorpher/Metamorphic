@@ -123,6 +123,36 @@
   <data name="Log_Messages_ServiceStopped" xml:space="preserve">
     <value>The Metamorphic server has stopped.</value>
   </data>
+  <data name="Log_Messages_SignalProcessor_CleaningUpWorker" xml:space="preserve">
+    <value>Cleaning up worker thread.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted" xml:space="preserve">
+    <value>A new signal was added to the queue, but the processing of signals is turned off. Signal will not be processed.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_StartingThread" xml:space="preserve">
+    <value>New item in signal queue. Starting processing thread.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists" xml:space="preserve">
+    <value>A new signal was added to the queue. The processing thread is already running. Signal should be processed shortly.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException" xml:space="preserve">
+    <value>Failure while processing signals. Error was: {0}.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignal_ForParameters" xml:space="preserve">
+    <value>Signal parameter: Name = {0}; Value = {1}</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignal_WithType" xml:space="preserve">
+    <value>Processing signal of type: {0}</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_QueueEmpty" xml:space="preserve">
+    <value>Signal queue empty. Stopping signal processing.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_StartingSignalProcessing" xml:space="preserve">
+    <value>Starting signal processing.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_StoppingProcessing" xml:space="preserve">
+    <value>Stopping processing.</value>
+  </data>
   <data name="Service_Description" xml:space="preserve">
     <value>The service that provides the core capabilities for Metamorphic</value>
   </data>

@@ -131,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="IProcessSignals.cs" />
+    <Compile Include="Jobs\IQueueJobs.cs" />
+    <Compile Include="Jobs\JobQueue.cs" />
     <Compile Include="Nuclei\ExceptionHandling\EventType.cs" />
     <Compile Include="Nuclei\ExceptionHandling\EventTypeToEventCategoryMap.cs" />
     <Compile Include="Nuclei\ExceptionHandling\ExceptionFilter.cs" />
@@ -150,16 +153,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rules\ILoadRules.cs" />
+    <Compile Include="Rules\IStoreRules.cs" />
+    <Compile Include="Rules\RuleCollection.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
+    <Compile Include="SignalProcessor.cs" />
+    <Compile Include="Signals\IQueueSignals.cs" />
+    <Compile Include="Signals\SignalQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Rules\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
