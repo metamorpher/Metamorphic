@@ -197,3 +197,4 @@ FakesAssemblies/
 AssemblyInfo.BuildInformation.cs
 AssemblyInfo.Company.cs
 AssemblyInfo.VersionNumber.cs
+AssemblyInfo.InternalsVisibleTo.cs
