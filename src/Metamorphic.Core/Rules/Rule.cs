@@ -5,28 +5,45 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
 {
+    /// <summary>
+    /// Defines methods for transforming signals into work.
+    /// </summary>
     public sealed class Rule
     {
+        /// <summary>
+        /// Returns a value indicating whether or not the current rule applies to the given signal.
+        /// </summary>
+        /// <param name="signal">The signal.</param>
+        /// <returns>
+        ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool ShouldProcess(Signal signal)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets or sets the signal identifier to which this rule applies.
+        /// </summary>
         public string SignalType
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Job"/> based on the current rule and the given signal.
+        /// </summary>
+        /// <param name="signal">The signal.</param>
+        /// <returns>The newly created job.</returns>
         public Job ToJob(Signal signal)
         {
             throw new NotImplementedException();

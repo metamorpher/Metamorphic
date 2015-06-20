@@ -63,18 +63,26 @@ namespace Metamorphic.Server
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
         /// </summary>
+        /// <param name="jobQueue">The object that queues jobs that need to be processed.</param>
+        /// <param name="ruleCollection">The object that stores all the known rules for the application.</param>
         /// <param name="signalQueue">The object that queues signals that need to be processed.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         public SignalProcessor(
+            IQueueJobs jobQueue,
+            IStoreRules ruleCollection,
             IQueueSignals signalQueue,
             SystemDiagnostics diagnostics)
         {
             {
+                Lokad.Enforce.Argument(() => jobQueue);
+                Lokad.Enforce.Argument(() => ruleCollection);
                 Lokad.Enforce.Argument(() => signalQueue);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_Diagnostics = diagnostics;
+            m_JobQueue = jobQueue;
+            m_RuleCollection = ruleCollection;
             m_SignalQueue = signalQueue;
             m_SignalQueue.OnEnqueue += HandleOnEnqueue;
         }

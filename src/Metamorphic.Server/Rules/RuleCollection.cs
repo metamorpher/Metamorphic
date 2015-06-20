@@ -25,7 +25,7 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly object m_Lock;
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The collection that maps signal types to rules.

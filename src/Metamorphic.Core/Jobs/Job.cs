@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Metamorphic.Core.Jobs
 {
+    /// <summary>
+    /// Defines an amount of work that should be done.
+    /// </summary>
     public sealed class Job
     {
     }
