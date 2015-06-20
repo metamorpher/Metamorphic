@@ -23,6 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core", "Metamor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core", "Test.Unit.Core\Test.Unit.Core.csproj", "{6DC017A8-C1B9-48FD-BDB4-968F33008639}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{967CA499-1EFE-4BBB-81AC-24C8BAE26854}"
+	ProjectSection(SolutionItems) = preProject
+		..\samples\example.mmrule = ..\samples\example.mmrule
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Server", "Test.Unit.Server\Test.Unit.Server.csproj", "{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +60,12 @@ Global
 		{6DC017A8-C1B9-48FD-BDB4-968F33008639}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DC017A8-C1B9-48FD-BDB4-968F33008639}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DC017A8-C1B9-48FD-BDB4-968F33008639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
