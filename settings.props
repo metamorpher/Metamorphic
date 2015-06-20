@@ -959,13 +959,13 @@
     <ItemGroup>
         <InternalsVisibleTo Include="Test.Unit.Core">
             <Projects>
-                Metamorphic.Server;
+                Metamorphic.Core;
             </Projects>
             <KeyFile></KeyFile>
         </InternalsVisibleTo>
         <InternalsVisibleTo Include="Test.Unit.Server">
             <Projects>
-                Metamorphic.Core;
+                Metamorphic.Server;
             </Projects>
             <KeyFile></KeyFile>
         </InternalsVisibleTo>

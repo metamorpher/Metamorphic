@@ -5,13 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Test.Unit.Server
+namespace Metamorphic.Server.Rules
 {
     [TestFixture]
-    public class SignalProcessorTest
+    public sealed class RuleCollectionTest
     {
-        // For now no tests
     }
 }
