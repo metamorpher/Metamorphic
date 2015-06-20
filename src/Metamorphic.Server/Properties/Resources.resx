@@ -162,4 +162,22 @@
   <data name="Service_ServiceName" xml:space="preserve">
     <value>Metamorphic.Service</value>
   </data>
+  <data name="Log_Messages_RuleWatcher_CreatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Disabled" xml:space="preserve">
+    <value>Rule discovery - Disabled</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Enabled" xml:space="preserve">
+    <value>Rule discovery - Enabled</value>
+  </data>
+  <data name="Exceptions_Messages_MissingConfigurationValue_WithKey" xml:space="preserve">
+    <value>A required configuration value is missing. The key for the missing configuration value is: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RemovedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered removed rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered updated rule file at: {0}</value>
+  </data>
 </root>

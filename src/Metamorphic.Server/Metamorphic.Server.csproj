@@ -128,6 +128,10 @@
       <HintPath>..\..\packages\Topshelf.3.2.0\lib\net40-full\Topshelf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="YamlDotNet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\YamlDotNet.Signed.3.6.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection.cs" />
@@ -153,9 +157,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rules\ActionDefinition.cs" />
+    <Compile Include="Rules\CriteriaDefinition.cs" />
     <Compile Include="Rules\ILoadRules.cs" />
     <Compile Include="Rules\IStoreRules.cs" />
+    <Compile Include="Rules\IWatchRules.cs" />
     <Compile Include="Rules\RuleCollection.cs" />
+    <Compile Include="Rules\RuleDefinition.cs" />
+    <Compile Include="Rules\RuleLoader.cs" />
+    <Compile Include="Rules\RuleWatcher.cs" />
+    <Compile Include="Rules\TriggerDefinition.cs" />
+    <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
     <Compile Include="SignalProcessor.cs" />

@@ -182,8 +182,11 @@ namespace Metamorphic.Server
                     var rules = m_RuleCollection.RulesForSignal(signal.SignalType);
                     foreach (var rule in rules)
                     {
-                        var job = rule.ToJob(signal);
-                        m_JobQueue.Enqueue(job);
+                        if (rule.ShouldProcess(signal))
+                        {
+                            var job = rule.ToJob(signal);
+                            m_JobQueue.Enqueue(job);
+                        }
                     }
                 }
             }

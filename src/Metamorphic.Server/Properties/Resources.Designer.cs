@@ -61,6 +61,60 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A required configuration value is missing. The key for the missing configuration value is: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_MissingConfigurationValue_WithKey {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingConfigurationValue_WithKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered new rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleWatcher_CreatedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleWatcher_CreatedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered removed rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleWatcher_RemovedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleWatcher_RemovedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule discovery - Disabled.
+        /// </summary>
+        internal static string Log_Messages_RuleWatcher_RuleDiscovery_Disabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleWatcher_RuleDiscovery_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule discovery - Enabled.
+        /// </summary>
+        internal static string Log_Messages_RuleWatcher_RuleDiscovery_Enabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleWatcher_RuleDiscovery_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered updated rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleWatcher_UpdatedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleWatcher_UpdatedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Metamorphic server has started..
         /// </summary>
         internal static string Log_Messages_ServiceStarted {

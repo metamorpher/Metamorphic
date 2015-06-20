@@ -16,6 +16,17 @@ namespace Metamorphic.Core.Rules
 {
     public sealed class Rule
     {
+        public bool ShouldProcess(Signal signal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string SignalType
+        {
+            get;
+            set;
+        }
+
         public Job ToJob(Signal signal)
         {
             throw new NotImplementedException();

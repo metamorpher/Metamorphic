@@ -4,18 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Metamorphic.Core.Rules;
 using Nuclei.Diagnostics;
 
 namespace Metamorphic.Server.Rules
 {
-    internal sealed class RuleCollection : IStoreRules, ILoadRules
+    internal sealed class RuleCollection : IStoreRules
     {
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -23,117 +18,146 @@ namespace Metamorphic.Server.Rules
         private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
-        /// The object that watches the file system for newly added packages.
+        /// The collection that maps file paths to rules.
         /// </summary>
-        private readonly FileSystemWatcher m_Watcher;
+        private readonly Dictionary<string, Rule> m_FileToRuleMap = new Dictionary<string, Rule>();
+
+        /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly object m_Lock;
+
+        /// <summary>
+        /// The collection that maps signal types to rules.
+        /// </summary>
+        private readonly Dictionary<string, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<string, List<Rule>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleCollection"/> class.
         /// </summary>
-        /// <param name="packageQueue">The object that queues packages that need to be processed.</param>
-        /// <param name="configuration">The configuration.</param>
         /// <param name="diagnostics">The object providing the diagnostics methods for the application.</param>
-        internal RuleCollection(
-            IQueueSymbolPackages packageQueue,
-            IConfiguration configuration,
-            SystemDiagnostics diagnostics)
+        internal RuleCollection(SystemDiagnostics diagnostics)
         {
             {
-                Lokad.Enforce.Argument(() => packageQueue);
-                Lokad.Enforce.Argument(() => configuration);
                 Lokad.Enforce.Argument(() => diagnostics);
-
-                Lokad.Enforce.With<ArgumentException>(
-                    configuration.HasValueFor(CoreConfigurationKeys.s_UploadPath),
-                    Resources.Exceptions_Messages_MissingConfigurationValue_WithKey,
-                    CoreConfigurationKeys.s_UploadPath);
             }
 
-            m_Queue = packageQueue;
             m_Diagnostics = diagnostics;
-
-            var uploadPath = configuration.Value<string>(CoreConfigurationKeys.s_UploadPath);
-            m_Watcher = new FileSystemWatcher
-            {
-                Path = uploadPath,
-                Filter = "*.mmrule",
-                IncludeSubdirectories = true,
-                EnableRaisingEvents = false,
-                NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.CreationTime | NotifyFilters.LastWrite,
-            };
-
-            m_Watcher.Created += HandleFileCreated;
         }
 
         /// <summary>
-        /// Disables the uploading of packages.
+        /// Adds a new <see cref="Rule"/> that was created from the given file.
         /// </summary>
-        public void Disable()
+        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
+        /// <param name="rule">The rule.</param>
+        public void Add(string filePath, Rule rule)
         {
-            m_Watcher.EnableRaisingEvents = false;
-            m_Diagnostics.Log(
-                    LevelToLog.Info,
-                    Resources.Log_Messages_FileWatcherBasedPackageUploader_PackageDiscovery_Disabled);
+            lock (m_Lock)
+            {
+                m_FileToRuleMap.Add(filePath, rule);
+
+                if (!m_SignalTypeToRuleMap.ContainsKey(rule.SignalType))
+                {
+                    m_SignalTypeToRuleMap.Add(rule.SignalType, new List<Rule>());
+                }
+                List<Rule> collection = m_SignalTypeToRuleMap[rule.SignalType];
+                if (!collection.Contains(rule))
+                {
+                    collection.Add(rule);
+                }
+            }
         }
 
         /// <summary>
-        /// Enables the uploading of packages.
+        /// Removes the <see cref="Rule"/> that is associated with the given file.
         /// </summary>
-        public void Enable()
+        /// <param name="filePath">The full path to the rule file.</param>
+        public void Remove(string filePath)
         {
-            m_Diagnostics.Log(
-                LevelToLog.Info,
-                Resources.Log_Messages_FileWatcherBasedPackageUploader_PackageDiscovery_Enabled);
-
-            EnqueueExistingFiles();
-            m_Watcher.EnableRaisingEvents = true;
-        }
-
-        private void EnqueueExistingFiles()
-        {
-            foreach (var file in Directory.GetFiles(m_Watcher.Path, m_Watcher.Filter, SearchOption.AllDirectories))
+            lock(m_Lock)
             {
-                ProcessRuleFile(file);
+                Rule rule = null;
+                if (m_FileToRuleMap.ContainsKey(filePath))
+                {
+                    rule = m_FileToRuleMap[filePath];
+                    m_FileToRuleMap.Remove(filePath);
+                }
+
+                if (rule != null)
+                {
+                    if (m_SignalTypeToRuleMap.ContainsKey(rule.SignalType))
+                    {
+                        var collection = m_SignalTypeToRuleMap[rule.SignalType];
+                        collection.Remove(rule);
+
+                        if (collection.Count == 0)
+                        {
+                            m_SignalTypeToRuleMap.Remove(rule.SignalType);
+                        }
+                    }
+                }
             }
         }
 
-        private void HandleFileCreated(object sender, FileSystemEventArgs e)
-        {
-            if ((e.ChangeType == WatcherChangeTypes.Created) || (e.ChangeType == WatcherChangeTypes.Changed))
-            {
-                ProcessRuleFile(e.FullPath);
-            }
-
-            var renamedArgs = e as RenamedEventArgs;
-            if ((e.ChangeType == WatcherChangeTypes.Renamed) && (renamedArgs != null))
-            {
-                RemoveRuleByPath(renamedArgs.OldFullPath);
-                ProcessRuleFile(e.FullPath);
-            }
-
-            if (e.ChangeType == WatcherChangeTypes.Deleted)
-            {
-                RemoveRuleByPath(e.FullPath);
-            }
-        }
-
-        private void ProcessRuleFile(string filePath)
-        {
-            m_Diagnostics.Log(
-                LevelToLog.Info,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_FileWatcherBasedPackageUploader_DiscoveredFile_WithFilePath,
-                    file));
-        }
-
-        private void RemoveRuleByPath(string filePath)
-        {
-        }
-
+        /// <summary>
+        /// Returns a collection containing all rules that are applicable for the given signal type.
+        /// </summary>
+        /// <param name="signalType">The type of the signal.</param>
+        /// <returns></returns>
         public IEnumerable<Rule> RulesForSignal(string signalType)
         {
-            throw new NotImplementedException();
+            lock(m_Lock)
+            {
+                if (m_SignalTypeToRuleMap.ContainsKey(signalType))
+                {
+                    return new List<Rule>(m_SignalTypeToRuleMap[signalType]);
+                }
+                else
+                {
+                    return new List<Rule>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing <see cref="Rule"/>.
+        /// </summary>
+        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
+        /// <param name="rule">The rule.</param>
+        public void Update(string filePath, Rule rule)
+        {
+            lock (m_Lock)
+            {
+                Rule ruleToReplace = null;
+                if (m_FileToRuleMap.ContainsKey(filePath))
+                {
+                    ruleToReplace = m_FileToRuleMap[filePath];
+                    m_FileToRuleMap[filePath] = rule;
+                }
+
+                if (ruleToReplace != null)
+                {
+                    List<Rule> oldCollection = null;
+                    if (m_SignalTypeToRuleMap.ContainsKey(ruleToReplace.SignalType))
+                    {
+                        oldCollection = m_SignalTypeToRuleMap[ruleToReplace.SignalType];
+                        oldCollection.Remove(ruleToReplace);
+                    }
+
+                    if (!m_SignalTypeToRuleMap.ContainsKey(rule.SignalType))
+                    {
+                        m_SignalTypeToRuleMap.Add(rule.SignalType, new List<Rule>());
+                    }
+
+                    var newCollection = m_SignalTypeToRuleMap[rule.SignalType];
+                    newCollection.Add(rule);
+
+                    if ((oldCollection != null) && (oldCollection.Count == 0))
+                    {
+                        m_SignalTypeToRuleMap.Remove(rule.SignalType);
+                    }
+                }
+            }
         }
     }
 }

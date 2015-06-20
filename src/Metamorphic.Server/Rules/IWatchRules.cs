@@ -4,17 +4,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Rules;
-
 namespace Metamorphic.Server.Rules
 {
-    internal interface ILoadRules
+    internal interface IWatchRules
     {
         /// <summary>
-        /// Creates a new <see cref="Rule"/> object from the information in the specified file.
+        /// Disables the loading of packages.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file.</param>
-        /// <returns>A newly created rule instance.</returns>
-        Rule Load(string filePath);
+        void Disable();
+
+        /// <summary>
+        /// Enables the loading of packages.
+        /// </summary>
+        void Enable();
     }
 }
