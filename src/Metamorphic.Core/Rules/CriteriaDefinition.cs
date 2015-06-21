@@ -13,11 +13,6 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public class CriteriaDefinition
     {
-        internal bool IsValid()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Gets or sets the name of the trigger parameter.
         /// </summary>

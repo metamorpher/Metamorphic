@@ -77,6 +77,8 @@ namespace Metamorphic.Core.Rules
             {
                 foreach (var actionParam in Action.Parameters)
                 {
+                    // Parameter must be complete
+                    // If action has trigger parameter reference it should exist
                 }
             }
 
@@ -87,7 +89,7 @@ namespace Metamorphic.Core.Rules
 
             // Trigger.Type exists
 
-            // Trigger.Parameters?
+            // Trigger.Parameters? -->> Must be complete
 
             foreach (var criteria in Criteria)
             {

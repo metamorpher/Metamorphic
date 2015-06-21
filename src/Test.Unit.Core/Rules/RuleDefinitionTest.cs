@@ -10,16 +10,31 @@ namespace Metamorphic.Core.Rules
     [TestFixture]
     public sealed class RuleDefinitionTest
     {
+        public void IsValidWithActionWithInvalidId()
+        { }
+
+        public void IsValidWithActionWithInvalidTriggerParameterReference()
+        { }
+
+        public void IsValidWithCriteriaWithIncorrectName()
+        { }
+
+        public void IsValidWithCriteriaWithInvalidType()
+        { }
+
         public void IsValidWithMissingAction()
         { }
 
-        public void IsValidWithMissingCriteria()
-        { }
-
-        public void IsValidWithInvalidCriteria()
-        { }
-
         public void IsValidWithMissingName()
+        { }
+
+        public void IsValidWithMissingTrigger()
+        { }
+
+        public void IsValidWithTriggerWithInvalidType()
+        { }
+
+        public void IsValidWithTriggerWithPartialParameters()
         { }
     }
 }
