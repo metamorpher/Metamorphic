@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Core.Rules
 {
     /// <summary>
     /// Stores information about a trigger in a rule.
