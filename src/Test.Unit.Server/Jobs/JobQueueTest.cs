@@ -14,25 +14,12 @@ namespace Metamorphic.Server.Jobs
     public sealed class JobQueueTest
     {
         [Test]
-        public void EnqueueWithNullObject()
+        public void DequeueWithEmptyQueue()
         {
-            var queue = new JobQueue();
-            Assert.Throws<ArgumentNullException>(() => queue.Enqueue(null));
-        }
-
-        [Test]
-        public void EnqueueWithEmptyQueue()
-        {
-            var job = new Job();
             var queue = new JobQueue();
 
             Assert.IsTrue(queue.IsEmpty);
-
-            queue.Enqueue(job);
-            Assert.IsFalse(queue.IsEmpty);
-            Assert.AreSame(job, queue.Dequeue());
-
-            Assert.IsTrue(queue.IsEmpty);
+            Assert.IsNull(queue.Dequeue());
         }
 
         [Test]
@@ -55,12 +42,25 @@ namespace Metamorphic.Server.Jobs
         }
 
         [Test]
-        public void DequeueWithEmptyQueue()
+        public void EnqueueWithEmptyQueue()
         {
+            var job = new Job();
             var queue = new JobQueue();
 
             Assert.IsTrue(queue.IsEmpty);
-            Assert.IsNull(queue.Dequeue());
+
+            queue.Enqueue(job);
+            Assert.IsFalse(queue.IsEmpty);
+            Assert.AreSame(job, queue.Dequeue());
+
+            Assert.IsTrue(queue.IsEmpty);
+        }
+
+        [Test]
+        public void EnqueueWithNullObject()
+        {
+            var queue = new JobQueue();
+            Assert.Throws<ArgumentNullException>(() => queue.Enqueue(null));
         }
     }
 }

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Metamorphic.Core.Rules
@@ -13,19 +14,25 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public class TriggerDefinition
     {
-        /// <summary>
-        /// The type of trigger.
-        /// </summary>
-        public string Type
+
+        internal bool IsValid()
         {
-            get;
-            set;
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// The collection of parameters for the trigger.
         /// </summary>
         public Dictionary<string, string> Parameters
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The type of trigger.
+        /// </summary>
+        public string Type
         {
             get;
             set;

@@ -4,30 +4,24 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using YamlDotNet.Serialization;
+using System;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Core.Rules
 {
     /// <summary>
     /// Stores information about a condition under which a given signal applies to a rule.
     /// </summary>
     public class CriteriaDefinition
     {
-        /// <summary>
-        /// Gets or sets the name of the trigger parameter.
-        /// </summary>
-        [YamlMember(Alias = "name")]
-        public string TriggerParameter
+        internal bool IsValid()
         {
-            get;
-            set;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Gets or sets the comparison method.
+        /// Gets or sets the name of the trigger parameter.
         /// </summary>
-        [YamlMember(Alias = "type")]
-        public string ComparisonMethod
+        public string Name
         {
             get;
             set;
@@ -37,6 +31,15 @@ namespace Metamorphic.Server.Rules
         /// Gets or sets the pattern to compare with.
         /// </summary>
         public string Pattern
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the comparison method.
+        /// </summary>
+        public string Type
         {
             get;
             set;

@@ -13,6 +13,17 @@ namespace Metamorphic.Server.Rules
 {
     internal sealed class RuleLoader
     {
+        internal RuleDefinition CreateDefinitionFromFile(string filePath)
+        {
+            using (var input = new StreamReader(filePath))
+            {
+                var deserializer = new Deserializer(namingConvention: new PascalCaseNamingConvention());
+                var definition = deserializer.Deserialize<RuleDefinition>(input);
+
+                return definition;
+            }
+        }
+
         /// <summary>
         /// Creates a new <see cref="Rule"/> object from the information in the specified file.
         /// </summary>
@@ -20,15 +31,8 @@ namespace Metamorphic.Server.Rules
         /// <returns>A newly created rule instance.</returns>
         public Rule Load(string filePath)
         {
-            using (var input = new StreamReader(filePath))
-            {
-                var deserializer = new Deserializer(namingConvention: new PascalCaseNamingConvention());
-                //deserializer.RegisterTypeConverter();
-                var definition = deserializer.Deserialize<RuleDefinition>(input);
-
-                var rule = definition.ToRule();
-                return rule;
-            }
+            var definition = CreateDefinitionFromFile(filePath);
+            return definition.ToRule();
         }
     }
 }

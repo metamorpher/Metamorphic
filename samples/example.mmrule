@@ -4,21 +4,21 @@
     enabled: true
 
     trigger:
-        type: "trigger_type_ref"
+        type: "signal_type_ref"
         parameters:
             foo: "bar"
             baz: "otherBar"
 
     criteria:
-        trigger.payload_parameter_name1:
-            type: "matchregex"
-            pattern : "^value$"
-        trigger.payload_parameter_name2:
-            type: "iequals"
-            pattern : "watchevent"
+        - name: "payload_parameter_name1"
+          type: "matchregex"
+          pattern : "^value$"
+        - name: "payload_parameter_name2"
+          type: "iequals"
+          pattern : "watchevent"
 
     action:
-        ref: "action_ref"
+        id: "action_ref"
         parameters:
             foo: "bar"
             baz: "{{trigger.payload_parameter_1}}"

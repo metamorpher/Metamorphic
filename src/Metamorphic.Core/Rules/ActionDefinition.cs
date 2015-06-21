@@ -4,10 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using YamlDotNet.Serialization;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Core.Rules
 {
     /// <summary>
     /// Stores the information about an action reference and the parameter necessary for the given action.
@@ -17,11 +17,15 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// Gets or sets the ID of the action that should be executed.
         /// </summary>
-        [YamlMember(Alias = "ref")]
         public string Id
         {
             get;
             set;
+        }
+
+        internal bool IsValid()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

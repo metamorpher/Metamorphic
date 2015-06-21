@@ -158,16 +158,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rules\ActionDefinition.cs" />
-    <Compile Include="Rules\CriteriaDefinition.cs" />
     <Compile Include="Rules\ILoadRules.cs" />
     <Compile Include="Rules\IStoreRules.cs" />
     <Compile Include="Rules\IWatchRules.cs" />
     <Compile Include="Rules\RuleCollection.cs" />
-    <Compile Include="Rules\RuleDefinition.cs" />
     <Compile Include="Rules\RuleLoader.cs" />
     <Compile Include="Rules\RuleWatcher.cs" />
-    <Compile Include="Rules\TriggerDefinition.cs" />
     <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
