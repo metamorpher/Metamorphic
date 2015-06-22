@@ -133,7 +133,10 @@ namespace Metamorphic.Server.Rules
             m_RuleCollection.Remove(e.FullPath);
 
             var rule = m_RuleLoader.Load(e.FullPath);
-            m_RuleCollection.Update(e.FullPath, rule);
+            if (rule != null)
+            {
+                m_RuleCollection.Update(e.FullPath, rule);
+            }
         }
 
         private void HandleFileCreated(object sender, FileSystemEventArgs e)
@@ -146,7 +149,10 @@ namespace Metamorphic.Server.Rules
                     e.FullPath));
 
             var rule = m_RuleLoader.Load(e.FullPath);
-            m_RuleCollection.Add(e.FullPath, rule);
+            if (rule != null)
+            {
+                m_RuleCollection.Add(e.FullPath, rule);
+            }
         }
 
         private void HandleFileDeleted(object sender, FileSystemEventArgs e)

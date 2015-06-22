@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 namespace Metamorphic.Core.Rules
@@ -21,11 +20,6 @@ namespace Metamorphic.Core.Rules
         {
             get;
             set;
-        }
-
-        internal bool IsValid()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

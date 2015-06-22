@@ -10,10 +10,10 @@
             baz: "otherBar"
 
     criteria:
-        - name: "payload_parameter_name1"
+        - name: "trigger_parameter_name1"
           type: "matchregex"
           pattern : "^value$"
-        - name: "payload_parameter_name2"
+        - name: "trigger_parameter_name2"
           type: "iequals"
           pattern : "watchevent"
 
@@ -21,4 +21,4 @@
         id: "action_ref"
         parameters:
             foo: "bar"
-            baz: "{{trigger.payload_parameter_1}}"
+            baz: "{{trigger.trigger_parameter_1}}"

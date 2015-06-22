@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 namespace Metamorphic.Core.Rules
@@ -14,12 +13,6 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public class TriggerDefinition
     {
-
-        internal bool IsValid()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// The collection of parameters for the trigger.
         /// </summary>

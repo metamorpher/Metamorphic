@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Jobs;
-using Metamorphic.Core.Properties;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
@@ -17,17 +16,6 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public sealed class Rule
     {
-
-        internal Rule(RuleDefinition definition)
-        {
-            {
-                Lokad.Enforce.Argument(() => definition);
-                Lokad.Enforce.With<InvalidRuleDefinitionException>(
-                    definition.IsValid(),
-                    Resources.Exceptions_Messages_InvalidRuleDefinition);
-            }
-        }
-
         /// <summary>
         /// Returns a value indicating whether or not the current rule applies to the given signal.
         /// </summary>

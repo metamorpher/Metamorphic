@@ -4,9 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
@@ -52,76 +50,12 @@ namespace Metamorphic.Core.Rules
         }
 
         /// <summary>
-        /// Returns a value indicating whether the current rule definition is valid or not.
-        /// </summary>
-        /// <returns>
-        ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        internal bool IsValid()
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                return false;
-            }
-
-            if (Action == null)
-            {
-                return false;
-            }
-
-            // Action.Id ==> exists?
-
-            if (Action.Parameters != null)
-            {
-                foreach (var actionParam in Action.Parameters)
-                {
-                    // Parameter must be complete
-                    // If action has trigger parameter reference it should exist
-                }
-            }
-
-            if (Trigger == null)
-            {
-                return false;
-            }
-
-            // Trigger.Type exists
-
-            // Trigger.Parameters? -->> Must be complete
-
-            foreach (var criteria in Criteria)
-            {
-                // criteria.Name matches existing trigger parameter
-                // criteria.Type exists
-                // 
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Gets or sets the name of the rule.
         /// </summary>
         public string Name
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Rule ToRule()
-        {
-            if (!IsValid())
-            {
-                throw new InvalidRuleDefinitionException();
-            }
-
-            return new Rule(this);
         }
 
         /// <summary>

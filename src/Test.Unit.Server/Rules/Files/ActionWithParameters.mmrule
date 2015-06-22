@@ -1,0 +1,12 @@
+﻿---
+    name: "Name"
+    description: "Description"
+    enabled: true
+
+    trigger:
+        type: "Trigger"
+
+    action:
+        id: "Action"
+        parameters:
+            foo: "bar"
