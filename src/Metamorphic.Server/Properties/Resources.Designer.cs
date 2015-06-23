@@ -70,6 +70,15 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The rule definition at {0} is not valid..
+        /// </summary>
+        internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discovered new rule file at: {0}.
         /// </summary>
         internal static string Log_Messages_RuleWatcher_CreatedFile_WithFilePath {

@@ -180,4 +180,7 @@
   <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
     <value>Discovered updated rule file at: {0}</value>
   </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
+    <value>The rule definition at {0} is not valid.</value>
+  </data>
 </root>

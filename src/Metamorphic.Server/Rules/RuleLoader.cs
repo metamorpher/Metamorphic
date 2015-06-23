@@ -6,9 +6,13 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Metamorphic.Core.Rules;
+using Metamorphic.Server.Properties;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -17,6 +21,11 @@ namespace Metamorphic.Server.Rules
     internal sealed class RuleLoader
     {
         private static readonly Regex s_TriggerParameterMatcher = new Regex(@"(?:{{trigger.)(.*?)(?:}})", RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
 
         // private readonly Predicate<>
 
@@ -127,7 +136,14 @@ namespace Metamorphic.Server.Rules
             var definition = CreateDefinitionFromFile(filePath);
             if (!IsValid(definition))
             {
+                m_Diagnostics.Log(
+                    LevelToLog.Warn,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath,
+                        filePath));
 
+                return null;
             }
 
             if (definition.Enabled)
