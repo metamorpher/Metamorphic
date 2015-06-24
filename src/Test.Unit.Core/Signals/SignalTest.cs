@@ -21,7 +21,7 @@ namespace Metamorphic.Core.Signals
             var type = "a";
             var signal = new Signal(type, new Dictionary<string, string>());
 
-            Assert.AreSame(type, signal.SignalType);
+            Assert.AreSame(type, signal.Sensor);
         }
 
         [Test]

@@ -121,7 +121,7 @@
     <Compile Include="Rules\TriggerRuleDefinition.cs" />
     <Compile Include="ParameterNotFoundException.cs" />
     <Compile Include="Signals\Signal.cs" />
-    <Compile Include="Signals\SignalId.cs" />
+    <Compile Include="Sensors\SensorId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -137,9 +137,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Triggers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.targets') " />
   <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.targets') " />

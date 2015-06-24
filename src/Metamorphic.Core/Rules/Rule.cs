@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Jobs;
+using Metamorphic.Core.Sensors;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
@@ -17,23 +19,36 @@ namespace Metamorphic.Core.Rules
     public sealed class Rule
     {
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="Rule"/> class.
         /// </summary>
-        /// <param name="signalId">The ID of the signal.</param>
+        /// <param name="signalId">The ID of the sensor from which the signals will originate.</param>
+        /// <param name="parameterCriteria">
+        ///     The criteria that should be applied to the individual parameters in order for the current rule to apply to a signal.
+        /// </param>
+        /// <param name="parameterReferences">The parameters that need to be provided for the action to be executable.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="signalId"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="signalId"/> is an empty string.
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameterCriteria"/> is <see langword="null" />.
         /// </exception>
-        public Rule(string signalId)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameterReferences"/> is <see langword="null" />.
+        /// </exception>
+        public Rule(
+            SensorId signalId,
+            IDictionary<string, Predicate<object>> parameterCriteria,
+            IDictionary<string, object> parameterReferences)
         {
             {
                 Lokad.Enforce.Argument(() => signalId);
-                Lokad.Enforce.Argument(() => signalId, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => parameterCriteria);
+                Lokad.Enforce.Argument(() => parameterReferences);
+
+                // Ensure that all parameters which reference a trigger parameter have a criteria?
             }
 
-            SignalId = signalId;
+            Sensor = signalId;
         }
 
         /// <summary>
@@ -52,13 +67,22 @@ namespace Metamorphic.Core.Rules
                 return false;
             }
 
-            return signal.SignalType.Equals(SignalId);
+            if (!signal.Sensor.Equals(Sensor))
+            {
+                return false;
+            }
+
+            // Match the parameters to the criteria and the trigger parameters
+            // Additional parameters are ok, missing parameters are not
+            foobar();
+
+            return true;
         }
 
         /// <summary>
         /// Gets or sets the signal identifier to which this rule applies.
         /// </summary>
-        public SignalId SignalId
+        public SensorId Sensor
         {
             get;
         }

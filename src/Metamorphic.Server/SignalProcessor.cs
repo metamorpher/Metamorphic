@@ -174,7 +174,7 @@ namespace Metamorphic.Server
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
-                            signal.SignalType));
+                            signal.Sensor));
 
                     foreach (var parameter in signal.Parameters())
                     {
@@ -187,7 +187,7 @@ namespace Metamorphic.Server
                                 signal.ParameterValue(parameter)));
                     }
 
-                    var rules = m_RuleCollection.RulesForSignal(signal.SignalType);
+                    var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
                     foreach (var rule in rules)
                     {
                         if (rule.ShouldProcess(signal))

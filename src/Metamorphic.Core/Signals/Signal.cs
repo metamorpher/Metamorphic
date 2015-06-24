@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Core.Properties;
+using Metamorphic.Core.Sensors;
 
 namespace Metamorphic.Core.Signals
 {
@@ -23,11 +24,6 @@ namespace Metamorphic.Core.Signals
         private readonly IDictionary<string, string> m_Parameters;
 
         /// <summary>
-        /// The type of signal that has occurred.
-        /// </summary>
-        private readonly string m_SignalType;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Signal"/> class.
         /// </summary>
         /// <param name="signalType">The type of signal.</param>
@@ -41,7 +37,7 @@ namespace Metamorphic.Core.Signals
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameters"/> is <see langword="null" />.
         /// </exception>
-        public Signal(string signalType, IDictionary<string, string> parameters)
+        public Signal(SensorId signalType, IDictionary<string, string> parameters)
         {
             {
                 Lokad.Enforce.Argument(() => signalType);
@@ -50,7 +46,7 @@ namespace Metamorphic.Core.Signals
                 Lokad.Enforce.Argument(() => parameters);
             }
 
-            m_SignalType = signalType;
+            Sensor = signalType;
             m_Parameters = parameters;
         }
 
@@ -105,14 +101,11 @@ namespace Metamorphic.Core.Signals
         }
 
         /// <summary>
-        /// Gets the type of signal that has occurred.
+        /// Gets the ID of the sensor from which the current signal originated.
         /// </summary>
-        public string SignalType
+        public SensorId Sensor
         {
-            get
-            {
-                return m_SignalType;
-            }
+            get;
         }
     }
 }

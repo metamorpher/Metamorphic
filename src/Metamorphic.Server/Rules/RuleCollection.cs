@@ -56,11 +56,11 @@ namespace Metamorphic.Server.Rules
             {
                 m_FileToRuleMap.Add(filePath, rule);
 
-                if (!m_SignalTypeToRuleMap.ContainsKey(rule.SignalId))
+                if (!m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
                 {
-                    m_SignalTypeToRuleMap.Add(rule.SignalId, new List<Rule>());
+                    m_SignalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
                 }
-                List<Rule> collection = m_SignalTypeToRuleMap[rule.SignalId];
+                List<Rule> collection = m_SignalTypeToRuleMap[rule.Sensor];
                 if (!collection.Contains(rule))
                 {
                     collection.Add(rule);
@@ -85,14 +85,14 @@ namespace Metamorphic.Server.Rules
 
                 if (rule != null)
                 {
-                    if (m_SignalTypeToRuleMap.ContainsKey(rule.SignalId))
+                    if (m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
                     {
-                        var collection = m_SignalTypeToRuleMap[rule.SignalId];
+                        var collection = m_SignalTypeToRuleMap[rule.Sensor];
                         collection.Remove(rule);
 
                         if (collection.Count == 0)
                         {
-                            m_SignalTypeToRuleMap.Remove(rule.SignalId);
+                            m_SignalTypeToRuleMap.Remove(rule.Sensor);
                         }
                     }
                 }
@@ -138,23 +138,23 @@ namespace Metamorphic.Server.Rules
                 if (ruleToReplace != null)
                 {
                     List<Rule> oldCollection = null;
-                    if (m_SignalTypeToRuleMap.ContainsKey(ruleToReplace.SignalId))
+                    if (m_SignalTypeToRuleMap.ContainsKey(ruleToReplace.Sensor))
                     {
-                        oldCollection = m_SignalTypeToRuleMap[ruleToReplace.SignalId];
+                        oldCollection = m_SignalTypeToRuleMap[ruleToReplace.Sensor];
                         oldCollection.Remove(ruleToReplace);
                     }
 
-                    if (!m_SignalTypeToRuleMap.ContainsKey(rule.SignalId))
+                    if (!m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
                     {
-                        m_SignalTypeToRuleMap.Add(rule.SignalId, new List<Rule>());
+                        m_SignalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
                     }
 
-                    var newCollection = m_SignalTypeToRuleMap[rule.SignalId];
+                    var newCollection = m_SignalTypeToRuleMap[rule.Sensor];
                     newCollection.Add(rule);
 
                     if ((oldCollection != null) && (oldCollection.Count == 0))
                     {
-                        m_SignalTypeToRuleMap.Remove(rule.SignalId);
+                        m_SignalTypeToRuleMap.Remove(rule.Sensor);
                     }
                 }
             }
