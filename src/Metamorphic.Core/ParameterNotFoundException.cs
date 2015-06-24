@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Metamorphic.Core.Properties;
 
-namespace Metamorphic.Core.Signals
+namespace Metamorphic.Core
 {
     /// <summary>
     /// An exception thrown when the user tries to get a value for a parameter that does not exist.

@@ -4,28 +4,35 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Stores the information about an action reference and the parameter necessary for the given action.
+    /// Stores information about a condition under which a given signal applies to a rule.
     /// </summary>
-    public class ActionDefinition
+    public class ConditionRuleDefinition
     {
         /// <summary>
-        /// Gets or sets the ID of the action that should be executed.
+        /// Gets or sets the name of the trigger parameter.
         /// </summary>
-        public string Id
+        public string Name
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the parameters for the action.
+        /// Gets or sets the pattern to compare with.
         /// </summary>
-        public Dictionary<string, string> Parameters
+        public string Pattern
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the comparison method.
+        /// </summary>
+        public string Type
         {
             get;
             set;

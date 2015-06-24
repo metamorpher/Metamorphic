@@ -9,23 +9,23 @@ using System.Collections.Generic;
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Stores information about a trigger in a rule.
+    /// Stores the information about an action reference and the parameter necessary for the given action.
     /// </summary>
-    public class TriggerDefinition
+    public class ActionRuleDefinition
     {
         /// <summary>
-        /// The collection of parameters for the trigger.
+        /// Gets or sets the ID of the action that should be executed.
         /// </summary>
-        public Dictionary<string, string> Parameters
+        public string Id
         {
             get;
             set;
         }
 
         /// <summary>
-        /// The type of trigger.
+        /// Gets or sets the parameters for the action.
         /// </summary>
-        public string Type
+        public Dictionary<string, string> Parameters
         {
             get;
             set;

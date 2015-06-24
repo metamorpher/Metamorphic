@@ -113,14 +113,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rules\ActionDefinition.cs" />
-    <Compile Include="Rules\CriteriaDefinition.cs" />
+    <Compile Include="Rules\ActionRuleDefinition.cs" />
+    <Compile Include="Rules\ConditionRuleDefinition.cs" />
     <Compile Include="Rules\InvalidRuleDefinitionException.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\RuleDefinition.cs" />
-    <Compile Include="Rules\TriggerDefinition.cs" />
-    <Compile Include="Signals\ParameterNotFoundException.cs" />
+    <Compile Include="Rules\TriggerRuleDefinition.cs" />
+    <Compile Include="ParameterNotFoundException.cs" />
     <Compile Include="Signals\Signal.cs" />
+    <Compile Include="Signals\SignalId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

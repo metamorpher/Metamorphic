@@ -74,6 +74,9 @@ namespace Metamorphic.Server.Rules
 
             if (definition.Action.Parameters != null)
             {
+                // --> Verify that the parameters for the action are correct for the
+                //     action with the given ID
+
                 foreach (var pair in definition.Action.Parameters)
                 {
                     if (string.IsNullOrEmpty(pair.Value))

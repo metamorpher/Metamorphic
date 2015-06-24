@@ -16,7 +16,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the action for the rule.
         /// </summary>
-        public ActionDefinition Action
+        public ActionRuleDefinition Action
         {
             get;
             set;
@@ -25,7 +25,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the criteria that should applied to the trigger.
         /// </summary>
-        public List<CriteriaDefinition> Criteria
+        public List<ConditionRuleDefinition> Criteria
         {
             get;
             set;
@@ -61,7 +61,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the signal definition for the rule.
         /// </summary>
-        public TriggerDefinition Trigger
+        public TriggerRuleDefinition Trigger
         {
             get;
             set;

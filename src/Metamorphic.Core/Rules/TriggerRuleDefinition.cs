@@ -4,33 +4,26 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Stores information about a condition under which a given signal applies to a rule.
+    /// Stores information about a trigger in a rule.
     /// </summary>
-    public class CriteriaDefinition
+    public class TriggerRuleDefinition
     {
         /// <summary>
-        /// Gets or sets the name of the trigger parameter.
+        /// The collection of parameters for the trigger.
         /// </summary>
-        public string Name
+        public Dictionary<string, string> Parameters
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the pattern to compare with.
-        /// </summary>
-        public string Pattern
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the comparison method.
+        /// The type of trigger.
         /// </summary>
         public string Type
         {

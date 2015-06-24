@@ -17,6 +17,26 @@ namespace Metamorphic.Core.Rules
     public sealed class Rule
     {
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signalId">The ID of the signal.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="signalId"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="signalId"/> is an empty string.
+        /// </exception>
+        public Rule(string signalId)
+        {
+            {
+                Lokad.Enforce.Argument(() => signalId);
+                Lokad.Enforce.Argument(() => signalId, Lokad.Rules.StringIs.NotEmpty);
+            }
+
+            SignalId = signalId;
+        }
+
+        /// <summary>
         /// Returns a value indicating whether or not the current rule applies to the given signal.
         /// </summary>
         /// <param name="signal">The signal.</param>
@@ -27,16 +47,20 @@ namespace Metamorphic.Core.Rules
             Justification = "Documentation can start with a language keyword")]
         public bool ShouldProcess(Signal signal)
         {
-            throw new NotImplementedException();
+            if (signal == null)
+            {
+                return false;
+            }
+
+            return signal.SignalType.Equals(SignalId);
         }
 
         /// <summary>
         /// Gets or sets the signal identifier to which this rule applies.
         /// </summary>
-        public string SignalType
+        public SignalId SignalId
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -46,7 +70,9 @@ namespace Metamorphic.Core.Rules
         /// <returns>The newly created job.</returns>
         public Job ToJob(Signal signal)
         {
-            throw new NotImplementedException();
+
+
+            return new Job();
         }
     }
 }
