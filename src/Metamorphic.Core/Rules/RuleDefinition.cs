@@ -61,7 +61,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the signal definition for the rule.
         /// </summary>
-        public TriggerRuleDefinition Trigger
+        public SignalRuleDefinition Signal
         {
             get;
             set;

@@ -87,7 +87,7 @@ namespace Metamorphic.Server.Rules
                     var match = s_TriggerParameterMatcher.Match(pair.Value);
                     if (match.Success)
                     {
-                        if ((definition.Trigger.Parameters == null) || (!definition.Trigger.Parameters.ContainsKey(match.Value)))
+                        if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(match.Value)))
                         {
                             return false;
                         }
@@ -95,19 +95,19 @@ namespace Metamorphic.Server.Rules
                 }
             }
 
-            if (definition.Trigger == null)
+            if (definition.Signal == null)
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(definition.Trigger.Type) || !doesTriggerTypeExist(definition.Trigger.Type))
+            if (string.IsNullOrEmpty(definition.Signal.Type) || !doesTriggerTypeExist(definition.Signal.Type))
             {
                 return false;
             }
 
-            if (definition.Trigger.Parameters != null)
+            if (definition.Signal.Parameters != null)
             {
-                foreach (var pair in definition.Trigger.Parameters)
+                foreach (var pair in definition.Signal.Parameters)
                 {
                     if (string.IsNullOrEmpty(pair.Value))
                     {
@@ -118,7 +118,7 @@ namespace Metamorphic.Server.Rules
 
             foreach (var criteria in definition.Criteria)
             {
-                if ((definition.Trigger.Parameters == null) || (!definition.Trigger.Parameters.ContainsKey(criteria.Name)))
+                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(criteria.Name)))
                 {
                     return false;
                 }

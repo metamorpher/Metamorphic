@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Sensors;
 using Metamorphic.Core.Signals;
+using Metamorphic.Core.Actions;
 
 namespace Metamorphic.Core.Rules
 {
@@ -19,36 +20,44 @@ namespace Metamorphic.Core.Rules
     public sealed class Rule
     {
         /// <summary>
+        /// The ID of the action that should be executed in response to signals that match the current rule.
+        /// </summary>
+        private readonly ActionId m_Action;
+
+        /// <summary>
+        /// The collection containing the required parameter references.
+        /// </summary>
+        private readonly Dictionary<string, SignalParameterReference> m_References;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Rule"/> class.
         /// </summary>
         /// <param name="signalId">The ID of the sensor from which the signals will originate.</param>
-        /// <param name="parameterCriteria">
-        ///     The criteria that should be applied to the individual parameters in order for the current rule to apply to a signal.
-        /// </param>
+        /// <param name="actionId">The ID of the action that should be executed in response to signals that match the current rule.</param>
         /// <param name="parameterReferences">The parameters that need to be provided for the action to be executable.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="signalId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameterCriteria"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="actionId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterReferences"/> is <see langword="null" />.
         /// </exception>
         public Rule(
             SensorId signalId,
-            IDictionary<string, Predicate<object>> parameterCriteria,
-            IDictionary<string, object> parameterReferences)
+            ActionId actionId,
+            IDictionary<string, SignalParameterReference> parameterReferences)
         {
             {
                 Lokad.Enforce.Argument(() => signalId);
-                Lokad.Enforce.Argument(() => parameterCriteria);
+                Lokad.Enforce.Argument(() => actionId);
                 Lokad.Enforce.Argument(() => parameterReferences);
-
-                // Ensure that all parameters which reference a trigger parameter have a criteria?
             }
 
             Sensor = signalId;
+            m_Action = actionId;
+            m_References = new Dictionary<string, SignalParameterReference>(parameterReferences);
         }
 
         /// <summary>
@@ -72,9 +81,13 @@ namespace Metamorphic.Core.Rules
                 return false;
             }
 
-            // Match the parameters to the criteria and the trigger parameters
-            // Additional parameters are ok, missing parameters are not
-            foobar();
+            foreach (var pair in m_References)
+            {
+                if (!pair.Value.IsValidFor(signal))
+                {
+                    return false;
+                }
+            }
 
             return true;
         }
@@ -94,9 +107,23 @@ namespace Metamorphic.Core.Rules
         /// <returns>The newly created job.</returns>
         public Job ToJob(Signal signal)
         {
+            if (!ShouldProcess(signal))
+            {
+                throw new InvalidSignalForRuleException();
+            }
 
+            var parameters = new Dictionary<string, object>();
+            foreach (var pair in m_References)
+            {
+                // If the given parameter reference points to a signal parameter
+                // then the signal needs to have that parameter and it needs to
+                // match the criteria for that parameter (if they exist)
+                parameters.Add(pair.Key, pair.Value.ValueForParameter(signal));
+            }
 
-            return new Job();
+            return new Job(
+                m_Action,
+                parameters);
         }
     }
 }

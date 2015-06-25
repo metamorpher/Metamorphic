@@ -11,7 +11,7 @@ namespace Metamorphic.Core.Rules
     /// <summary>
     /// Stores information about a trigger in a rule.
     /// </summary>
-    public class TriggerRuleDefinition
+    public class SignalRuleDefinition
     {
         /// <summary>
         /// The collection of parameters for the trigger.

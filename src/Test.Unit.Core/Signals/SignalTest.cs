@@ -4,9 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Metamorphic.Core.Sensors;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework;
 
 namespace Metamorphic.Core.Signals
 {
@@ -18,7 +19,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void Construct()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var signal = new Signal(type, new Dictionary<string, string>());
 
             Assert.AreSame(type, signal.Sensor);
@@ -27,7 +28,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ContainsParameterWithNullString()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -40,7 +41,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ContainsParameterWithEmptyString()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -53,7 +54,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ContainsParameterWithNonExistingParameter()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -66,7 +67,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ContainsParameterWithExistingParameter()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -79,7 +80,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ParameterValueWithNullString()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -92,7 +93,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ParameterValueWithEmptyString()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -105,7 +106,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ParameterValueWithNonExistingParameter()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }
@@ -118,7 +119,7 @@ namespace Metamorphic.Core.Signals
         [Test]
         public void ParameterValueWithExistingParameter()
         {
-            var type = "a";
+            var type = new SensorId("a");
             var parameters = new Dictionary<string, string>
                 {
                     { "a", "b" }

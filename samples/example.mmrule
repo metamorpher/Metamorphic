@@ -3,7 +3,7 @@
     description: "Rule description."
     enabled: true
 
-    trigger:
+    signal:
         type: "signal_type_ref"
         parameters:
             foo: "bar"

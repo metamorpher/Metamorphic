@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Signals
+namespace Metamorphic.Core
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

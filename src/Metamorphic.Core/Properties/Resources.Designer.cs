@@ -70,6 +70,15 @@ namespace Metamorphic.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given signal does not match the current rule..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidSignalForRule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidSignalForRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No parameter with the specified name could be found..
         /// </summary>
         internal static string Exceptions_Messages_ParameterNotFound {

@@ -21,32 +21,27 @@ namespace Metamorphic.Core.Signals
         /// <summary>
         /// The collection that stores the parameters for the signal.
         /// </summary>
-        private readonly IDictionary<string, string> m_Parameters;
+        private readonly IDictionary<string, object> m_Parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Signal"/> class.
         /// </summary>
-        /// <param name="signalType">The type of signal.</param>
+        /// <param name="sensorId">The ID of the sensor that created the current signal.</param>
         /// <param name="parameters">The collection containing the parameters for the signal.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="signalType"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="signalType"/> is an empty string.
+        ///     Thrown if <paramref name="sensorId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameters"/> is <see langword="null" />.
         /// </exception>
-        public Signal(SensorId signalType, IDictionary<string, string> parameters)
+        public Signal(SensorId sensorId, IDictionary<string, object> parameters)
         {
             {
-                Lokad.Enforce.Argument(() => signalType);
-                Lokad.Enforce.Argument(() => signalType, Lokad.Rules.StringIs.NotEmpty);
-
+                Lokad.Enforce.Argument(() => sensorId);
                 Lokad.Enforce.Argument(() => parameters);
             }
 
-            Sensor = signalType;
+            Sensor = sensorId;
             m_Parameters = parameters;
         }
 
@@ -76,7 +71,7 @@ namespace Metamorphic.Core.Signals
         /// <exception cref="ParameterNotFoundException">
         ///     Thrown if <paramref name="name" /> does not exist.
         /// </exception>
-        public string ParameterValue(string name)
+        public object ParameterValue(string name)
         {
             if (!ContainsParameter(name))
             {

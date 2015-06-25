@@ -38,8 +38,8 @@
   <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.props') " />
   <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.props') " />
   <ItemGroup>
-    <Reference Include="Autofac, Version=2.2.4.900, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.2.2.4.900\lib\NET40\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
@@ -70,8 +70,24 @@
       <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.4.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.4.0\lib\20\Mono.Cecil.dll</HintPath>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nuclei, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nuclei.0.8.0\lib\net45\Nuclei.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nuclei.Build, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
@@ -97,11 +113,17 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Actions\ActionIdTest.cs" />
+    <Compile Include="Jobs\JobTest.cs" />
     <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.Company.cs" />
     <Compile Include="Properties\AssemblyInfo.VersionNumber.cs" />
+    <Compile Include="Rules\InvalidRuleDefinitionExceptionTest.cs" />
+    <Compile Include="Rules\InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="Rules\RuleTest.cs" />
-    <Compile Include="Signals\ParameterNotFoundExceptionTest.cs" />
+    <Compile Include="Rules\SignalParameterReferenceTest.cs" />
+    <Compile Include="Sensors\SensorIdTest.cs" />
+    <Compile Include="ParameterNotFoundExceptionTest.cs" />
     <Compile Include="Signals\SignalTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -119,6 +141,7 @@
     <Content Include="nbuildkit.csharp.readme.txt" />
     <Content Include="nbuildkit.readme.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
