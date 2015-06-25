@@ -159,7 +159,7 @@ namespace Metamorphic.Core.Rules
             var job = rule.ToJob(signal);
             Assert.AreSame(actionId, job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
-            Assert.IsTrue(job.HasParameterWithName("a"));
+            Assert.IsTrue(job.ContainsParameter("a"));
             Assert.AreEqual(parameterValue, job.ParameterValue("a"));
         }
 
@@ -220,7 +220,7 @@ namespace Metamorphic.Core.Rules
             var job = rule.ToJob(signal);
             Assert.AreSame(actionId, job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
-            Assert.IsTrue(job.HasParameterWithName("a"));
+            Assert.IsTrue(job.ContainsParameter("a"));
             Assert.AreEqual(parameterValue, job.ParameterValue("a"));
         }
     }

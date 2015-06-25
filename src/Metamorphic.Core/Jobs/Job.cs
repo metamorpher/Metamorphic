@@ -67,7 +67,7 @@ namespace Metamorphic.Core.Jobs
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool HasParameterWithName(string name)
+        public bool ContainsParameter(string name)
         {
             if (name == null)
             {
@@ -93,7 +93,7 @@ namespace Metamorphic.Core.Jobs
         /// <returns>The value for the given parameter with the provided name.</returns>
         public object ParameterValue(string name)
         {
-            if (!HasParameterWithName(name))
+            if (!ContainsParameter(name))
             {
                 throw new ParameterNotFoundException(
                     string.Format(

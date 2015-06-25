@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Metamorphic.Core.Rules;
+using Metamorphic.Core.Sensors;
 using Nuclei.Diagnostics;
 
 namespace Metamorphic.Server.Rules
@@ -30,7 +31,7 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// The collection that maps signal types to rules.
         /// </summary>
-        private readonly Dictionary<string, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<string, List<Rule>>();
+        private readonly Dictionary<SensorId, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<SensorId, List<Rule>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleCollection"/> class.
@@ -102,15 +103,15 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
-        /// <param name="signalType">The type of the signal.</param>
+        /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
         /// <returns></returns>
-        public IEnumerable<Rule> RulesForSignal(string signalType)
+        public IEnumerable<Rule> RulesForSignal(SensorId sensorId)
         {
             lock(m_Lock)
             {
-                if (m_SignalTypeToRuleMap.ContainsKey(signalType))
+                if (m_SignalTypeToRuleMap.ContainsKey(sensorId))
                 {
-                    return new List<Rule>(m_SignalTypeToRuleMap[signalType]);
+                    return new List<Rule>(m_SignalTypeToRuleMap[sensorId]);
                 }
                 else
                 {

@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Metamorphic.Core.Rules;
+using Metamorphic.Core.Sensors;
 
 namespace Metamorphic.Server.Rules
 {
@@ -30,9 +31,9 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
-        /// <param name="signalType">The type of the signal.</param>
+        /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
         /// <returns></returns>
-        IEnumerable<Rule> RulesForSignal(string signalType);
+        IEnumerable<Rule> RulesForSignal(SensorId sensorId);
 
         /// <summary>
         /// Updates an existing <see cref="Rule"/>.
