@@ -57,7 +57,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Description", definition.Description);
             Assert.IsTrue(definition.Enabled);
 
-            Assert.AreEqual(0, definition.Criteria.Count);
+            Assert.AreEqual(0, definition.Condition.Count);
             Assert.AreEqual("Trigger", definition.Trigger.Type);
 
             Assert.AreEqual("Action", definition.Action.Id);

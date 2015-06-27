@@ -25,7 +25,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the parameters for the action.
         /// </summary>
-        public Dictionary<string, string> Parameters
+        public Dictionary<string, object> Parameters
         {
             get;
             set;

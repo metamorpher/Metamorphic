@@ -183,4 +183,7 @@
   <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
     <value>The rule definition at {0} is not valid.</value>
   </data>
+  <data name="Exceptions_Messages_InvalidConditionType" xml:space="preserve">
+    <value>The condition type is not valid.</value>
+  </data>
 </root>

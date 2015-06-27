@@ -18,20 +18,20 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void CreateWithEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new SignalParameterReference(string.Empty));
+            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty));
         }
 
         [Test]
         public void CreateWithNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new SignalParameterReference(null));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null));
         }
 
         [Test]
         public void IsValidForNullSignal()
         {
             var parameterName = "a";
-            var reference = new SignalParameterReference(parameterName);
+            var reference = new ActionParameterValue(parameterName);
             Assert.IsFalse(reference.IsValidFor(null));
         }
 
@@ -41,7 +41,7 @@ namespace Metamorphic.Core.Rules
             var parameterName = "a";
             var parameterValue = "10";
             Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new SignalParameterReference(parameterName, condition: condition);
+            var reference = new ActionParameterValue(parameterName, condition: condition);
 
             var signal = new Signal(
                 new SensorId("b"),
@@ -56,7 +56,7 @@ namespace Metamorphic.Core.Rules
         public void IsValidForSignalWithMatchingParameterValueWithoutCondition()
         {
             var parameterName = "a";
-            var reference = new SignalParameterReference(parameterName);
+            var reference = new ActionParameterValue(parameterName);
 
             var signal = new Signal(
                 new SensorId("b"),
@@ -73,7 +73,7 @@ namespace Metamorphic.Core.Rules
             var parameterName = "a";
             var parameterValue = "11";
             Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new SignalParameterReference(parameterName, condition: condition);
+            var reference = new ActionParameterValue(parameterName, condition: condition);
 
             var signal = new Signal(
                 new SensorId("b"),
@@ -88,7 +88,7 @@ namespace Metamorphic.Core.Rules
         public void IsValidForSignalWithMissingParameter()
         {
             var parameterName = "a";
-            var reference = new SignalParameterReference(parameterName);
+            var reference = new ActionParameterValue(parameterName);
 
             var signal = new Signal(
                 new SensorId("b"),
@@ -101,7 +101,7 @@ namespace Metamorphic.Core.Rules
         {
             var parameterName = "a";
             var parameterValue = 10;
-            var reference = new SignalParameterReference(parameterName, parameterValue: parameterValue);
+            var reference = new ActionParameterValue(parameterName, parameterValue: parameterValue);
 
             var signal = new Signal(
                 new SensorId("b"),
@@ -117,7 +117,7 @@ namespace Metamorphic.Core.Rules
         {
             var parameterName = "a";
             var parameterValue = 10;
-            var reference = new SignalParameterReference(parameterName);
+            var reference = new ActionParameterValue(parameterName);
 
             var signal = new Signal(
                 new SensorId("b"),

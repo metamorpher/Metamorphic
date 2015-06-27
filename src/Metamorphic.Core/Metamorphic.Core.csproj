@@ -119,7 +119,7 @@
     <Compile Include="Rules\InvalidSignalForRuleException.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\RuleDefinition.cs" />
-    <Compile Include="Rules\SignalParameterReference.cs" />
+    <Compile Include="Rules\ActionParameterValue.cs" />
     <Compile Include="Rules\SignalRuleDefinition.cs" />
     <Compile Include="ParameterNotFoundException.cs" />
     <Compile Include="Signals\Signal.cs" />

@@ -25,7 +25,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the criteria that should applied to the trigger.
         /// </summary>
-        public List<ConditionRuleDefinition> Criteria
+        public List<ConditionRuleDefinition> Condition
         {
             get;
             set;

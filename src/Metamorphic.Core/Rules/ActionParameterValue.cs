@@ -14,7 +14,7 @@ namespace Metamorphic.Core.Rules
     /// Defines a reference to a parameter provided by a signal and the conditions
     /// placed on that parameter.
     /// </summary>
-    public sealed class SignalParameterReference
+    public sealed class ActionParameterValue
     {
         /// <summary>
         /// The predicate that will be used if a parameter does not have any conditions on it.
@@ -33,30 +33,78 @@ namespace Metamorphic.Core.Rules
         private readonly string m_Name;
 
         /// <summary>
+        /// The name of the signal parameter that should be used for the action parameter value.
+        /// </summary>
+        private readonly string m_SignalParameter;
+
+        /// <summary>
         /// The value of the parameter. May be null if the value should be taken from the signal.
         /// </summary>
         private readonly object m_Value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignalParameterReference"/> class.
+        /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterValue">
         ///     The value of the parameter. Should be <see langword="null" /> if the value should be taken from the signal.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="parameterName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameterValue"/> is <see langword="null" />.
+        /// </exception>
+        public ActionParameterValue(string parameterName, object parameterValue)
+        {
+            {
+                Lokad.Enforce.Argument(() => parameterName);
+                Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
+
+                Lokad.Enforce.Argument(() => parameterValue);
+            }
+
+            m_Name = parameterName;
+            m_Value = parameterValue;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
+        /// <param name="signalParameter">The name of the signal parameter that should be used as the value.</param>
         /// <param name="condition">
         ///     The predicate used to verify if a given parameter value is allowed for the current
         ///     parameter. If there are no conditions on the parameter then <see langword="null" />
         ///     is allowed.
         /// </param>
-        public SignalParameterReference(string parameterName, object parameterValue = null, Predicate<object> condition = null)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="parameterName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="signalParameter"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="signalParameter"/> is an empty string.
+        /// </exception>
+        public ActionParameterValue(string parameterName, string signalParameter, Predicate<object> condition = null)
         {
             {
                 Lokad.Enforce.Argument(() => parameterName);
                 Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
+
+                Lokad.Enforce.Argument(() => signalParameter);
+                Lokad.Enforce.Argument(() => signalParameter, Lokad.Rules.StringIs.NotEmpty);
             }
 
             m_Name = parameterName;
+            m_SignalParameter = signalParameter;
             m_Condition = condition ?? s_PassThrough;
         }
 
@@ -78,12 +126,17 @@ namespace Metamorphic.Core.Rules
                 return false;
             }
 
-            if (!signal.ContainsParameter(m_Name))
+            if (m_Value != null)
+            {
+                return true;
+            }
+
+            if (!signal.ContainsParameter(m_SignalParameter))
             {
                 return false;
             }
 
-            return m_Condition(signal.ParameterValue(m_Name));
+            return (m_Condition != null) ? m_Condition(signal.ParameterValue(m_SignalParameter)) : true;
         }
 
         /// <summary>
@@ -95,7 +148,12 @@ namespace Metamorphic.Core.Rules
         /// </returns>
         public object ValueForParameter(Signal signal)
         {
-            return m_Value ?? signal.ParameterValue(m_Name);
+            if (!IsValidFor(signal))
+            {
+                throw new InvalidSignalForRuleException();
+            }
+
+            return m_Value ?? signal.ParameterValue(m_SignalParameter);
         }
     }
 }

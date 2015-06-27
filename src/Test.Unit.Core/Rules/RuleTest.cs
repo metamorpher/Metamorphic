@@ -21,7 +21,7 @@ namespace Metamorphic.Core.Rules
         public void CreateWithNullActionId()
         {
             var sensorId = new SensorId("a");
-            var parameters = new Dictionary<string, SignalParameterReference>();
+            var parameters = new Dictionary<string, ActionParameterValue>();
             Assert.Throws<ArgumentNullException>(() => new Rule(sensorId, null, parameters));
         }
 
@@ -37,7 +37,7 @@ namespace Metamorphic.Core.Rules
         public void CreateWithNullSensorId()
         {
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>();
+            var parameters = new Dictionary<string, ActionParameterValue>();
             Assert.Throws<ArgumentNullException>(() => new Rule(null, actionId, parameters));
         }
 
@@ -46,10 +46,10 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
-                ["b"] = new SignalParameterReference("b"),
+                ["a"] = new ActionParameterValue("a"),
+                ["b"] = new ActionParameterValue("b"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -67,9 +67,9 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a", condition:o => false),
+                ["a"] = new ActionParameterValue("a", condition:o => false),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -87,9 +87,9 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
+                ["a"] = new ActionParameterValue("a"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -107,9 +107,9 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
+                ["a"] = new ActionParameterValue("a"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -127,10 +127,10 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
-                ["b"] = new SignalParameterReference("b"),
+                ["a"] = new ActionParameterValue("a"),
+                ["b"] = new ActionParameterValue("b"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -144,9 +144,9 @@ namespace Metamorphic.Core.Rules
             var actionId = new ActionId("b");
 
             var parameterValue = 10;
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a", parameterValue: parameterValue),
+                ["a"] = new ActionParameterValue("a", parameterValue: parameterValue),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -168,9 +168,9 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a", condition: o => false),
+                ["a"] = new ActionParameterValue("a", condition: o => false),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -188,10 +188,10 @@ namespace Metamorphic.Core.Rules
         {
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
-                ["b"] = new SignalParameterReference("b"),
+                ["a"] = new ActionParameterValue("a"),
+                ["b"] = new ActionParameterValue("b"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -204,9 +204,9 @@ namespace Metamorphic.Core.Rules
             var sensorId = new SensorId("a");
             var actionId = new ActionId("b");
 
-            var parameters = new Dictionary<string, SignalParameterReference>
+            var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new SignalParameterReference("a"),
+                ["a"] = new ActionParameterValue("a"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 

@@ -5,11 +5,14 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
+using Metamorphic.Core.Sensors;
 using Metamorphic.Server.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -27,10 +30,42 @@ namespace Metamorphic.Server.Rules
         /// </summary>
         private readonly SystemDiagnostics m_Diagnostics;
 
-        // private readonly Predicate<>
+        /// <summary>
+        /// The predicate that is used to determine if a given <see cref="ActionId"/> exists.
+        /// </summary>
+        private readonly Predicate<string> m_DoesActionIdExist;
 
-        public RuleLoader()
+        /// <summary>
+        /// The predicate that is used to determine if a given <see cref="SensorId"/> exists.
+        /// </summary>
+        private readonly Predicate<string> m_DoesSensorIdExist;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RuleLoader"/> class.
+        /// </summary>
+        /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
+        /// <param name="doesSensorIdExist">The predicate that is used to determine if a given <see cref="SensorId"/> exists.</param>
+        /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="doesSensorIdExist"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public RuleLoader(Predicate<string> doesActionIdExist, Predicate<string> doesSensorIdExist, SystemDiagnostics diagnostics)
         {
+            {
+                Lokad.Enforce.Argument(() => doesActionIdExist);
+                Lokad.Enforce.Argument(() => doesSensorIdExist);
+                Lokad.Enforce.Argument(() => diagnostics);
+            }
+
+            m_DoesActionIdExist = doesActionIdExist;
+            m_DoesSensorIdExist = doesSensorIdExist;
+            m_Diagnostics = diagnostics;
         }
 
         internal RuleDefinition CreateDefinitionFromFile(string filePath)
@@ -55,7 +90,7 @@ namespace Metamorphic.Server.Rules
         internal bool IsValid(
             RuleDefinition definition,
             Predicate<string> doesActionIdExist,
-            Predicate<string> doesTriggerTypeExist)
+            Predicate<string> doesSensorIdExist)
         {
             if (string.IsNullOrEmpty(definition.Name))
             {
@@ -74,22 +109,18 @@ namespace Metamorphic.Server.Rules
 
             if (definition.Action.Parameters != null)
             {
-                // --> Verify that the parameters for the action are correct for the
-                //     action with the given ID
-
                 foreach (var pair in definition.Action.Parameters)
                 {
-                    if (string.IsNullOrEmpty(pair.Value))
+                    var parameterText = pair.Value as string;
+                    if (parameterText != null)
                     {
-                        return false;
-                    }
-
-                    var match = s_TriggerParameterMatcher.Match(pair.Value);
-                    if (match.Success)
-                    {
-                        if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(match.Value)))
+                        var match = s_TriggerParameterMatcher.Match(parameterText);
+                        if (match.Success)
                         {
-                            return false;
+                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(match.Value)))
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -100,7 +131,7 @@ namespace Metamorphic.Server.Rules
                 return false;
             }
 
-            if (string.IsNullOrEmpty(definition.Signal.Type) || !doesTriggerTypeExist(definition.Signal.Type))
+            if (string.IsNullOrEmpty(definition.Signal.Type) || !doesSensorIdExist(definition.Signal.Type))
             {
                 return false;
             }
@@ -116,17 +147,35 @@ namespace Metamorphic.Server.Rules
                 }
             }
 
-            foreach (var criteria in definition.Criteria)
+            foreach (var condition in definition.Condition)
             {
-                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(criteria.Name)))
+                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(condition.Name)))
                 {
                     return false;
                 }
 
-                // criteria type exists
+                if (!IsValidConditionType(condition.Type))
+                {
+                    return false;
+                }
             }
 
             return true;
+        }
+
+        private bool IsValidConditionType(string conditionType)
+        {
+            switch (conditionType)
+            {
+                case "equals" :
+                case "notequals":
+                case "lessthan":
+                case "greaterthan":
+                case "matchregex":
+                case "startswith":
+                case "endswith": return true;
+                default: return false;
+            }
         }
 
         /// <summary>
@@ -137,7 +186,7 @@ namespace Metamorphic.Server.Rules
         public Rule Load(string filePath)
         {
             var definition = CreateDefinitionFromFile(filePath);
-            if (!IsValid(definition))
+            if (!IsValid(definition, m_DoesActionIdExist, m_DoesSensorIdExist))
             {
                 m_Diagnostics.Log(
                     LevelToLog.Warn,
@@ -151,17 +200,90 @@ namespace Metamorphic.Server.Rules
 
             if (definition.Enabled)
             {
-                // Action
-                // Trigger
-                // Conditions
+                var parameters = new Dictionary<string, ActionParameterValue>();
+                foreach (var pair in definition.Action.Parameters)
+                {
+                    ActionParameterValue reference = null;
+
+                    var parameterText = pair.Value as string;
+                    if (parameterText != null)
+                    {
+                        var match = s_TriggerParameterMatcher.Match(parameterText);
+                        if (match.Success)
+                        {
+                            var signalParameterName = match.Value;
+                            var condition = definition.Condition.Find(c => c.Name.Equals(signalParameterName));
+
+                            Predicate<object> pred = null;
+                            if (condition != null)
+                            {
+                                pred = ToCondition(condition);
+                            }
+
+                            reference = new ActionParameterValue(pair.Key, signalParameterName, pred);
+                        }
+                    }
+
+                    if (reference == null)
+                    {
+                        reference = new ActionParameterValue(pair.Key, pair.Value);
+                    }
+                }
 
                 return new Rule(
-                    definition.Name,
-                    definition.Description,
-                    );
+                    new SensorId(definition.Signal.Type),
+                    new ActionId(definition.Action.Id),
+                    parameters);
             }
 
             return null;
+        }
+
+        private Predicate<object> ToCondition(ConditionRuleDefinition condition)
+        {
+            object comparisonValue = condition.Pattern;
+            switch (condition.Type)
+            {
+                case "equals":
+                    return o => o.Equals(comparisonValue);
+                case "notequals":
+                    return o => !o.Equals(comparisonValue);
+                case "lessthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return (comparable.CompareTo(comparisonValue) < 0);
+                    };
+                case "greaterthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return (comparable.CompareTo(comparisonValue) > 0);
+                    };
+                case "matchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern);
+                    };
+                case "startswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.StartsWith(pattern);
+                    };
+                case "endswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.EndsWith(pattern);
+                    };
+                default:
+                    throw new InvalidConditionTypeException();
+            }
         }
     }
 }

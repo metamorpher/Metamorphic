@@ -163,6 +163,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Rules\ILoadRules.cs" />
+    <Compile Include="Rules\InvalidConditionTypeException.cs" />
     <Compile Include="Rules\IStoreRules.cs" />
     <Compile Include="Rules\IWatchRules.cs" />
     <Compile Include="Rules\RuleCollection.cs" />

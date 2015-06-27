@@ -27,7 +27,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// The collection containing the required parameter references.
         /// </summary>
-        private readonly Dictionary<string, SignalParameterReference> m_References;
+        private readonly Dictionary<string, ActionParameterValue> m_References;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Rule"/> class.
@@ -47,7 +47,7 @@ namespace Metamorphic.Core.Rules
         public Rule(
             SensorId signalId,
             ActionId actionId,
-            IDictionary<string, SignalParameterReference> parameterReferences)
+            IDictionary<string, ActionParameterValue> parameterReferences)
         {
             {
                 Lokad.Enforce.Argument(() => signalId);
@@ -57,7 +57,7 @@ namespace Metamorphic.Core.Rules
 
             Sensor = signalId;
             m_Action = actionId;
-            m_References = new Dictionary<string, SignalParameterReference>(parameterReferences);
+            m_References = new Dictionary<string, ActionParameterValue>(parameterReferences);
         }
 
         /// <summary>

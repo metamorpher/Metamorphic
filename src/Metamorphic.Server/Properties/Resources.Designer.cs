@@ -61,6 +61,15 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The condition type is not valid..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidConditionType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidConditionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A required configuration value is missing. The key for the missing configuration value is: {0}.
         /// </summary>
         internal static string Exceptions_Messages_MissingConfigurationValue_WithKey {

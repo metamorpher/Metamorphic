@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Sensors;
@@ -37,6 +38,9 @@ namespace Metamorphic.Server.Rules
         /// Initializes a new instance of the <see cref="RuleCollection"/> class.
         /// </summary>
         /// <param name="diagnostics">The object providing the diagnostics methods for the application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
         internal RuleCollection(SystemDiagnostics diagnostics)
         {
             {
