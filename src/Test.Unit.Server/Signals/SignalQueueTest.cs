@@ -6,19 +6,22 @@
 
 using System;
 using System.Collections.Generic;
-using Metamorphic.Core.Actions;
-using Metamorphic.Core.Jobs;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Metamorphic.Core.Sensors;
+using Metamorphic.Core.Signals;
 using NUnit.Framework;
 
-namespace Metamorphic.Server.Jobs
+namespace Metamorphic.Server.Signals
 {
     [TestFixture]
-    public sealed class JobQueueTest
+    public sealed class SignalQueueTest
     {
         [Test]
         public void DequeueWithEmptyQueue()
         {
-            var queue = new JobQueue();
+            var queue = new SignalQueue();
 
             Assert.IsTrue(queue.IsEmpty);
             Assert.IsNull(queue.Dequeue());
@@ -27,18 +30,18 @@ namespace Metamorphic.Server.Jobs
         [Test]
         public void Enqueue()
         {
-            var job1 = new Job(new ActionId("a"), new Dictionary<string, object>());
-            var job2 = new Job(new ActionId("b"), new Dictionary<string, object>());
-            var queue = new JobQueue();
+            var signal1 = new Signal(new SensorId("a"), new Dictionary<string, object>());
+            var signal2 = new Signal(new SensorId("b"), new Dictionary<string, object>());
+            var queue = new SignalQueue();
 
             Assert.IsTrue(queue.IsEmpty);
             Assert.IsNull(queue.Dequeue());
 
-            queue.Enqueue(job1);
-            queue.Enqueue(job2);
+            queue.Enqueue(signal1);
+            queue.Enqueue(signal2);
             Assert.IsFalse(queue.IsEmpty);
-            Assert.AreSame(job1, queue.Dequeue());
-            Assert.AreSame(job2, queue.Dequeue());
+            Assert.AreSame(signal1, queue.Dequeue());
+            Assert.AreSame(signal2, queue.Dequeue());
 
             Assert.IsTrue(queue.IsEmpty);
         }
@@ -46,14 +49,14 @@ namespace Metamorphic.Server.Jobs
         [Test]
         public void EnqueueWithEmptyQueue()
         {
-            var job = new Job(new ActionId("a"), new Dictionary<string, object>());
-            var queue = new JobQueue();
+            var signal = new Signal(new SensorId("a"), new Dictionary<string, object>());
+            var queue = new SignalQueue();
 
             Assert.IsTrue(queue.IsEmpty);
 
-            queue.Enqueue(job);
+            queue.Enqueue(signal);
             Assert.IsFalse(queue.IsEmpty);
-            Assert.AreSame(job, queue.Dequeue());
+            Assert.AreSame(signal, queue.Dequeue());
 
             Assert.IsTrue(queue.IsEmpty);
         }
@@ -61,7 +64,7 @@ namespace Metamorphic.Server.Jobs
         [Test]
         public void EnqueueWithNullObject()
         {
-            var queue = new JobQueue();
+            var queue = new SignalQueue();
             Assert.Throws<ArgumentNullException>(() => queue.Enqueue(null));
         }
     }

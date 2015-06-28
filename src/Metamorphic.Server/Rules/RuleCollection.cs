@@ -55,10 +55,31 @@ namespace Metamorphic.Server.Rules
         /// </summary>
         /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
         /// <param name="rule">The rule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="rule"/> is <see langword="null" />.
+        /// </exception>
         public void Add(string filePath, Rule rule)
         {
+            {
+                Lokad.Enforce.Argument(() => filePath);
+                Lokad.Enforce.Argument(() => filePath, Lokad.Rules.StringIs.NotEmpty);
+
+                Lokad.Enforce.Argument(() => rule);
+            }
+
             lock (m_Lock)
             {
+                if (m_FileToRuleMap.ContainsKey(filePath))
+                {
+                    throw new RuleAlreadyExistsException();
+                }
+
                 m_FileToRuleMap.Add(filePath, rule);
 
                 if (!m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
@@ -79,6 +100,11 @@ namespace Metamorphic.Server.Rules
         /// <param name="filePath">The full path to the rule file.</param>
         public void Remove(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
             lock(m_Lock)
             {
                 Rule rule = null;
@@ -129,8 +155,24 @@ namespace Metamorphic.Server.Rules
         /// </summary>
         /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
         /// <param name="rule">The rule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="rule"/> is <see langword="null" />.
+        /// </exception>
         public void Update(string filePath, Rule rule)
         {
+            {
+                Lokad.Enforce.Argument(() => filePath);
+                Lokad.Enforce.Argument(() => filePath, Lokad.Rules.StringIs.NotEmpty);
+
+                Lokad.Enforce.Argument(() => rule);
+            }
+
             lock (m_Lock)
             {
                 Rule ruleToReplace = null;

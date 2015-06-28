@@ -16,16 +16,16 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// The collection of parameters for the trigger.
         /// </summary>
-        public Dictionary<string, string> Parameters
+        public Dictionary<string, object> Parameters
         {
             get;
             set;
         }
 
         /// <summary>
-        /// The type of trigger.
+        /// The ID of trigger.
         /// </summary>
-        public string Type
+        public string Id
         {
             get;
             set;

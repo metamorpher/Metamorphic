@@ -3,8 +3,8 @@
     description: "Description"
     enabled: true
 
-    trigger:
-        type: "Trigger"
+    signal:
+        type: "Signal"
 
     action:
         id: "Action"

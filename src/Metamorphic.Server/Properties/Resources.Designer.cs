@@ -79,6 +79,15 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified Rule already exists in the collection..
+        /// </summary>
+        internal static string Exceptions_Messages_RuleAlreadyExists {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_RuleAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The rule definition at {0} is not valid..
         /// </summary>
         internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath {

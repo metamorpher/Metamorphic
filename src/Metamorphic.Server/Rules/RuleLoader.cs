@@ -23,7 +23,7 @@ namespace Metamorphic.Server.Rules
 {
     internal sealed class RuleLoader
     {
-        private static readonly Regex s_TriggerParameterMatcher = new Regex(@"(?:{{trigger.)(.*?)(?:}})", RegexOptions.IgnoreCase);
+        private static readonly Regex s_TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -131,7 +131,7 @@ namespace Metamorphic.Server.Rules
                 return false;
             }
 
-            if (string.IsNullOrEmpty(definition.Signal.Type) || !doesSensorIdExist(definition.Signal.Type))
+            if (string.IsNullOrEmpty(definition.Signal.Id) || !doesSensorIdExist(definition.Signal.Id))
             {
                 return false;
             }
@@ -231,7 +231,7 @@ namespace Metamorphic.Server.Rules
                 }
 
                 return new Rule(
-                    new SensorId(definition.Signal.Type),
+                    new SensorId(definition.Signal.Id),
                     new ActionId(definition.Action.Id),
                     parameters);
             }

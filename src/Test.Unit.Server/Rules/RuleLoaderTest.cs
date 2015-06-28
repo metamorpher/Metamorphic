@@ -11,6 +11,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Rules;
+using Nuclei.Diagnostics;
 using NUnit.Framework;
 
 namespace Metamorphic.Server.Rules
@@ -19,38 +22,208 @@ namespace Metamorphic.Server.Rules
     public sealed class RuleLoaderTest
     {
         public void IsValidWithActionWithInvalidId()
-        { }
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
 
-        public void IsValidWithActionWithInvalidTriggerParameterReference()
-        { }
+            var definition = new RuleDefinition
+                {
+                    Name = "a",
+                    Action = new ActionRuleDefinition
+                        {
+                            Id = "b",
+                            Parameters = new Dictionary<string, object>(),
+                        },
+                    Condition = new List<ConditionRuleDefinition>(),
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                        {
+                            Id = "c",
+                            Parameters = new Dictionary<string, object>(),
+                        }
+                };
+            Assert.IsFalse(loader.IsValid(definition, s => false, s => true));
+        }
 
-        public void IsValidWithCriteriaWithIncorrectName()
-        { }
+        public void IsValidWithActionWithInvalidSignalParameterReference()
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
 
-        public void IsValidWithCriteriaWithInvalidType()
+            var definition = new RuleDefinition
+            {
+                Name = "a",
+                Action = new ActionRuleDefinition
+                {
+                    Id = "b",
+                    Parameters = new Dictionary<string, object>
+                    {
+                        ["c"] = "{{signal.d}}"
+                    },
+                },
+                Condition = new List<ConditionRuleDefinition>(),
+                Enabled = true,
+                Signal = new SignalRuleDefinition
+                {
+                    Id = "d",
+                    Parameters = new Dictionary<string, object>
+                    {
+                        ["e"] = "f"
+                    },
+                }
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+        }
+
+        public void IsValidWithConditionWithIncorrectName()
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+
+            var definition = new RuleDefinition
+            {
+                Name = "a",
+                Action = new ActionRuleDefinition
+                {
+                    Id = "b",
+                    Parameters = new Dictionary<string, object>(),
+                },
+                Condition = new List<ConditionRuleDefinition>
+                {
+                    new ConditionRuleDefinition
+                    {
+                        Name = "c",
+                        Pattern = "d",
+                        Type
+                    },
+                },
+                Enabled = true,
+                Signal = new SignalRuleDefinition
+                {
+                    Id = "c",
+                    Parameters = new Dictionary<string, object>(),
+                }
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+        }
+
+        public void IsValidWithConditionWithInvalidType()
         { }
 
         public void IsValidWithMissingAction()
-        { }
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+
+            var definition = new RuleDefinition
+            {
+                Name = "a",
+                Action = null,
+                Condition = new List<ConditionRuleDefinition>(),
+                Enabled = true,
+                Signal = new SignalRuleDefinition
+                {
+                    Id = "c",
+                    Parameters = new Dictionary<string, object>(),
+                }
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+        }
 
         public void IsValidWithMissingName()
-        { }
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
 
-        public void IsValidWithMissingTrigger()
-        { }
+            var definition = new RuleDefinition
+            {
+                Name = string.Empty,
+                Action = new ActionRuleDefinition
+                {
+                    Id = "b",
+                    Parameters = new Dictionary<string, object>(),
+                },
+                Condition = new List<ConditionRuleDefinition>(),
+                Enabled = true,
+                Signal = new SignalRuleDefinition
+                {
+                    Id = "c",
+                    Parameters = new Dictionary<string, object>(),
+                }
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+        }
 
-        public void IsValidWithTriggerWithInvalidType()
-        { }
+        public void IsValidWithMissingSignal()
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
 
-        public void IsValidWithTriggerWithPartialParameters()
+            var definition = new RuleDefinition
+            {
+                Name = "a",
+                Action = new ActionRuleDefinition
+                {
+                    Id = "b",
+                    Parameters = new Dictionary<string, object>(),
+                },
+                Condition = new List<ConditionRuleDefinition>(),
+                Enabled = true,
+                Signal = null
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+        }
+
+        public void IsValidWithSignalWithInvalidType()
+        {
+            var loader = new RuleLoader(
+                s => false,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+
+            var definition = new RuleDefinition
+            {
+                Name = "a",
+                Action = new ActionRuleDefinition
+                {
+                    Id = "b",
+                    Parameters = new Dictionary<string, object>(),
+                },
+                Condition = new List<ConditionRuleDefinition>(),
+                Enabled = true,
+                Signal = new SignalRuleDefinition
+                {
+                    Id = "c",
+                    Parameters = new Dictionary<string, object>(),
+                }
+            };
+            Assert.IsFalse(loader.IsValid(definition, s => true, s => false));
+        }
+
+        public void IsValidWithSignalWithPartialParameters()
         { }
 
         [Test]
         public void LoadRuleWithActionWithParameters()
         {
-            var fileName = "ActionWithParameters.mmrule";
+            var fileName = "Valid_ActionWithParameters.mmrule";
 
-            var loader = new RuleLoader();
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
@@ -58,7 +231,7 @@ namespace Metamorphic.Server.Rules
             Assert.IsTrue(definition.Enabled);
 
             Assert.AreEqual(0, definition.Condition.Count);
-            Assert.AreEqual("Trigger", definition.Trigger.Type);
+            Assert.AreEqual("Signal", definition.Signal.Id);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);

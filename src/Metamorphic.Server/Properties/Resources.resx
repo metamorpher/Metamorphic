@@ -186,4 +186,7 @@
   <data name="Exceptions_Messages_InvalidConditionType" xml:space="preserve">
     <value>The condition type is not valid.</value>
   </data>
+  <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
+    <value>The specified Rule already exists in the collection.</value>
+  </data>
 </root>

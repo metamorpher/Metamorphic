@@ -121,7 +121,7 @@
     <Compile Include="Rules\InvalidRuleDefinitionExceptionTest.cs" />
     <Compile Include="Rules\InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="Rules\RuleTest.cs" />
-    <Compile Include="Rules\SignalParameterReferenceTest.cs" />
+    <Compile Include="Rules\ActionParameterValueTest.cs" />
     <Compile Include="Sensors\SensorIdTest.cs" />
     <Compile Include="ParameterNotFoundExceptionTest.cs" />
     <Compile Include="Signals\SignalTest.cs" />
