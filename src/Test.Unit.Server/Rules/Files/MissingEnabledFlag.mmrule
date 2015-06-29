@@ -1,0 +1,19 @@
+﻿---
+    name: "Name"
+    description: "Description."
+
+    signal:
+        type: "Signal"
+        parameters:
+            foo: "bar"
+
+    condition:
+        - name: "foo"
+          type: "equals"
+          pattern : "bar"
+
+    action:
+        id: "Action"
+        parameters:
+            foo: "bar"
+            baz: "{{signal.foo}}"

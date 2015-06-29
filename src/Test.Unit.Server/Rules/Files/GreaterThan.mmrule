@@ -1,0 +1,19 @@
+﻿---
+    name: "rule_name"
+    description: "Rule description."
+    enabled: true
+
+    signal:
+        type: "Signal"
+        parameters:
+            bar: "stuff"
+
+    condition:
+        - name: "bar"
+          type: "greaterthan"
+          pattern : 10
+
+    action:
+        id: "Action"
+        parameters:
+            foo: "bar"

@@ -160,9 +160,25 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Rules\Files\ActionWithoutReference.mmrule" />
     <None Include="Rules\Files\ActionWithParameters.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Rules\Files\ActionWithParametersReferencingSignal.mmrule" />
+    <None Include="Rules\Files\ConditionWithoutName.mmrule" />
+    <None Include="Rules\Files\ConditionWithoutPattern.mmrule" />
+    <None Include="Rules\Files\ConditionWithoutType.mmrule" />
+    <None Include="Rules\Files\EmptyFile.mmrule" />
+    <None Include="Rules\Files\EndsWithCondition.mmrule" />
+    <None Include="Rules\Files\EqualsCondition.mmrule" />
+    <None Include="Rules\Files\GreaterThan.mmrule" />
+    <None Include="Rules\Files\LessThan.mmrule" />
+    <None Include="Rules\Files\MatchRegexCondition.mmrule" />
+    <None Include="Rules\Files\MissingDescription.mmrule" />
+    <None Include="Rules\Files\MissingEnabledFlag.mmrule" />
+    <None Include="Rules\Files\MissingName.mmrule" />
+    <None Include="Rules\Files\NotEqualsCondition.mmrule" />
+    <None Include="Rules\Files\NotMatchRegexCondition.mmrule" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

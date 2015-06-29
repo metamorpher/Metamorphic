@@ -140,7 +140,7 @@ namespace Metamorphic.Server.Rules
             {
                 foreach (var pair in definition.Signal.Parameters)
                 {
-                    if (string.IsNullOrEmpty(pair.Value))
+                    if (pair.Value == null)
                     {
                         return false;
                     }
@@ -172,6 +172,7 @@ namespace Metamorphic.Server.Rules
                 case "lessthan":
                 case "greaterthan":
                 case "matchregex":
+                case "notmatchregex":
                 case "startswith":
                 case "endswith": return true;
                 default: return false;
@@ -266,6 +267,13 @@ namespace Metamorphic.Server.Rules
                         var text = o as string;
                         var pattern = comparisonValue as string;
                         return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern);
+                    };
+                case "notmatchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern);
                     };
                 case "startswith":
                     return o =>
