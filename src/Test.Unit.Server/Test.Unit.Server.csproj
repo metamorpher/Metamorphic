@@ -34,9 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.props') " />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.props') " />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.props') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.props') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.net.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.net.props') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/csharp.props" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/csharp.props') " />
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
@@ -154,10 +154,6 @@
     <Compile Include="Signals\SignalQueueTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="nbuildkit.csharp.readme.txt" />
-    <Content Include="nbuildkit.readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Rules\Files\ActionWithoutReference.mmrule" />
@@ -192,7 +188,10 @@
     <None Include="Rules\Files\RuleWithStartsWithCondition.mmrule" />
     <None Include="Rules\Files\SignalWithoutId.mmrule" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="nbuildkit.csharp.readme.txt" />
+    <Content Include="nbuildkit.readme.txt" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>
@@ -223,9 +222,9 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.targets') " />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/common.net.targets') " />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.2/build/csharp.targets') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.targets') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.net.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/common.net.targets') " />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/csharp.targets" Condition=" Exists('../../packages/nBuildKit.MsBuild.Projects.CSharp.0.5.5/build/csharp.targets') " />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
