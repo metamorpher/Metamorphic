@@ -174,11 +174,23 @@
     <None Include="Rules\Files\GreaterThan.mmrule" />
     <None Include="Rules\Files\LessThan.mmrule" />
     <None Include="Rules\Files\MatchRegexCondition.mmrule" />
+    <None Include="Rules\Files\MissingAction.mmrule" />
     <None Include="Rules\Files\MissingDescription.mmrule" />
     <None Include="Rules\Files\MissingEnabledFlag.mmrule" />
     <None Include="Rules\Files\MissingName.mmrule" />
+    <None Include="Rules\Files\MissingSignal.mmrule" />
     <None Include="Rules\Files\NotEqualsCondition.mmrule" />
     <None Include="Rules\Files\NotMatchRegexCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithEndsWithCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithEqualsCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithGreaterThanCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithLessThanCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithMatchRegexCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithNotEqualsCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithNotMatchRegexCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithoutCondition.mmrule" />
+    <None Include="Rules\Files\RuleWithStartsWithCondition.mmrule" />
+    <None Include="Rules\Files\SignalWithoutId.mmrule" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

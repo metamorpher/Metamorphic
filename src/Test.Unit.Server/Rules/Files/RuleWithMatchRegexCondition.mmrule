@@ -1,0 +1,19 @@
+﻿---
+    name: "Name"
+    description: "Description."
+    enabled: true
+
+    signal:
+        type: "Signal"
+        parameters:
+            foo: "some_stuff"
+
+    condition:
+        - name: "foo"
+          type: "matchregex"
+          pattern : ".*(bar).*"
+
+    action:
+        id: "Action"
+        parameters:
+            bar: "{{signal.foo}}"

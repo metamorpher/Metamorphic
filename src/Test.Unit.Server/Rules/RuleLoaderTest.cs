@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
+using Metamorphic.Core.Sensors;
+using Metamorphic.Core.Signals;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
 
@@ -662,22 +664,265 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void LoadWithoutAction()
         {
+            var fileName = "MissingAction.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNull(rule);
         }
 
         [Test]
-        public void LoadWithoutTrigger()
+        public void LoadWithoutSignal()
         {
+            var fileName = "MissingSignal.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNull(rule);
         }
 
         [Test]
-        public void LoadWithTriggerWithoutType()
+        public void LoadWithSignalWithoutId()
         {
+            var fileName = "SignalWithoutId.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNull(rule);
         }
 
         [Test]
-        public void Load()
+        public void LoadRuleWithoutCondition()
         {
-            foobar();
+            var fileName = "RuleWithoutCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = 10;
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithEndsWithCondition()
+        {
+            var fileName = "RuleWithEndsWithCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = "some_bar";
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithEqualsCondition()
+        {
+            var fileName = "RuleWithEqualsCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = 10;
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithGreaterThanCondition()
+        {
+            var fileName = "RuleWithGreaterThanCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = 10;
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithLessThanCondition()
+        {
+            var fileName = "RuleWithLessThanCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = 10;
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithMatchRegexCondition()
+        {
+            var fileName = "RuleWithMatchRegexCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = "bar_some";
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithNotEqualsCondition()
+        {
+            var fileName = "RuleWithNotEqualsCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = 10;
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithNotMatchRegexCondition()
+        {
+            var fileName = "RuleWithNotMatchRegexCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = "some_stuff";
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithStartsWithCondition()
+        {
+            var fileName = "RuleWithStartsWithCondition.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+
+            var parameterValue = "bar_some";
+            var signal = new Signal(
+                new SensorId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["foo"] = parameterValue,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("bar"));
+            Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
         }
 
         private static string RulePath()
