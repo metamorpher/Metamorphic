@@ -1,9 +1,9 @@
 ﻿---
     name: "Name"
-    description: "Description."
+    description: "Description"
 
     signal:
-        type: "Signal"
+        id: "Signal"
         parameters:
             foo: "bar"
 

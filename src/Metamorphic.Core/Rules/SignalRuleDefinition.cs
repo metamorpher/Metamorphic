@@ -14,6 +14,14 @@ namespace Metamorphic.Core.Rules
     public class SignalRuleDefinition
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SignalRuleDefinition"/> class.
+        /// </summary>
+        public SignalRuleDefinition()
+        {
+            Parameters = new Dictionary<string, object>();
+        }
+
+        /// <summary>
         /// The collection of parameters for the trigger.
         /// </summary>
         public Dictionary<string, object> Parameters

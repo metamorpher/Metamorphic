@@ -14,6 +14,14 @@ namespace Metamorphic.Core.Rules
     public class ActionRuleDefinition
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ActionRuleDefinition"/> class.
+        /// </summary>
+        public ActionRuleDefinition()
+        {
+            Parameters = new Dictionary<string, object>();
+        }
+
+        /// <summary>
         /// Gets or sets the ID of the action that should be executed.
         /// </summary>
         public string Id

@@ -48,8 +48,8 @@ namespace Metamorphic.Core.Rules
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 1),
-                ["b"] = new ActionParameterValue("b", 2),
+                ["a"] = new ActionParameterValue("a", "a"),
+                ["b"] = new ActionParameterValue("b", "b"),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 

@@ -14,6 +14,14 @@ namespace Metamorphic.Core.Rules
     public class RuleDefinition
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RuleDefinition"/> class.
+        /// </summary>
+        public RuleDefinition()
+        {
+            Condition = new List<ConditionRuleDefinition>();
+        }
+
+        /// <summary>
         /// Gets or sets the action for the rule.
         /// </summary>
         public ActionRuleDefinition Action

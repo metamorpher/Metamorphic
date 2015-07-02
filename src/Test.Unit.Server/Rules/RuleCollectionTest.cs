@@ -57,7 +57,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule, matchingRules.First());
 
-            var path2 = "d";
+            var path2 = "a";
             var rule2 = new Rule(sensor, new ActionId("e"), new Dictionary<string, ActionParameterValue>());
             Assert.Throws<RuleAlreadyExistsException>(() => collection.Add(path2, rule2));
         }

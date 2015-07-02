@@ -1,16 +1,16 @@
 ﻿---
-    name: "rule_name"
-    description: "Rule description."
+    name: "Name"
+    description: "Description"
     enabled: true
 
     signal:
-        type: "Signal"
+        id: "Signal"
         parameters:
             bar: "stuff"
 
     condition:
         - name: "bar"
-          type: "lessthan"
+          type: "greaterthan"
           pattern : 10
 
     action:

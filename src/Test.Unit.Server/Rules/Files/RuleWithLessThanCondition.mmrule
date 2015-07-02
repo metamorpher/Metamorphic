@@ -1,10 +1,10 @@
 ﻿---
     name: "Name"
-    description: "Description."
+    description: "Description"
     enabled: true
 
     signal:
-        type: "Signal"
+        id: "Signal"
         parameters:
             foo: 20
 

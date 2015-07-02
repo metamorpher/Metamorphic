@@ -72,7 +72,7 @@ namespace Metamorphic.Server.Rules
         {
             using (var input = new StreamReader(filePath))
             {
-                var deserializer = new Deserializer(namingConvention: new PascalCaseNamingConvention());
+                var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
                 var definition = deserializer.Deserialize<RuleDefinition>(input);
 
                 return definition;

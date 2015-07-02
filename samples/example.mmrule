@@ -4,7 +4,7 @@
     enabled: true
 
     signal:
-        type: "signal_type_ref"
+        id: "signal_type_ref"
         parameters:
             foo: "bar"
             baz: "otherBar"

@@ -123,7 +123,7 @@ namespace Metamorphic.Core.Rules
             var signal = new Signal(
                 new SensorId("b"),
                 new Dictionary<string, object>());
-            Assert.IsTrue(reference.IsValidFor(signal));
+            Assert.IsFalse(reference.IsValidFor(signal));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace Metamorphic.Core.Rules
                 {
                     { parameterName, "100" }
                 });
-            Assert.AreSame(parameterValue, reference.ValueForParameter(signal));
+            Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace Metamorphic.Core.Rules
                 {
                     { parameterName, parameterValue }
                 });
-            Assert.AreSame(parameterValue, reference.ValueForParameter(signal));
+            Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
         }
     }
 }

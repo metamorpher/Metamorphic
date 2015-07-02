@@ -3,7 +3,7 @@
     enabled: true
 
     signal:
-        type: "Signal"
+        id: "Signal"
         parameters:
             foo: "bar"
 
