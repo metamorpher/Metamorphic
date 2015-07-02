@@ -73,6 +73,7 @@ namespace Metamorphic.Server.Rules
             using (var input = new StreamReader(filePath))
             {
                 var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+                deserializer.TypeResolvers.Add(new ScalarYamlNodeTypeResolver());
                 var definition = deserializer.Deserialize<RuleDefinition>(input);
 
                 return definition;
@@ -117,7 +118,10 @@ namespace Metamorphic.Server.Rules
                         var match = s_TriggerParameterMatcher.Match(parameterText);
                         if (match.Success)
                         {
-                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(match.Value)))
+                            // The name of the parameter is in the first match group. The first item in the groups collection
+                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
+                            var signalParameterName = match.Groups[1].Value;
+                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
                             {
                                 return false;
                             }
@@ -212,7 +216,9 @@ namespace Metamorphic.Server.Rules
                         var match = s_TriggerParameterMatcher.Match(parameterText);
                         if (match.Success)
                         {
-                            var signalParameterName = match.Value;
+                            // The name of the parameter is in the first match group. The first item in the groups collection
+                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
+                            var signalParameterName = match.Groups[1].Value;
                             var condition = definition.Condition.Find(c => c.Name.Equals(signalParameterName));
 
                             Predicate<object> pred = null;
@@ -229,6 +235,8 @@ namespace Metamorphic.Server.Rules
                     {
                         reference = new ActionParameterValue(pair.Key, pair.Value);
                     }
+
+                    parameters.Add(pair.Key, reference);
                 }
 
                 return new Rule(

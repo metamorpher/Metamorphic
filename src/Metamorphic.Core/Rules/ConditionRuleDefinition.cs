@@ -23,7 +23,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the pattern to compare with.
         /// </summary>
-        public string Pattern
+        public object Pattern
         {
             get;
             set;

@@ -67,7 +67,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -98,7 +98,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -129,7 +129,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -160,7 +160,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -191,7 +191,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -222,7 +222,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -253,7 +253,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -284,7 +284,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
             Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
-            Assert.AreEqual("stuff", definition.Action.Parameters["bar"]);
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
 
             Assert.AreEqual("Action", definition.Action.Id);
             Assert.AreEqual(1, definition.Action.Parameters.Count);
@@ -710,6 +710,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = 10;
             var signal = new Signal(
@@ -719,7 +720,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -735,6 +736,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = "some_bar";
             var signal = new Signal(
@@ -744,7 +746,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -760,6 +762,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = 10;
             var signal = new Signal(
@@ -769,7 +772,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -785,6 +788,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = 10;
             var signal = new Signal(
@@ -794,7 +798,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -810,6 +814,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = 10;
             var signal = new Signal(
@@ -819,7 +824,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -835,6 +840,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = "bar_some";
             var signal = new Signal(
@@ -844,7 +850,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -860,6 +866,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = 10;
             var signal = new Signal(
@@ -869,7 +876,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -885,6 +892,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = "some_stuff";
             var signal = new Signal(
@@ -894,7 +902,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
@@ -910,6 +918,7 @@ namespace Metamorphic.Server.Rules
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
 
             var parameterValue = "bar_some";
             var signal = new Signal(
@@ -919,7 +928,7 @@ namespace Metamorphic.Server.Rules
                     ["foo"] = parameterValue,
                 });
             var job = rule.ToJob(signal);
-            Assert.AreSame(new ActionId("Action"), job.Action);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));

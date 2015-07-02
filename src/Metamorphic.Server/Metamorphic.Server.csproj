@@ -170,6 +170,7 @@
     <Compile Include="Rules\RuleCollection.cs" />
     <Compile Include="Rules\RuleLoader.cs" />
     <Compile Include="Rules\RuleWatcher.cs" />
+    <Compile Include="Rules\ScalarYamlNodeTypeResolver.cs" />
     <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
