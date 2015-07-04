@@ -93,41 +93,14 @@ namespace Metamorphic.Server.Rules
             Predicate<string> doesActionIdExist,
             Predicate<string> doesSensorIdExist)
         {
+            if (definition == null)
+            {
+                return false;
+            }
+
             if (string.IsNullOrEmpty(definition.Name))
             {
                 return false;
-            }
-
-            if (definition.Action == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(definition.Action.Id) || !doesActionIdExist(definition.Action.Id))
-            {
-                return false;
-            }
-
-            if (definition.Action.Parameters != null)
-            {
-                foreach (var pair in definition.Action.Parameters)
-                {
-                    var parameterText = pair.Value as string;
-                    if (parameterText != null)
-                    {
-                        var match = s_TriggerParameterMatcher.Match(parameterText);
-                        if (match.Success)
-                        {
-                            // The name of the parameter is in the first match group. The first item in the groups collection
-                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
-                            var signalParameterName = match.Groups[1].Value;
-                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
             }
 
             if (definition.Signal == null)
@@ -162,6 +135,43 @@ namespace Metamorphic.Server.Rules
                 {
                     return false;
                 }
+
+                if (condition.Pattern == null)
+                {
+                    return false;
+                }
+            }
+
+            if (definition.Action == null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(definition.Action.Id) || !doesActionIdExist(definition.Action.Id))
+            {
+                return false;
+            }
+
+            if (definition.Action.Parameters != null)
+            {
+                foreach (var pair in definition.Action.Parameters)
+                {
+                    var parameterText = pair.Value as string;
+                    if (parameterText != null)
+                    {
+                        var match = s_TriggerParameterMatcher.Match(parameterText);
+                        if (match.Success)
+                        {
+                            // The name of the parameter is in the first match group. The first item in the groups collection
+                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
+                            var signalParameterName = match.Groups[1].Value;
+                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
 
             return true;
@@ -190,6 +200,16 @@ namespace Metamorphic.Server.Rules
         /// <returns>A newly created rule instance.</returns>
         public Rule Load(string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return null;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
+
             var definition = CreateDefinitionFromFile(filePath);
             if (!IsValid(definition, m_DoesActionIdExist, m_DoesSensorIdExist))
             {

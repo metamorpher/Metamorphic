@@ -24,7 +24,7 @@ namespace Metamorphic.Server.Rules
     {
         bool INodeTypeResolver.Resolve(NodeEvent nodeEvent, ref Type currentType)
         {
-            if (currentType == typeof(string))
+            if (currentType == typeof(object))
             {
                 var scalar = nodeEvent as Scalar;
                 if ((scalar != null) && (scalar.Style == ScalarStyle.Plain))

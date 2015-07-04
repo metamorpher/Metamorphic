@@ -612,19 +612,6 @@ namespace Metamorphic.Server.Rules
         }
 
         [Test]
-        public void LoadWithMissingRuleDescription()
-        {
-            var fileName = "MissingDescription.mmrule";
-
-            var loader = new RuleLoader(
-                s => true,
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var rule = loader.Load(Path.Combine(RulePath(), fileName));
-            Assert.IsNull(rule);
-        }
-
-        [Test]
         public void LoadWithMissingRuleName()
         {
             var fileName = "MissingName.mmrule";
