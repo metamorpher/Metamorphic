@@ -79,6 +79,24 @@ namespace Metamorphic.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A parameter required for the action invocation was missing..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingActionParameter {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingActionParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The parameter &apos;{0}&apos; required for the action invocation was missing..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingActionParameter_WithParameterName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingActionParameter_WithParameterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No parameter with the specified name could be found..
         /// </summary>
         internal static string Exceptions_Messages_ParameterNotFound {

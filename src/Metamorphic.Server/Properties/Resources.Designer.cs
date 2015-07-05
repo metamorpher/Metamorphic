@@ -88,6 +88,114 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cleaning up worker thread..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_CleaningUpWorker {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_CleaningUpWorker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new job was added to the queue, but the processing of jobs is turned off. Job will not be processed..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New item in job queue. Starting processing thread..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_NewItemInQueue_StartingThread {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_NewItemInQueue_StartingThread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new job was added to the queue. The processing thread is already running. Job should be processed shortly..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure while processing jobs. Action with ID {0} could not be found..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job parameter: Name = {0}; Value = {1}.
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_ProcessJob_ForParameters {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_ProcessJob_ForParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing job with ID: {0}.
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_ProcessJob_WithId {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_ProcessJob_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure while processing job with ID {0}. Error was: {0}..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_ProcessJobFailed_WithId_WithException {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_ProcessJobFailed_WithId_WithException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure while processing jobs. Error was: {0}..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_ProcessJobsFailed_WithException {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_ProcessJobsFailed_WithException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job queue empty. Stopping job processing..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_QueueEmpty {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_QueueEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting job processing..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_StartingJobProcessing {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_StartingJobProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopping processing..
+        /// </summary>
+        internal static string Log_Messages_JobProcessor_StoppingProcessing {
+            get {
+                return ResourceManager.GetString("Log_Messages_JobProcessor_StoppingProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The rule definition at {0} is not valid..
         /// </summary>
         internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath {

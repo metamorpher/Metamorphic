@@ -103,7 +103,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ActionDefinition.cs" />
     <Compile Include="Actions\ActionId.cs" />
+    <Compile Include="Actions\ActionParameterDefinition.cs" />
+    <Compile Include="Actions\ActionParameterValueMap.cs" />
+    <Compile Include="Actions\MissingActionParameterException.cs" />
     <Compile Include="ApplicationConstants.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="Jobs\Job.cs" />

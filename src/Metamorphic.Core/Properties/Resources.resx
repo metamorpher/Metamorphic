@@ -123,6 +123,12 @@
   <data name="Exceptions_Messages_InvalidSignalForRule" xml:space="preserve">
     <value>The given signal does not match the current rule.</value>
   </data>
+  <data name="Exceptions_Messages_MissingActionParameter" xml:space="preserve">
+    <value>A parameter required for the action invocation was missing.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingActionParameter_WithParameterName" xml:space="preserve">
+    <value>The parameter '{0}' required for the action invocation was missing.</value>
+  </data>
   <data name="Exceptions_Messages_ParameterNotFound" xml:space="preserve">
     <value>No parameter with the specified name could be found.</value>
   </data>

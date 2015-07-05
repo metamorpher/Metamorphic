@@ -1139,10 +1139,10 @@
         -->
         <FxCopFiles Include="$(DirBuildBinPlatformConfig)\Metamorphic*.dll"
                     Exclude="$(DirBuildBinPlatformConfig)\Test.*.dll">
-            <Group>.NET 4.5</Group>
+            <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
         <FxCopFiles Include="$(DirBuildBinPlatformConfig)\Metamorphic*.exe">
-            <Group>.NET 4.5</Group>
+            <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
 
         <!--

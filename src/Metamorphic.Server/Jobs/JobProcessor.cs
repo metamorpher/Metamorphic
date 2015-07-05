@@ -8,18 +8,22 @@ using System;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Metamorphic.Core.Signals;
-using Metamorphic.Server.Jobs;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Jobs;
+using Metamorphic.Server.Actions;
 using Metamorphic.Server.Properties;
-using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Metamorphic.Server
+namespace Metamorphic.Server.Jobs
 {
-    internal sealed class SignalProcessor : IProcessSignals, IDisposable
+    internal sealed class JobProcessor : IProcessJobs, IDisposable
     {
+        /// <summary>
+        /// The collection that contains all the actions for the application.
+        /// </summary>
+        private readonly IStoreActions m_ActionStorage;
+
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
@@ -34,16 +38,6 @@ namespace Metamorphic.Server
         /// The object used to lock on.
         /// </summary>
         private readonly object m_Lock = new object();
-
-        /// <summary>
-        /// The collection containing all the rules.
-        /// </summary>
-        private readonly IStoreRules m_RuleCollection;
-
-        /// <summary>
-        /// The queue that stores the location of the non-processed packages.
-        /// </summary>
-        private readonly IQueueSignals m_SignalQueue;
 
         /// <summary>
         /// The cancellation source that is used to cancel the worker task.
@@ -61,42 +55,35 @@ namespace Metamorphic.Server
         private Task m_Worker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
+        /// Initializes a new instance of the <see cref="JobProcessor"/> class.
         /// </summary>
+        /// <param name="actions">The collection that stores all the actions known to the application.</param>
         /// <param name="jobQueue">The object that queues jobs that need to be processed.</param>
-        /// <param name="ruleCollection">The object that stores all the known rules for the application.</param>
-        /// <param name="signalQueue">The object that queues signals that need to be processed.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="actions"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="jobQueue"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="ruleCollection"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="signalQueue"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public SignalProcessor(
+        public JobProcessor(
+            IStoreActions actions,
             IQueueJobs jobQueue,
-            IStoreRules ruleCollection,
-            IQueueSignals signalQueue,
             SystemDiagnostics diagnostics)
         {
             {
+                Lokad.Enforce.Argument(() => actions);
                 Lokad.Enforce.Argument(() => jobQueue);
-                Lokad.Enforce.Argument(() => ruleCollection);
-                Lokad.Enforce.Argument(() => signalQueue);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
+            m_ActionStorage = actions;
             m_Diagnostics = diagnostics;
             m_JobQueue = jobQueue;
-            m_RuleCollection = ruleCollection;
-            m_SignalQueue = signalQueue;
-            m_SignalQueue.OnEnqueue += HandleOnEnqueue;
+            m_JobQueue.OnEnqueue += HandleOnEnqueue;
         }
 
         private void CleanUpWorkerTask()
@@ -105,7 +92,7 @@ namespace Metamorphic.Server
             {
                 m_Diagnostics.Log(
                     LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_CleaningUpWorker);
+                    Resources.Log_Messages_JobProcessor_CleaningUpWorker);
 
                 m_CancellationSource = null;
                 m_Worker = null;
@@ -117,8 +104,7 @@ namespace Metamorphic.Server
         /// </summary>
         public void Dispose()
         {
-            var task = Stop(false);
-            task.Wait();
+            throw new NotImplementedException();
         }
 
         private void HandleOnEnqueue(object sender, EventArgs e)
@@ -129,7 +115,7 @@ namespace Metamorphic.Server
                 {
                     m_Diagnostics.Log(
                         LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted);
+                        Resources.Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted);
 
                     return;
                 }
@@ -138,45 +124,45 @@ namespace Metamorphic.Server
                 {
                     m_Diagnostics.Log(
                         LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists);
+                        Resources.Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists);
 
                     return;
                 }
 
                 m_Diagnostics.Log(
                     LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_NewItemInQueue_StartingThread);
+                    Resources.Log_Messages_JobProcessor_NewItemInQueue_StartingThread);
 
                 m_CancellationSource = new CancellationTokenSource();
                 m_Worker = Task.Factory.StartNew(
-                    () => ProcessSignals(m_CancellationSource.Token),
+                    () => ProcessJobs(m_CancellationSource.Token),
                     m_CancellationSource.Token,
                     TaskCreationOptions.LongRunning,
                     TaskScheduler.Default);
             }
         }
 
-        private void ProcessSignals(CancellationToken token)
+        private void ProcessJobs(CancellationToken token)
         {
             try
             {
-                m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_StartingSignalProcessing);
+                m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_StartingJobProcessing);
 
                 while (!token.IsCancellationRequested)
                 {
-                    if (m_SignalQueue.IsEmpty)
+                    if (m_JobQueue.IsEmpty)
                     {
-                        m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_QueueEmpty);
+                        m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_QueueEmpty);
                         break;
                     }
 
-                    Signal signal = null;
-                    if (!m_SignalQueue.IsEmpty)
+                    Job job = null;
+                    if (!m_JobQueue.IsEmpty)
                     {
-                        signal = m_SignalQueue.Dequeue();
+                        job = m_JobQueue.Dequeue();
                     }
 
-                    if (signal == null)
+                    if (job == null)
                     {
                         continue;
                     }
@@ -185,28 +171,47 @@ namespace Metamorphic.Server
                         LevelToLog.Info,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
-                            signal.Sensor));
+                            Resources.Log_Messages_JobProcessor_ProcessJob_WithId,
+                            job.Action));
 
-                    foreach (var parameter in signal.Parameters())
+                    foreach (var parameter in job.ParameterNames())
                     {
                         m_Diagnostics.Log(
                             LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
-                                Resources.Log_Messages_SignalProcessor_ProcessSignal_ForParameters,
+                                Resources.Log_Messages_JobProcessor_ProcessJob_ForParameters,
                                 parameter,
-                                signal.ParameterValue(parameter)));
+                                job.ParameterValue(parameter)));
                     }
 
-                    var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
-                    foreach (var rule in rules)
+                    // Find the action
+                    if (!m_ActionStorage.HasActionFor(job.Action))
                     {
-                        if (rule.ShouldProcess(signal))
-                        {
-                            var job = rule.ToJob(signal);
-                            m_JobQueue.Enqueue(job);
-                        }
+                        m_Diagnostics.Log(
+                            LevelToLog.Error,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId,
+                                job.Action));
+                        continue;
+                    }
+
+                    var action = m_ActionStorage.Action(job.Action);
+                    try
+                    {
+                        var parameters = ToParameterData(job);
+                        action.Invoke(parameters);
+                    }
+                    catch (Exception e)
+                    {
+                        m_Diagnostics.Log(
+                            LevelToLog.Error,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Log_Messages_JobProcessor_ProcessJobFailed_WithId_WithException,
+                                job.Action,
+                                e));
                     }
                 }
             }
@@ -216,7 +221,7 @@ namespace Metamorphic.Server
                     LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException,
+                        Resources.Log_Messages_JobProcessor_ProcessJobsFailed_WithException,
                         e));
             }
             finally
@@ -226,7 +231,7 @@ namespace Metamorphic.Server
         }
 
         /// <summary>
-        /// Starts the symbol indexing process.
+        /// Starts the job executing process.
         /// </summary>
         public void Start()
         {
@@ -237,12 +242,12 @@ namespace Metamorphic.Server
         }
 
         /// <summary>
-        /// Stops the symbol indexing process.
+        /// Stops the job executing process.
         /// </summary>
         /// <param name="clearCurrentQueue">
         /// Indicates if the elements currently in the queue need to be processed before stopping or not.
         /// </param>
-        /// <returns>A task that completes when the indexer has stopped.</returns>
+        /// <returns>A task that completes when the processor has stopped.</returns>
         public Task Stop(bool clearCurrentQueue)
         {
             m_IsStarted = false;
@@ -252,9 +257,9 @@ namespace Metamorphic.Server
                 {
                     m_Diagnostics.Log(
                         LevelToLog.Info,
-                        Resources.Log_Messages_SignalProcessor_StoppingProcessing);
+                        Resources.Log_Messages_JobProcessor_StoppingProcessing);
 
-                    if (!clearCurrentQueue && !m_SignalQueue.IsEmpty)
+                    if (!clearCurrentQueue && !m_JobQueue.IsEmpty)
                     {
                         lock (m_Lock)
                         {
@@ -280,6 +285,11 @@ namespace Metamorphic.Server
                 });
 
             return result;
+        }
+
+        private ActionParameterValueMap[] ToParameterData(Job job)
+        {
+
         }
     }
 }
