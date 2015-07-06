@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,7 +105,8 @@ namespace Metamorphic.Server.Jobs
         /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            var task = Stop(false);
+            task.Wait();
         }
 
         private void HandleOnEnqueue(object sender, EventArgs e)
@@ -289,7 +291,18 @@ namespace Metamorphic.Server.Jobs
 
         private ActionParameterValueMap[] ToParameterData(Job job)
         {
+            var namedParameters = new List<ActionParameterValueMap>();
+            foreach(var name in job.ParameterNames())
+            {
+                var value = job.ParameterValue(name);
 
+                namedParameters.Add(
+                    new ActionParameterValueMap(
+                        new ActionParameterDefinition(name),
+                        value));
+            }
+
+            return namedParameters.ToArray();
         }
     }
 }

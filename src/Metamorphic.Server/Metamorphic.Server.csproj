@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionStorage.cs" />
+    <Compile Include="Actions\DuplicateActionDefinitionException.cs" />
     <Compile Include="Actions\IStoreActions.cs" />
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="IProcessSignals.cs" />

@@ -225,4 +225,7 @@
   <data name="Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId" xml:space="preserve">
     <value>Failure while processing jobs. Action with ID {0} could not be found.</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
+    <value>An action with the given ID is already registered.</value>
+  </data>
 </root>

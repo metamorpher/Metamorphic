@@ -107,6 +107,7 @@
     <Compile Include="Actions\ActionId.cs" />
     <Compile Include="Actions\ActionParameterDefinition.cs" />
     <Compile Include="Actions\ActionParameterValueMap.cs" />
+    <Compile Include="Actions\IActionBuilder.cs" />
     <Compile Include="Actions\MissingActionParameterException.cs" />
     <Compile Include="ApplicationConstants.cs" />
     <Compile Include="FileConstants.cs" />

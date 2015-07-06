@@ -19,6 +19,12 @@ namespace Metamorphic.Server.Actions
         ActionDefinition Action(ActionId action);
 
         /// <summary>
+        /// Adds a new <see cref="ActionDefinition"/> to the collection.
+        /// </summary>
+        /// <param name="definition">The action definition that should be added.</param>
+        void Add(ActionDefinition definition);
+
+        /// <summary>
         /// Returns a value indicating whether the storage has an <see cref="ActionDefinition"/>
         /// with the given <see cref="ActionId"/>.
         /// </summary>
