@@ -113,5 +113,41 @@ namespace Metamorphic.Core.Properties {
                 return ResourceManager.GetString("Exceptions_Messages_ParameterNotFound_WithName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to run powershell.exe. Error: {0}.
+        /// </summary>
+        internal static string PowershellActionbuilder_Error_FailedToRunExe_WithError {
+            get {
+                return ResourceManager.GetString("PowershellActionbuilder_Error_FailedToRunExe_WithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        internal static string PowershellActionBuilder_ErrorWhileRunningPowershell_WithError {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_ErrorWhileRunningPowershell_WithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Powershell script finished.
+        /// </summary>
+        internal static string PowershellActionBuilder_Output_ProcessCompleted {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_Output_ProcessCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output: {0}.
+        /// </summary>
+        internal static string PowershellActionBuilder_OutputWhileRunning_WithOutput {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_OutputWhileRunning_WithOutput", resourceCulture);
+            }
+        }
     }
 }

@@ -135,4 +135,16 @@
   <data name="Exceptions_Messages_ParameterNotFound_WithName" xml:space="preserve">
     <value>No parameter with the name {0} could be found.</value>
   </data>
+  <data name="PowershellActionBuilder_ErrorWhileRunningPowershell_WithError" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="PowershellActionbuilder_Error_FailedToRunExe_WithError" xml:space="preserve">
+    <value>Failed to run powershell.exe. Error: {0}</value>
+  </data>
+  <data name="PowershellActionBuilder_OutputWhileRunning_WithOutput" xml:space="preserve">
+    <value>Output: {0}</value>
+  </data>
+  <data name="PowershellActionBuilder_Output_ProcessCompleted" xml:space="preserve">
+    <value>Powershell script finished</value>
+  </data>
 </root>
