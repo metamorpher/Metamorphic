@@ -141,7 +141,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Actions\ActionDefinitionTest.cs" />
     <Compile Include="Actions\ActionIdTest.cs" />
+    <Compile Include="Actions\ActionParameterDefinitionTest.cs" />
+    <Compile Include="Actions\ActionParameterValueMapTest.cs" />
+    <Compile Include="Actions\MissingActionParameterExceptionTest.cs" />
+    <Compile Include="Actions\PowershellActionBuilderTest.cs" />
     <Compile Include="Jobs\JobTest.cs" />
     <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.Company.cs" />
