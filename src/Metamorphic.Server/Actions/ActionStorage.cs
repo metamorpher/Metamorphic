@@ -42,7 +42,7 @@ namespace Metamorphic.Server.Actions
             {
                 Lokad.Enforce.Argument(() => definition);
                 Lokad.Enforce.With<DuplicateActionDefinitionException>(
-                    HasActionFor(definition.Id),
+                    !HasActionFor(definition.Id),
                     Resources.Exceptions_Messages_DuplicateActionDefinition);
             }
 
