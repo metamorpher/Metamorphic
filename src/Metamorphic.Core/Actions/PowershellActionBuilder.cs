@@ -47,7 +47,7 @@ namespace Metamorphic.Core.Actions
                 startInfo.FileName = @"c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
 
                 // Build the command line arguments
-                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -file \"{0}\" ", scriptFile);
+                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" ", scriptFile);
 
                 // do not display an error dialog if the process
                 // can't be started
@@ -56,6 +56,7 @@ namespace Metamorphic.Core.Actions
                 // Do not use the system shell. We want to
                 // be able to redirect the output streams
                 startInfo.UseShellExecute = false;
+                startInfo.CreateNoWindow = true;
 
                 // Redirect the standard output / error streams
                 startInfo.RedirectStandardOutput = true;
