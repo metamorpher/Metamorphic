@@ -5,7 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Reflection;
+using System.Web.Http;
 using Autofac;
+using Autofac.Integration.WebApi;
 
 namespace Metamorphic.Server
 {
@@ -20,7 +23,30 @@ namespace Metamorphic.Server
         /// <returns>The container.</returns>
         public static IContainer CreateContainer()
         {
-            throw new NotImplementedException();
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => new XmlConfiguration(
+                        WebApiConfigurationKeys.ToCollection()
+                            .Append(DiagnosticsConfigurationKeys.ToCollection())
+                            .ToList(),
+                        WebApiConstants.ConfigurationSectionApplicationSettings))
+                    .As<IConfiguration>()
+                    .SingleInstance();
+
+                builder.Register(c => new NucleiBasedTraceWriter(
+                        c.Resolve<SystemDiagnostics>()))
+                    .As<ITraceWriter>()
+                    .SingleInstance();
+
+                RegisterControllers(builder);
+            }
+
+            return builder.Build();
+        }
+
+        private static void RegisterControllers(ContainerBuilder builder)
+        {
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
         }
     }
 }
