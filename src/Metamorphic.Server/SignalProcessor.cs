@@ -226,7 +226,7 @@ namespace Metamorphic.Server
         }
 
         /// <summary>
-        /// Starts the symbol indexing process.
+        /// Starts the signal processing.
         /// </summary>
         public void Start()
         {
@@ -237,7 +237,7 @@ namespace Metamorphic.Server
         }
 
         /// <summary>
-        /// Stops the symbol indexing process.
+        /// Stops the signal processing.
         /// </summary>
         /// <param name="clearCurrentQueue">
         /// Indicates if the elements currently in the queue need to be processed before stopping or not.

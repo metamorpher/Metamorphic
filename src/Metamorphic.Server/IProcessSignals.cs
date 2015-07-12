@@ -14,12 +14,12 @@ namespace Metamorphic.Server
     internal interface IProcessSignals
     {
         /// <summary>
-        /// Starts the symbol indexing process.
+        /// Starts the signal processing.
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Stops the symbol indexing process.
+        /// Stops the signal processing.
         /// </summary>
         /// <param name="clearCurrentQueue">
         /// Indicates if the elements currently in the queue need to be processed before stopping or not.
