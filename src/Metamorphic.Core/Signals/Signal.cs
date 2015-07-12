@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Core.Properties;
-using Metamorphic.Core.Sensors;
+using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Signals
 {
@@ -34,7 +34,7 @@ namespace Metamorphic.Core.Signals
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameters"/> is <see langword="null" />.
         /// </exception>
-        public Signal(SensorId sensorId, IDictionary<string, object> parameters)
+        public Signal(SignalTypeId sensorId, IDictionary<string, object> parameters)
         {
             {
                 Lokad.Enforce.Argument(() => sensorId);
@@ -98,7 +98,7 @@ namespace Metamorphic.Core.Signals
         /// <summary>
         /// Gets the ID of the sensor from which the current signal originated.
         /// </summary>
-        public SensorId Sensor
+        public SignalTypeId Sensor
         {
             get;
         }

@@ -6,10 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Metamorphic.Core.Sensors;
 using Metamorphic.Core.Signals;
 using NUnit.Framework;
 
@@ -30,8 +26,8 @@ namespace Metamorphic.Server.Signals
         [Test]
         public void Enqueue()
         {
-            var signal1 = new Signal(new SensorId("a"), new Dictionary<string, object>());
-            var signal2 = new Signal(new SensorId("b"), new Dictionary<string, object>());
+            var signal1 = new Signal(new SignalTypeId("a"), new Dictionary<string, object>());
+            var signal2 = new Signal(new SignalTypeId("b"), new Dictionary<string, object>());
             var queue = new SignalQueue();
 
             Assert.IsTrue(queue.IsEmpty);
@@ -49,7 +45,7 @@ namespace Metamorphic.Server.Signals
         [Test]
         public void EnqueueWithEmptyQueue()
         {
-            var signal = new Signal(new SensorId("a"), new Dictionary<string, object>());
+            var signal = new Signal(new SignalTypeId("a"), new Dictionary<string, object>());
             var queue = new SignalQueue();
 
             Assert.IsTrue(queue.IsEmpty);

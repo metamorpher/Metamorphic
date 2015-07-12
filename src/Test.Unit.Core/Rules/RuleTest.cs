@@ -4,13 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Actions;
-using Metamorphic.Core.Sensors;
-using Metamorphic.Core.Signals;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Signals;
+using NUnit.Framework;
 
 namespace Metamorphic.Core.Rules
 {
@@ -20,7 +19,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void CreateWithNullActionId()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var parameters = new Dictionary<string, ActionParameterValue>();
             Assert.Throws<ArgumentNullException>(() => new Rule(sensorId, null, parameters));
         }
@@ -28,7 +27,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void CreateWithNullReferenceCollection()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             Assert.Throws<ArgumentNullException>(() => new Rule(sensorId, actionId, null));
         }
@@ -44,7 +43,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithMissingParameters()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -65,7 +64,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNonMatchingParameters()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -85,7 +84,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNonMatchingSensorId()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -94,7 +93,7 @@ namespace Metamorphic.Core.Rules
             var rule = new Rule(sensorId, actionId, parameters);
 
             var signal = new Signal(
-                new SensorId("c"),
+                new SignalTypeId("c"),
                 new Dictionary<string, object>
                 {
                     ["a"] = 1
@@ -105,7 +104,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcess()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -125,7 +124,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNullSignal()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -140,7 +139,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithDefaultValue()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
 
             var parameterValue = 10;
@@ -166,7 +165,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithInvalidSignal()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -186,7 +185,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithNullSignal()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
@@ -201,7 +200,7 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithSignalValue()
         {
-            var sensorId = new SensorId("a");
+            var sensorId = new SignalTypeId("a");
             var actionId = new ActionId("b");
 
             var parameters = new Dictionary<string, ActionParameterValue>

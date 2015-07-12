@@ -4,11 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Sensors;
-using Metamorphic.Core.Signals;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Metamorphic.Core.Signals;
+using NUnit.Framework;
 
 namespace Metamorphic.Core.Rules
 {
@@ -74,7 +73,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue("b", parameterName, condition: condition);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
                     { parameterName, "10" }
@@ -89,7 +88,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue("b", parameterName);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
                     { parameterName, "10" }
@@ -106,7 +105,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue("b", parameterName, condition: condition);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
                     { parameterName, "10" }
@@ -121,7 +120,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue("b", parameterName);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>());
             Assert.IsFalse(reference.IsValidFor(signal));
         }
@@ -134,7 +133,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue(parameterName, parameterValue);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
                     { parameterName, "100" }
@@ -150,7 +149,7 @@ namespace Metamorphic.Core.Rules
             var reference = new ActionParameterValue("b", parameterName);
 
             var signal = new Signal(
-                new SensorId("b"),
+                new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
                     { parameterName, parameterValue }

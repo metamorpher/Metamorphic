@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Metamorphic.Core.Rules;
-using Metamorphic.Core.Sensors;
+using Metamorphic.Core.Signals;
 using Nuclei.Diagnostics;
 
 namespace Metamorphic.Server.Rules
@@ -32,7 +32,7 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// The collection that maps signal types to rules.
         /// </summary>
-        private readonly Dictionary<SensorId, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<SensorId, List<Rule>>();
+        private readonly Dictionary<SignalTypeId, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<SignalTypeId, List<Rule>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleCollection"/> class.
@@ -135,7 +135,7 @@ namespace Metamorphic.Server.Rules
         /// </summary>
         /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
         /// <returns></returns>
-        public IEnumerable<Rule> RulesForSignal(SensorId sensorId)
+        public IEnumerable<Rule> RulesForSignal(SignalTypeId sensorId)
         {
             lock(m_Lock)
             {

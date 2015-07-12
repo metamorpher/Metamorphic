@@ -10,23 +10,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Metamorphic.Core.Sensors
+namespace Metamorphic.Core.Signals
 {
     [TestFixture]
     public sealed class SensorIdTest : EqualityContractVerifierTest
     {
-        private sealed class SensorIdEqualityContractVerifier : EqualityContractVerifier<SensorId>
+        private sealed class SensorIdEqualityContractVerifier : EqualityContractVerifier<SignalTypeId>
         {
-            private readonly SensorId m_First = new SensorId("a");
+            private readonly SignalTypeId m_First = new SignalTypeId("a");
 
-            private readonly SensorId m_Second = new SensorId("b");
+            private readonly SignalTypeId m_Second = new SignalTypeId("b");
 
-            protected override SensorId Copy(SensorId original)
+            protected override SignalTypeId Copy(SignalTypeId original)
             {
                 return original.Clone();
             }
 
-            protected override SensorId FirstInstance
+            protected override SignalTypeId FirstInstance
             {
                 get
                 {
@@ -34,7 +34,7 @@ namespace Metamorphic.Core.Sensors
                 }
             }
 
-            protected override SensorId SecondInstance
+            protected override SignalTypeId SecondInstance
             {
                 get
                 {
@@ -53,17 +53,17 @@ namespace Metamorphic.Core.Sensors
 
         private sealed class SensorIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            private readonly IEnumerable<SensorId> m_DistinctInstances
-                = new List<SensorId>
+            private readonly IEnumerable<SignalTypeId> m_DistinctInstances
+                = new List<SignalTypeId>
                      {
-                        new SensorId("a"),
-                        new SensorId("b"),
-                        new SensorId("c"),
-                        new SensorId("d"),
-                        new SensorId("e"),
-                        new SensorId("f"),
-                        new SensorId("g"),
-                        new SensorId("h"),
+                        new SignalTypeId("a"),
+                        new SignalTypeId("b"),
+                        new SignalTypeId("c"),
+                        new SignalTypeId("d"),
+                        new SignalTypeId("e"),
+                        new SignalTypeId("f"),
+                        new SignalTypeId("g"),
+                        new SignalTypeId("h"),
                      };
 
             protected override IEnumerable<int> GetHashcodes()
@@ -95,8 +95,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
         {
-            SensorId first = null;
-            var second = new SensorId("a");
+            SignalTypeId first = null;
+            var second = new SignalTypeId("a");
 
             Assert.IsFalse(first > second);
         }
@@ -104,8 +104,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            var first = new SensorId("a");
-            SensorId second = null;
+            var first = new SignalTypeId("a");
+            SignalTypeId second = null;
 
             Assert.IsTrue(first > second);
         }
@@ -113,8 +113,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithBothObjectsNull()
         {
-            SensorId first = null;
-            SensorId second = null;
+            SignalTypeId first = null;
+            SignalTypeId second = null;
 
             Assert.IsFalse(first > second);
         }
@@ -122,8 +122,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            var first = new SensorId("a");
-            var second = new SensorId("a");
+            var first = new SignalTypeId("a");
+            var second = new SignalTypeId("a");
 
             Assert.IsFalse(first > second);
         }
@@ -131,8 +131,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            var first = new SensorId("b");
-            var second = new SensorId("a");
+            var first = new SignalTypeId("b");
+            var second = new SignalTypeId("a");
 
             Assert.IsTrue(first > second);
         }
@@ -140,8 +140,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            var first = new SensorId("a");
-            var second = new SensorId("b");
+            var first = new SignalTypeId("a");
+            var second = new SignalTypeId("b");
 
             Assert.IsFalse(first > second);
         }
@@ -149,8 +149,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
-            SensorId first = null;
-            var second = new SensorId("a");
+            SignalTypeId first = null;
+            var second = new SignalTypeId("a");
 
             Assert.IsTrue(first < second);
         }
@@ -158,8 +158,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            var first = new SensorId("a");
-            SensorId second = null;
+            var first = new SignalTypeId("a");
+            SignalTypeId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -167,8 +167,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
-            SensorId first = null;
-            SensorId second = null;
+            SignalTypeId first = null;
+            SignalTypeId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -176,8 +176,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            var first = new SensorId("a");
-            var second = new SensorId("a");
+            var first = new SignalTypeId("a");
+            var second = new SignalTypeId("a");
 
             Assert.IsFalse(first < second);
         }
@@ -185,8 +185,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            var first = new SensorId("b");
-            var second = new SensorId("a");
+            var first = new SignalTypeId("b");
+            var second = new SignalTypeId("a");
 
             Assert.IsFalse(first < second);
         }
@@ -194,8 +194,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            var first = new SensorId("a");
-            var second = new SensorId("b");
+            var first = new SignalTypeId("a");
+            var second = new SignalTypeId("b");
 
             Assert.IsTrue(first < second);
         }
@@ -203,7 +203,7 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void Clone()
         {
-            var first = new SensorId("a");
+            var first = new SignalTypeId("a");
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
@@ -212,7 +212,7 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void CompareToWithNullObject()
         {
-            var first = new SensorId("a");
+            var first = new SignalTypeId("a");
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -221,8 +221,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            var first = new SensorId("a");
-            object second = new SensorId("a");
+            var first = new SignalTypeId("a");
+            object second = new SignalTypeId("a");
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -230,8 +230,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            var first = new SensorId("b");
-            object second = new SensorId("a");
+            var first = new SignalTypeId("b");
+            object second = new SignalTypeId("a");
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -239,8 +239,8 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            var first = new SensorId("a");
-            object second = new SensorId("b");
+            var first = new SignalTypeId("a");
+            object second = new SignalTypeId("b");
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -248,7 +248,7 @@ namespace Metamorphic.Core.Sensors
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            var first = new SensorId("a");
+            var first = new SignalTypeId("a");
             var second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

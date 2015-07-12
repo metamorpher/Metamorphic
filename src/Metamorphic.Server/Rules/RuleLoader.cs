@@ -12,7 +12,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
-using Metamorphic.Core.Sensors;
+using Metamorphic.Core.Signals;
 using Metamorphic.Server.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -36,7 +36,7 @@ namespace Metamorphic.Server.Rules
         private readonly Predicate<string> m_DoesActionIdExist;
 
         /// <summary>
-        /// The predicate that is used to determine if a given <see cref="SensorId"/> exists.
+        /// The predicate that is used to determine if a given <see cref="SignalTypeId"/> exists.
         /// </summary>
         private readonly Predicate<string> m_DoesSensorIdExist;
 
@@ -44,7 +44,7 @@ namespace Metamorphic.Server.Rules
         /// Initializes a new instance of the <see cref="RuleLoader"/> class.
         /// </summary>
         /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
-        /// <param name="doesSensorIdExist">The predicate that is used to determine if a given <see cref="SensorId"/> exists.</param>
+        /// <param name="doesSensorIdExist">The predicate that is used to determine if a given <see cref="SignalTypeId"/> exists.</param>
         /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
@@ -260,7 +260,7 @@ namespace Metamorphic.Server.Rules
                 }
 
                 return new Rule(
-                    new SensorId(definition.Signal.Id),
+                    new SignalTypeId(definition.Signal.Id),
                     new ActionId(definition.Action.Id),
                     parameters);
             }

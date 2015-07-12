@@ -7,10 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Metamorphic.Core.Jobs;
-using Metamorphic.Core.Sensors;
-using Metamorphic.Core.Signals;
 using Metamorphic.Core.Actions;
+using Metamorphic.Core.Jobs;
+using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
 {
@@ -45,7 +44,7 @@ namespace Metamorphic.Core.Rules
         ///     Thrown if <paramref name="parameterReferences"/> is <see langword="null" />.
         /// </exception>
         public Rule(
-            SensorId signalId,
+            SignalTypeId signalId,
             ActionId actionId,
             IDictionary<string, ActionParameterValue> parameterReferences)
         {
@@ -95,7 +94,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the signal identifier to which this rule applies.
         /// </summary>
-        public SensorId Sensor
+        public SignalTypeId Sensor
         {
             get;
         }

@@ -9,11 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
-using Metamorphic.Core.Sensors;
 using Metamorphic.Core.Signals;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
@@ -701,7 +698,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = 10;
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -727,7 +724,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = "some_bar";
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -753,7 +750,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = 10;
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -779,7 +776,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = 10;
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -805,7 +802,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = 10;
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -831,7 +828,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = "bar_some";
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -857,7 +854,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = 10;
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -883,7 +880,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = "some_stuff";
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,
@@ -909,7 +906,7 @@ namespace Metamorphic.Server.Rules
 
             var parameterValue = "bar_some";
             var signal = new Signal(
-                new SensorId("Signal"),
+                new SignalTypeId("Signal"),
                 new Dictionary<string, object>
                 {
                     ["foo"] = parameterValue,

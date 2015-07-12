@@ -1,19 +1,19 @@
 ﻿using System;
 using Nuclei;
 
-namespace Metamorphic.Core.Sensors
+namespace Metamorphic.Core.Signals
 {
     /// <summary>
     /// Defines an ID for a trigger.
     /// </summary>
     [Serializable]
-    public sealed class SensorId : Id<SensorId, string>
+    public sealed class SignalTypeId : Id<SignalTypeId, string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SensorId"/> class.
+        /// Initializes a new instance of the <see cref="SignalTypeId"/> class.
         /// </summary>
         /// <param name="value">The value.</param>
-        public SensorId(string value) 
+        public SignalTypeId(string value) 
             : base(value)
         {
         }
@@ -25,9 +25,9 @@ namespace Metamorphic.Core.Sensors
         /// <returns>
         /// A copy of the current ID number.
         /// </returns>
-        protected override SensorId Clone(string value)
+        protected override SignalTypeId Clone(string value)
         {
-            return new SensorId(value);
+            return new SignalTypeId(value);
         }
 
         /// <summary>
