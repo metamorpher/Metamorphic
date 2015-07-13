@@ -70,6 +70,15 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A signal generator with the given ID is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateSignalGenerator {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateSignalGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The condition type is not valid..
         /// </summary>
         internal static string Exceptions_Messages_InvalidConditionType {

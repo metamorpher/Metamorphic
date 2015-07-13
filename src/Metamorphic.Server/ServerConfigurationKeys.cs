@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using Nuclei.Configuration;
 
 namespace Metamorphic.Server
@@ -19,5 +20,17 @@ namespace Metamorphic.Server
         /// </summary>
         internal static readonly ConfigurationKey s_RulePath
             = new ConfigurationKey("UploadPath", typeof(string));
+
+        /// <summary>
+        /// Returns a collection containing all the configuration keys for the application.
+        /// </summary>
+        /// <returns>A collection containing all the configuration keys for the application.</returns>
+        public static IEnumerable<ConfigurationKey> ToCollection()
+        {
+            return new List<ConfigurationKey>
+                {
+                    s_RulePath
+                };
+        }
     }
 }

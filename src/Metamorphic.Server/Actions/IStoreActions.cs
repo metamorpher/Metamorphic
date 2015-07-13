@@ -30,7 +30,7 @@ namespace Metamorphic.Server.Actions
         /// </summary>
         /// <param name="action">The ID of the action.</param>
         /// <returns>
-        ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
+        ///   <see langword="true" /> if the storage has a definition with the given ID; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

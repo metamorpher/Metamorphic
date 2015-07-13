@@ -21,7 +21,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Metamorphic.Server.Rules
 {
-    internal sealed class RuleLoader
+    internal sealed class RuleLoader : ILoadRules
     {
         private static readonly Regex s_TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
 

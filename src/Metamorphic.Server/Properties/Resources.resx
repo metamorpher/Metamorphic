@@ -228,4 +228,7 @@
   <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
     <value>An action with the given ID is already registered.</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateSignalGenerator" xml:space="preserve">
+    <value>A signal generator with the given ID is already registered.</value>
+  </data>
 </root>
