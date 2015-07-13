@@ -25,10 +25,10 @@ namespace Metamorphic.Server.Signals
         }
 
         [HttpPost]
-        public HttpResponseMessage Powershell(string scriptPath)
+        public HttpResponseMessage Trigger(string signalType, string scriptPath)
         {
             var signal = new Signal(
-                new SignalTypeId("powershell"),
+                new SignalTypeId(signalType),
                 new Dictionary<string, object>
                 {
                     ["scriptPath"] = scriptPath,

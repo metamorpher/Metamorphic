@@ -86,6 +86,11 @@ namespace Metamorphic.Server
             builder.Register(c => new ActionStorage())
                 .As<IStoreActions>()
                 .SingleInstance();
+
+            builder.RegisterAssemblyTypes(typeof(ActionId).Assembly)
+                .Where(t => !t.IsAbstract && typeof(IActionBuilder).IsAssignableFrom(t))
+                .OnActivated
+                .SingleInstance();
         }
 
         private static void RegisterControllers(ContainerBuilder builder)
