@@ -17,7 +17,7 @@ namespace Metamorphic.Core.Actions
     /// <summary>
     /// Defines methods for building an action that executes a Powershell script.
     /// </summary>
-    internal sealed class PowershellActionBuilder : IActionBuilder
+    public sealed class PowershellActionBuilder : IActionBuilder
     {
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -40,14 +40,14 @@ namespace Metamorphic.Core.Actions
             m_Diagnostics = diagnostics;
         }
 
-        private void InvokePowershell(string scriptFile)
+        private void InvokePowershell(string scriptFile, string arguments)
         {
             var startInfo = new ProcessStartInfo();
             {
                 startInfo.FileName = @"c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
 
                 // Build the command line arguments
-                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" ", scriptFile);
+                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}", scriptFile, arguments);
 
                 // do not display an error dialog if the process
                 // can't be started
@@ -146,9 +146,10 @@ namespace Metamorphic.Core.Actions
             var parameters = new List<ActionParameterDefinition>
             {
                 new ActionParameterDefinition("scriptFile"),
+                new ActionParameterDefinition("arguments"),
             };
 
-            Delegate method = new Action<string>(InvokePowershell);
+            Delegate method = new Action<string, string>(InvokePowershell);
 
             return new ActionDefinition(
                 id,

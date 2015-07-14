@@ -25,13 +25,13 @@ namespace Metamorphic.Server.Signals
         }
 
         [HttpPost]
-        public HttpResponseMessage Trigger(string signalType, string scriptPath)
+        public HttpResponseMessage Trigger(string signalType, string arguments)
         {
             var signal = new Signal(
                 new SignalTypeId(signalType),
                 new Dictionary<string, object>
                 {
-                    ["scriptPath"] = scriptPath,
+                    ["arguments"] = arguments,
                 });
 
             m_Queue.Enqueue(signal);

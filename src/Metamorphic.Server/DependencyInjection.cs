@@ -83,13 +83,23 @@ namespace Metamorphic.Server
 
         private static void RegisterActions(ContainerBuilder builder)
         {
-            builder.Register(c => new ActionStorage())
-                .As<IStoreActions>()
+            builder.Register(c => new PowershellActionBuilder(c.Resolve<SystemDiagnostics>()))
+                .As<IActionBuilder>()
                 .SingleInstance();
 
-            builder.RegisterAssemblyTypes(typeof(ActionId).Assembly)
-                .Where(t => !t.IsAbstract && typeof(IActionBuilder).IsAssignableFrom(t))
-                .OnActivated
+            builder.Register(c => new ActionStorage())
+                .As<IStoreActions>()
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Instance;
+                        var builders = a.Context.Resolve<IEnumerable<IActionBuilder>>();
+                        foreach (var b in builders)
+                        {
+                            var definition = b.ToDefinition();
+                            collection.Add(definition);
+                        }
+                    })
                 .SingleInstance();
         }
 
