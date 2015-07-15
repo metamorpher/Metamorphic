@@ -231,9 +231,7 @@
     <Compile Include="Signals\DuplicateGeneratorDefinitionException.cs" />
     <Compile Include="Signals\IGenerateSignals.cs" />
     <Compile Include="Signals\IQueueSignals.cs" />
-    <Compile Include="Signals\IStoreSignalGenerators.cs" />
     <Compile Include="Signals\SignalController.cs" />
-    <Compile Include="Signals\SignalGeneratorStorage.cs" />
     <Compile Include="Signals\SignalQueue.cs" />
     <Compile Include="Signals\WebCallSignalGenerator.cs" />
     <Compile Include="Signals\WebCallStartup.cs" />
