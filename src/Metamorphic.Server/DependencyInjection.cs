@@ -76,7 +76,9 @@ namespace Metamorphic.Server
 
         private static void RegisterActions(ContainerBuilder builder)
         {
-            builder.Register(c => new PowershellActionBuilder(c.Resolve<SystemDiagnostics>()))
+            builder.Register(c => new PowershellActionBuilder(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IActionBuilder>()
                 .SingleInstance();
 

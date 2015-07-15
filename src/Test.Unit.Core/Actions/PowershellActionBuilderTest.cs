@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Moq;
+using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using NUnit.Framework;
@@ -20,13 +22,19 @@ namespace Metamorphic.Core.Actions
         [Test]
         public void ToDefinition()
         {
+            var configuration = new Mock<IConfiguration>();
+            {
+                configuration.Setup(c => c.HasValueFor(It.IsAny<ConfigurationKey>()))
+                    .Returns(false);
+            }
+
             var output = new List<string>();
             Action<LevelToLog, string> logger = (l, m) => 
                 {
                     output.Add(m);
                 };
             var diagnostics = new SystemDiagnostics(logger, null);
-            var builder = new PowershellActionBuilder(diagnostics);
+            var builder = new PowershellActionBuilder(configuration.Object, diagnostics);
 
             var definition = builder.ToDefinition();
             Assert.AreEqual(new ActionId("powershell"), definition.Id);

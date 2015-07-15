@@ -8,7 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using Metamorphic.Core.Properties;
+using Nuclei;
+using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -25,29 +29,54 @@ namespace Metamorphic.Core.Actions
         private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
+        /// The full path to the directory that contains all the powershell scripts
+        /// </summary>
+        private readonly string m_ScriptPath;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PowershellActionBuilder"/> class.
         /// </summary>
+        /// <param name="configuration">The object that provides the configuration for the application.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public PowershellActionBuilder(SystemDiagnostics diagnostics)
+        public PowershellActionBuilder(IConfiguration configuration, SystemDiagnostics diagnostics)
         {
             {
+                Lokad.Enforce.Argument(() => configuration);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_Diagnostics = diagnostics;
+
+            m_ScriptPath = configuration.HasValueFor(CoreConfigurationKeys.ScriptDirectory)
+                ? configuration.Value<string>(CoreConfigurationKeys.ScriptDirectory)
+                : CoreConstants.DefaultScriptDirectory;
+            if (!Path.IsPathRooted(m_ScriptPath))
+            {
+                var exeDirectoryPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+                m_ScriptPath = Path.GetFullPath(Path.Combine(exeDirectoryPath, m_ScriptPath));
+            }
         }
 
         private void InvokePowershell(string scriptFile, string arguments)
         {
+            var scriptFullPath = scriptFile;
+            if (!Path.IsPathRooted(scriptFullPath))
+            {
+                scriptFullPath = Path.GetFullPath(Path.Combine(m_ScriptPath, scriptFullPath));
+            }
+
             var startInfo = new ProcessStartInfo();
             {
                 startInfo.FileName = @"c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
 
                 // Build the command line arguments
-                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}", scriptFile, arguments);
+                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}", scriptFullPath, arguments);
 
                 // do not display an error dialog if the process
                 // can't be started

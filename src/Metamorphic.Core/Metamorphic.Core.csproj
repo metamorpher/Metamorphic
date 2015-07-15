@@ -139,6 +139,8 @@
     <Compile Include="Actions\MissingActionParameterException.cs" />
     <Compile Include="Actions\PowershellActionBuilder.cs" />
     <Compile Include="ApplicationConstants.cs" />
+    <Compile Include="CoreConfigurationKeys.cs" />
+    <Compile Include="CoreConstants.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="Jobs\Job.cs" />
     <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
