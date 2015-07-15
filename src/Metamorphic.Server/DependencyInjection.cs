@@ -178,7 +178,6 @@ namespace Metamorphic.Server
 
             builder.Register(c => new RuleLoader(
                     (string id) => c.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
-                    (string id) => c.Resolve<IStoreSignalGenerators>().HasGeneratorFor(new SignalTypeId(id)),
                     c.Resolve<SystemDiagnostics>()))
                 .As<ILoadRules>()
                 .SingleInstance();

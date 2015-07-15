@@ -36,35 +36,24 @@ namespace Metamorphic.Server.Rules
         private readonly Predicate<string> m_DoesActionIdExist;
 
         /// <summary>
-        /// The predicate that is used to determine if a given <see cref="SignalTypeId"/> exists.
-        /// </summary>
-        private readonly Predicate<string> m_DoesSensorIdExist;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RuleLoader"/> class.
         /// </summary>
         /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
-        /// <param name="doesSensorIdExist">The predicate that is used to determine if a given <see cref="SignalTypeId"/> exists.</param>
         /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="doesSensorIdExist"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public RuleLoader(Predicate<string> doesActionIdExist, Predicate<string> doesSensorIdExist, SystemDiagnostics diagnostics)
+        public RuleLoader(Predicate<string> doesActionIdExist, SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => doesActionIdExist);
-                Lokad.Enforce.Argument(() => doesSensorIdExist);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_DoesActionIdExist = doesActionIdExist;
-            m_DoesSensorIdExist = doesSensorIdExist;
             m_Diagnostics = diagnostics;
         }
 
@@ -90,8 +79,7 @@ namespace Metamorphic.Server.Rules
             Justification = "Documentation can start with a language keyword")]
         internal bool IsValid(
             RuleDefinition definition,
-            Predicate<string> doesActionIdExist,
-            Predicate<string> doesSensorIdExist)
+            Predicate<string> doesActionIdExist)
         {
             if (definition == null)
             {
@@ -108,7 +96,7 @@ namespace Metamorphic.Server.Rules
                 return false;
             }
 
-            if (string.IsNullOrEmpty(definition.Signal.Id) || !doesSensorIdExist(definition.Signal.Id))
+            if (string.IsNullOrEmpty(definition.Signal.Id))
             {
                 return false;
             }
@@ -211,7 +199,7 @@ namespace Metamorphic.Server.Rules
             }
 
             var definition = CreateDefinitionFromFile(filePath);
-            if (!IsValid(definition, m_DoesActionIdExist, m_DoesSensorIdExist))
+            if (!IsValid(definition, m_DoesActionIdExist))
             {
                 m_Diagnostics.Log(
                     LevelToLog.Warn,

@@ -7,8 +7,10 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using Metamorphic.Core.Rules;
 using Metamorphic.Server.Properties;
+using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -55,18 +57,22 @@ namespace Metamorphic.Server.Rules
                 Lokad.Enforce.Argument(() => ruleLoader);
                 Lokad.Enforce.Argument(() => ruleCollection);
                 Lokad.Enforce.Argument(() => diagnostics);
-
-                Lokad.Enforce.With<ArgumentException>(
-                    configuration.HasValueFor(ServerConfigurationKeys.s_RulePath),
-                    Resources.Exceptions_Messages_MissingConfigurationValue_WithKey,
-                    ServerConfigurationKeys.s_RulePath);
             }
 
             m_Diagnostics = diagnostics;
             m_RuleCollection = ruleCollection;
             m_RuleLoader = ruleLoader;
 
-            var uploadPath = configuration.Value<string>(ServerConfigurationKeys.s_RulePath);
+            var uploadPath = string.Empty;
+            uploadPath = configuration.HasValueFor(ServerConfigurationKeys.RuleDirectory)
+                ? configuration.Value<string>(ServerConfigurationKeys.RuleDirectory)
+                : ServerConstants.DefaultRuleDirectory;
+            if (!Path.IsPathRooted(uploadPath))
+            {
+                var exeDirectoryPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+                uploadPath = Path.GetFullPath(Path.Combine(exeDirectoryPath, uploadPath));
+            }
+
             m_Watcher = new FileSystemWatcher
             {
                 Path = uploadPath,

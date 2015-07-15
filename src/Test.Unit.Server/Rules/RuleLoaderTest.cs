@@ -27,7 +27,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
@@ -50,7 +49,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "ActionWithParametersReferencingSignal.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
@@ -78,7 +76,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "EndsWithCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
@@ -110,7 +107,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
@@ -140,7 +136,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "GreaterThanCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
@@ -172,7 +167,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
@@ -202,7 +196,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "MatchRegexCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
@@ -234,7 +227,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
@@ -265,7 +257,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
@@ -294,7 +285,6 @@ namespace Metamorphic.Server.Rules
         {
             var loader = new RuleLoader(
                 s => false,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
             var definition = new RuleDefinition
@@ -313,14 +303,13 @@ namespace Metamorphic.Server.Rules
                             Parameters = new Dictionary<string, object>(),
                         }
                 };
-            Assert.IsFalse(loader.IsValid(definition, s => false, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => false));
         }
 
         [Test]
         public void IsValidWithActionWithInvalidSignalParameterReference()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -346,14 +335,13 @@ namespace Metamorphic.Server.Rules
                     },
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithConditionWithIncorrectName()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -381,14 +369,13 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithConditionWithInvalidType()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -416,14 +403,13 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingAction()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -439,14 +425,13 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingName()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -466,14 +451,13 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingSignal()
         {
             var loader = new RuleLoader(
-                s => false,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
 
@@ -489,34 +473,7 @@ namespace Metamorphic.Server.Rules
                 Enabled = true,
                 Signal = null
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => true));
-        }
-
-        [Test]
-        public void IsValidWithSignalWithInvalidType()
-        {
-            var loader = new RuleLoader(
-                s => false,
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
-            var definition = new RuleDefinition
-            {
-                Name = "a",
-                Action = new ActionRuleDefinition
-                {
-                    Id = "b",
-                    Parameters = new Dictionary<string, object>(),
-                },
-                Condition = new List<ConditionRuleDefinition>(),
-                Enabled = true,
-                Signal = new SignalRuleDefinition
-                {
-                    Id = "c",
-                    Parameters = new Dictionary<string, object>(),
-                }
-            };
-            Assert.IsFalse(loader.IsValid(definition, s => true, s => false));
+            Assert.IsFalse(loader.IsValid(definition, s => true));
         }
 
         [Test]
@@ -525,7 +482,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "ActionWithoutReference.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -539,7 +495,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -551,7 +506,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "ConditionWithoutPattern.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -565,7 +519,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -578,7 +531,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -588,7 +540,6 @@ namespace Metamorphic.Server.Rules
         public void LoadWithEmptyFilePath()
         {
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(string.Empty);
@@ -602,7 +553,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -614,7 +564,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "MissingName.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -628,7 +577,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -638,7 +586,6 @@ namespace Metamorphic.Server.Rules
         public void LoadWithNullFilePath()
         {
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(null);
@@ -652,7 +599,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -664,7 +610,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "MissingSignal.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -678,7 +623,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNull(rule);
@@ -690,7 +634,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "RuleWithoutCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -717,7 +660,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNotNull(rule);
@@ -742,7 +684,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "RuleWithEqualsCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -769,7 +710,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNotNull(rule);
@@ -794,7 +734,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "RuleWithLessThanCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -821,7 +760,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNotNull(rule);
@@ -846,7 +784,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "RuleWithNotEqualsCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
@@ -873,7 +810,6 @@ namespace Metamorphic.Server.Rules
 
             var loader = new RuleLoader(
                 s => true,
-                s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
             Assert.IsNotNull(rule);
@@ -898,7 +834,6 @@ namespace Metamorphic.Server.Rules
             var fileName = "RuleWithStartsWithCondition.mmrule";
 
             var loader = new RuleLoader(
-                s => true,
                 s => true,
                 new SystemDiagnostics((l, m) => { }, null));
             var rule = loader.Load(Path.Combine(RulePath(), fileName));
