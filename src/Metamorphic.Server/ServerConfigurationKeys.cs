@@ -18,8 +18,8 @@ namespace Metamorphic.Server
         /// The configuration key that is used to retrieve path for the directory in 
         /// which the rule files will be placed.
         /// </summary>
-        internal static readonly ConfigurationKey s_RulePath
-            = new ConfigurationKey("UploadPath", typeof(string));
+        internal static readonly ConfigurationKey RuleDirectory
+            = new ConfigurationKey("RulePath", typeof(string));
 
         /// <summary>
         /// Returns a collection containing all the configuration keys for the application.
@@ -29,7 +29,7 @@ namespace Metamorphic.Server
         {
             return new List<ConfigurationKey>
                 {
-                    s_RulePath
+                    RuleDirectory
                 };
         }
     }
