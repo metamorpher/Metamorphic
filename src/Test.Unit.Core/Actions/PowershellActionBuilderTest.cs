@@ -33,7 +33,7 @@ namespace Metamorphic.Core.Actions
 
             var currentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var powershellScriptPath = Path.Combine(currentDirectory, "hello.ps1");
-            var powershellScriptContent = @"Write-Output 'hello'";
+            var powershellScriptContent = @"param( [string]$text ) Write-Output ('hello ' + $text)";
             File.WriteAllText(powershellScriptPath, powershellScriptContent);
 
             var parameters = new[]
@@ -41,6 +41,9 @@ namespace Metamorphic.Core.Actions
                     new ActionParameterValueMap(
                         new ActionParameterDefinition("scriptFile"),
                         powershellScriptPath),
+                    new ActionParameterValueMap(
+                        new ActionParameterDefinition("arguments"),
+                        "-text 'world'"),
                 };
             definition.Invoke(parameters);
             Assert.AreEqual(2, output.Count);
