@@ -6,7 +6,10 @@
 
 using System;
 using Autofac;
+using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Properties;
+using Metamorphic.Server.Rules;
+using Metamorphic.Server.Signals;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -43,6 +46,26 @@ namespace Metamorphic.Server
         private volatile bool m_IsDisposed;
 
         /// <summary>
+        /// The object that is used to process queued jobs.
+        /// </summary>
+        private IProcessJobs m_JobProcessor;
+
+        /// <summary>
+        /// The object that is used to keep track of the available rules.
+        /// </summary>
+        private IWatchRules m_RuleWatcher;
+
+        /// <summary>
+        /// The object that generates the signals.
+        /// </summary>
+        private IGenerateSignals m_SignalGenerator;
+
+        /// <summary>
+        /// The object that processes signals.
+        /// </summary>
+        private IProcessSignals m_SignalProcessor;
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -64,7 +87,16 @@ namespace Metamorphic.Server
         public void OnStart()
         {
             m_Container = DependencyInjection.CreateContainer();
+            m_JobProcessor = m_Container.Resolve<IProcessJobs>();
+            m_RuleWatcher = m_Container.Resolve<IWatchRules>();
+            m_SignalGenerator = m_Container.Resolve<IGenerateSignals>();
+            m_SignalProcessor = m_Container.Resolve<IProcessSignals>();
             m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
+
+            m_JobProcessor.Start();
+            m_RuleWatcher.Enable();
+            m_SignalProcessor.Start();
+            m_SignalGenerator.Start();
 
             m_Diagnostics.Log(
                 LevelToLog.Info,
@@ -92,6 +124,34 @@ namespace Metamorphic.Server
 
             try
             {
+                if (m_RuleWatcher != null)
+                {
+                    m_RuleWatcher.Disable();
+                    m_RuleWatcher = null;
+                }
+
+                if (m_SignalGenerator != null)
+                {
+                    m_SignalGenerator.Stop();
+                    m_SignalGenerator = null;
+                }
+
+                if (m_SignalProcessor != null)
+                {
+                    var clearingTask =  m_SignalProcessor.Stop(true);
+                    clearingTask.Wait();
+
+                    m_SignalProcessor = null;
+                }
+
+                if (m_JobProcessor != null)
+                {
+                    var clearingTask = m_JobProcessor.Stop(true);
+                    clearingTask.Wait();
+
+                    m_JobProcessor = null;
+                }
+
                 // Do what ever we need to do to stop the service here
                 m_Diagnostics.Log(
                     LevelToLog.Info,

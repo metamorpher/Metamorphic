@@ -53,13 +53,6 @@ namespace Metamorphic.Server
                         ServerConstants.ConfigurationSectionApplicationSettings))
                     .As<IConfiguration>()
                     .SingleInstance();
-                
-                /*
-                builder.Register(c => new NucleiBasedTraceWriter(
-                        c.Resolve<SystemDiagnostics>()))
-                    .As<ITraceWriter>()
-                    .SingleInstance();
-                */
 
                 RegisterActions(builder);
                 RegisterControllers(builder);
