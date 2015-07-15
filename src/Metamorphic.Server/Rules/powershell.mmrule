@@ -1,0 +1,24 @@
+﻿---
+    name: "powershell"
+    description: "Rule description."
+    enabled: true
+
+    signal:
+        id: "test"
+        parameters:
+            scriptfile: "bar"
+            arguments: "otherBar"
+
+    condition:
+        - name: "signal_parameter_name1"
+          type: "matchregex"
+          pattern : "^value$"
+        - name: "signal_parameter_name2"
+          type: "iequals"
+          pattern : "watchevent"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "{{signal.scriptfile}}"
+            arguments: "{{signal.arguments}}"
