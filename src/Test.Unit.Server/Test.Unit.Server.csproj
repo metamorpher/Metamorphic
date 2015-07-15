@@ -163,91 +163,91 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Rules\Files\ActionWithoutReference.mmrule">
+    <None Include="TestFiles\ActionWithoutReference.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\ActionWithParameters.mmrule">
+    <None Include="TestFiles\ActionWithParameters.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\ActionWithParametersReferencingSignal.mmrule">
+    <None Include="TestFiles\ActionWithParametersReferencingSignal.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\ConditionWithoutName.mmrule">
+    <None Include="TestFiles\ConditionWithoutName.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\ConditionWithoutPattern.mmrule">
+    <None Include="TestFiles\ConditionWithoutPattern.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\ConditionWithoutType.mmrule">
+    <None Include="TestFiles\ConditionWithoutType.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\EmptyFile.mmrule">
+    <None Include="TestFiles\EmptyFile.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\EndsWithCondition.mmrule">
+    <None Include="TestFiles\EndsWithCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\EqualsCondition.mmrule">
+    <None Include="TestFiles\EqualsCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\GreaterThanCondition.mmrule">
+    <None Include="TestFiles\GreaterThanCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\LessThanCondition.mmrule">
+    <None Include="TestFiles\LessThanCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MatchRegexCondition.mmrule">
+    <None Include="TestFiles\MatchRegexCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MissingAction.mmrule">
+    <None Include="TestFiles\MissingAction.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MissingDescription.mmrule">
+    <None Include="TestFiles\MissingDescription.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MissingEnabledFlag.mmrule">
+    <None Include="TestFiles\MissingEnabledFlag.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MissingName.mmrule">
+    <None Include="TestFiles\MissingName.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\MissingSignal.mmrule">
+    <None Include="TestFiles\MissingSignal.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\NotEqualsCondition.mmrule">
+    <None Include="TestFiles\NotEqualsCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\NotMatchRegexCondition.mmrule">
+    <None Include="TestFiles\NotMatchRegexCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithEndsWithCondition.mmrule">
+    <None Include="TestFiles\RuleWithEndsWithCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithEqualsCondition.mmrule">
+    <None Include="TestFiles\RuleWithEqualsCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithGreaterThanCondition.mmrule">
+    <None Include="TestFiles\RuleWithGreaterThanCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithLessThanCondition.mmrule">
+    <None Include="TestFiles\RuleWithLessThanCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithMatchRegexCondition.mmrule">
+    <None Include="TestFiles\RuleWithMatchRegexCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithNotEqualsCondition.mmrule">
+    <None Include="TestFiles\RuleWithNotEqualsCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithNotMatchRegexCondition.mmrule">
+    <None Include="TestFiles\RuleWithNotMatchRegexCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithoutCondition.mmrule">
+    <None Include="TestFiles\RuleWithoutCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\RuleWithStartsWithCondition.mmrule">
+    <None Include="TestFiles\RuleWithStartsWithCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\Files\SignalWithoutId.mmrule">
+    <None Include="TestFiles\SignalWithoutId.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

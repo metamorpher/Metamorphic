@@ -855,7 +855,7 @@ namespace Metamorphic.Server.Rules
 
         private static string RulePath()
         {
-            var path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Rules\Files");
+            var path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"TestFiles");
             return path;
         }
     }
