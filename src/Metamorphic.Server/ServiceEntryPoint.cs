@@ -87,6 +87,8 @@ namespace Metamorphic.Server
         public void OnStart()
         {
             m_Container = DependencyInjection.CreateContainer();
+            WebCallStartup.Container = m_Container;
+
             m_JobProcessor = m_Container.Resolve<IProcessJobs>();
             m_RuleWatcher = m_Container.Resolve<IWatchRules>();
             m_SignalGenerator = m_Container.Resolve<IGenerateSignals>();

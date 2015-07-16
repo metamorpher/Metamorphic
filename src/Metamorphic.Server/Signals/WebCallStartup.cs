@@ -13,15 +13,10 @@ namespace Metamorphic.Server.Signals
 {
     internal sealed class WebCallStartup
     {
-        private readonly IContainer m_Container;
-
-        public WebCallStartup(IContainer container)
+        public static IContainer Container
         {
-            {
-                Lokad.Enforce.Argument(() => container);
-            }
-
-            m_Container = container;
+            get;
+            set;
         }
 
         public void Configuration(IAppBuilder appBuilder)
@@ -35,13 +30,13 @@ namespace Metamorphic.Server.Signals
             var httpConfiguration = new HttpConfiguration();
             httpConfiguration.Routes.MapHttpRoute(
                 name: "WebApi",
-                routeTemplate: "{controller}/{id}",
+                routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional });
-            httpConfiguration.DependencyResolver = new AutofacWebApiDependencyResolver(m_Container);
+            httpConfiguration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
 
             // Register the Autofac middleware FIRST, then the Autofac Web API middleware,
             // and finally the standard Web API middleware.
-            appBuilder.UseAutofacMiddleware(m_Container);
+            appBuilder.UseAutofacMiddleware(Container);
             appBuilder.UseAutofacWebApi(httpConfiguration);
             appBuilder.UseWebApi(httpConfiguration);
         }

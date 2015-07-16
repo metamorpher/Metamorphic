@@ -54,6 +54,12 @@ namespace Metamorphic.Server
                     .As<IConfiguration>()
                     .SingleInstance();
 
+                builder.Register(c => new ApplicationConstants())
+                    .As<ApplicationConstants>();
+
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
+
                 RegisterActions(builder);
                 RegisterControllers(builder);
                 RegisterDiagnostics(builder);
@@ -100,7 +106,8 @@ namespace Metamorphic.Server
 
         private static void RegisterControllers(ContainerBuilder builder)
         {
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.Register(c => new SignalController(c.Resolve<IQueueSignals>()))
+                .InstancePerRequest();
         }
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
@@ -171,9 +178,14 @@ namespace Metamorphic.Server
                 .As<IStoreRules>()
                 .SingleInstance();
 
-            builder.Register(c => new RuleLoader(
-                    (string id) => c.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
-                    c.Resolve<SystemDiagnostics>()))
+            builder.Register(
+                    c => 
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new RuleLoader(
+                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
+                            c.Resolve<SystemDiagnostics>());
+                    })
                 .As<ILoadRules>()
                 .SingleInstance();
 
