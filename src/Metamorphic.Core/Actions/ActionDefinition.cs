@@ -81,7 +81,7 @@ namespace Metamorphic.Core.Actions
             {
                 var expectedParameter = m_Parameters[i];
                 var providedParameter = parameters.FirstOrDefault(
-                    m => string.Equals(m.Parameter.Name, expectedParameter.Name, StringComparison.Ordinal));
+                    m => string.Equals(m.Parameter.Name, expectedParameter.Name, StringComparison.OrdinalIgnoreCase));
                 if (providedParameter == null)
                 {
                     throw new MissingActionParameterException(
