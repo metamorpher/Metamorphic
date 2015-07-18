@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Log_Messages_ServiceStarted" xml:space="preserve">
+    <value>The Metamorphic server has started.</value>
+  </data>
+  <data name="Log_Messages_ServiceStopped" xml:space="preserve">
+    <value>The Metamorphic server has stopped.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_CleaningUpWorker" xml:space="preserve">
+    <value>Cleaning up worker thread.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted" xml:space="preserve">
+    <value>A new signal was added to the queue, but the processing of signals is turned off. Signal will not be processed.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_StartingThread" xml:space="preserve">
+    <value>New item in signal queue. Starting processing thread.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists" xml:space="preserve">
+    <value>A new signal was added to the queue. The processing thread is already running. Signal should be processed shortly.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException" xml:space="preserve">
+    <value>Failure while processing signals. Error was: {0}.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignal_ForParameters" xml:space="preserve">
+    <value>Signal parameter: Name = {0}; Value = {1}</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_ProcessSignal_WithType" xml:space="preserve">
+    <value>Processing signal of type: {0}</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_QueueEmpty" xml:space="preserve">
+    <value>Signal queue empty. Stopping signal processing.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_StartingSignalProcessing" xml:space="preserve">
+    <value>Starting signal processing.</value>
+  </data>
+  <data name="Log_Messages_SignalProcessor_StoppingProcessing" xml:space="preserve">
+    <value>Stopping processing.</value>
+  </data>
+  <data name="Service_Description" xml:space="preserve">
+    <value>The service that provides the core capabilities for Metamorphic</value>
+  </data>
+  <data name="Service_DisplayName" xml:space="preserve">
+    <value>Metamorphic Server</value>
+  </data>
+  <data name="Service_ServiceName" xml:space="preserve">
+    <value>Metamorphic.Service</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_CreatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Disabled" xml:space="preserve">
+    <value>Rule discovery - Disabled</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Enabled" xml:space="preserve">
+    <value>Rule discovery - Enabled</value>
+  </data>
+  <data name="Exceptions_Messages_MissingConfigurationValue_WithKey" xml:space="preserve">
+    <value>A required configuration value is missing. The key for the missing configuration value is: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RemovedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered removed rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered updated rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
+    <value>The rule definition at {0} is not valid.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidConditionType" xml:space="preserve">
+    <value>The condition type is not valid.</value>
+  </data>
+  <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
+    <value>The specified Rule already exists in the collection.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_CleaningUpWorker" xml:space="preserve">
+    <value>Cleaning up worker thread.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted" xml:space="preserve">
+    <value>A new job was added to the queue, but the processing of jobs is turned off. Job will not be processed.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_NewItemInQueue_StartingThread" xml:space="preserve">
+    <value>New item in job queue. Starting processing thread.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists" xml:space="preserve">
+    <value>A new job was added to the queue. The processing thread is already running. Job should be processed shortly.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_ProcessJobsFailed_WithException" xml:space="preserve">
+    <value>Failure while processing jobs. Error was: {0}.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_ProcessJob_ForParameters" xml:space="preserve">
+    <value>Job parameter: Name = {0}; Value = {1}</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_ProcessJob_WithId" xml:space="preserve">
+    <value>Processing job with ID: {0}</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_QueueEmpty" xml:space="preserve">
+    <value>Job queue empty. Stopping job processing.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_StartingJobProcessing" xml:space="preserve">
+    <value>Starting job processing.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_StoppingProcessing" xml:space="preserve">
+    <value>Stopping processing.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_ProcessJobFailed_WithId_WithException" xml:space="preserve">
+    <value>Failure while processing job with ID {0}. Error was: {0}.</value>
+  </data>
+  <data name="Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId" xml:space="preserve">
+    <value>Failure while processing jobs. Action with ID {0} could not be found.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
+    <value>An action with the given ID is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateSignalGenerator" xml:space="preserve">
+    <value>A signal generator with the given ID is already registered.</value>
+  </data>
+</root>

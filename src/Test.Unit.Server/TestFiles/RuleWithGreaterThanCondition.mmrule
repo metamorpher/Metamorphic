@@ -1,0 +1,19 @@
+﻿---
+    name: "Name"
+    description: "Description"
+    enabled: true
+
+    signal:
+        id: "Signal"
+        parameters:
+            foo: 1
+
+    condition:
+        - name: "foo"
+          type: "greaterthan"
+          pattern : 5
+
+    action:
+        id: "Action"
+        parameters:
+            bar: "{{signal.foo}}"
