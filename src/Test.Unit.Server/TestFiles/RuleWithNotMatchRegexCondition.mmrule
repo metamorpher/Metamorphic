@@ -1,0 +1,19 @@
+﻿---
+    name: "Name"
+    description: "Description"
+    enabled: true
+
+    signal:
+        id: "Signal"
+        parameters:
+            foo: "bar"
+
+    condition:
+        - name: "foo"
+          type: "notmatchregex"
+          pattern : ".*(bar).*"
+
+    action:
+        id: "Action"
+        parameters:
+            bar: "{{signal.foo}}"
