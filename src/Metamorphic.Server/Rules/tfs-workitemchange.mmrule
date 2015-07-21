@@ -1,0 +1,27 @@
+﻿---
+    name: "tfs-workitemchange"
+    description: "Executes a powershell script when a TFS item changes state."
+    enabled: true
+
+    signal:
+        id: "WorkItemChange"
+        parameters:
+            workitemtype: "workitem_type"
+            id: "workitem_id"
+            user: "workitem_user"
+            state: "workitem_state"
+            title: "workitem_title"
+
+    condition:
+        - name: "workitemtype"
+          type: "equals"
+          pattern : "sometype"
+        - name: "state"
+          type: "equals"
+          pattern : "somestate"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "start-release.ps1"
+            arguments: "-id {{signal.id}} -user {{signal.user}}"

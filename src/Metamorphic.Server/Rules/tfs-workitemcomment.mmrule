@@ -1,0 +1,26 @@
+﻿---
+    name: "tfs-workitemcomment"
+    description: "Executes a powershell script when a comment is put on a TFS item."
+    enabled: true
+
+    signal:
+        id: "WorkItemComment"
+        parameters:
+            workitemtype: "workitem_type"
+            id: "workitem_id"
+            user: "workitem_user"
+            comment: "workitem_comment"
+
+    condition:
+        - name: "workitemtype"
+          type: "equals"
+          pattern : "sometype"
+        - name: "comment"
+          type: "matchregex"
+          pattern : "^value$"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "start-build.ps1"
+            arguments: "-id {{signal.id}} -user {{signal.user}}"

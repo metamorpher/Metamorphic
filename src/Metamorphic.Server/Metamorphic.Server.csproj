@@ -242,6 +242,18 @@
     <None Include="Rules\test-powershell.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Rules\tfs-buildcomplete.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Rules\tfs-checkin.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Rules\tfs-workitemchange.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Rules\tfs-workitemcomment.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Scripts\test-powershell.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

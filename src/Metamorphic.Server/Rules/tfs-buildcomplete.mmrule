@@ -1,0 +1,20 @@
+﻿---
+    name: "tfs-buildcomplete"
+    description: "Executes a powershell script when a TFS build completes."
+    enabled: true
+
+    signal:
+        id: "BuildComplete"
+        parameters:
+            build: "build_definition_name"
+            buildnumber: "build_number"
+            issuccess: "flag"
+            status: "build_status"
+            user: "build_user"
+            requestedby: "other_build_user"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "test-build.ps1"
+            arguments: "-build {{signal.build}} -buildnumber {{signal.buildnumber}} -user {{signal.user}}"
