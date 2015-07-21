@@ -35,7 +35,7 @@ namespace Metamorphic.Server.Signals
         /// </summary>
         public void Start()
         {
-            var uri = "http://localhost:7070";
+            var uri = "http://*:7070";
             m_Server = WebApp.Start<WebCallStartup>(uri);
         }
 
