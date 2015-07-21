@@ -150,12 +150,15 @@ namespace Metamorphic.Server.Rules
                         var match = s_TriggerParameterMatcher.Match(parameterText);
                         if (match.Success)
                         {
-                            // The name of the parameter is in the first match group. The first item in the groups collection
-                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
-                            var signalParameterName = match.Groups[1].Value;
-                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
+                            // The first item in the groups collection is the full string that matched 
+                            // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                            for (int i = 1; i < match.Groups.Count; i++)
                             {
-                                return false;
+                                var signalParameterName = match.Groups[i].Value;
+                                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -224,18 +227,27 @@ namespace Metamorphic.Server.Rules
                         var match = s_TriggerParameterMatcher.Match(parameterText);
                         if (match.Success)
                         {
-                            // The name of the parameter is in the first match group. The first item in the groups collection
-                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
-                            var signalParameterName = match.Groups[1].Value;
-                            var condition = definition.Condition.Find(c => c.Name.Equals(signalParameterName));
-
-                            Predicate<object> pred = null;
-                            if (condition != null)
+                            // The first item in the groups collection is the full string that matched 
+                            // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                            var signalParameters = new List<string>();
+                            var signalParameterConditions = new Dictionary<string, Predicate<object>>();
+                            for (int i = 1; i < match.Groups.Count; i++)
                             {
-                                pred = ToCondition(condition);
+                                var signalParameterName = match.Groups[i].Value;
+                                signalParameters.Add(signalParameterName);
+
+                                var condition = definition.Condition.Find(c => c.Name.Equals(signalParameterName));
+                                if (condition != null)
+                                {
+                                    var pred = ToCondition(condition);
+                                    if (pred != null)
+                                    {
+                                        signalParameterConditions.Add(signalParameterName, pred);
+                                    }
+                                }
                             }
 
-                            reference = new ActionParameterValue(pair.Key, signalParameterName, pred);
+                            reference = new ActionParameterValue(pair.Key, parameterText, signalParameters, signalParameterConditions);
                         }
                     }
 

@@ -44,6 +44,35 @@ namespace Metamorphic.Server.Rules
         }
 
         [Test]
+        public void CreateDefinitionFromFileWithActionWithParametersReferencingMultipleSignalParameters()
+        {
+            var fileName = "ActionWithParametersReferencingMultipleSignalParameters.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+
+            Assert.AreEqual("Name", definition.Name);
+            Assert.AreEqual("Description", definition.Description);
+            Assert.IsTrue(definition.Enabled);
+
+            Assert.AreEqual(0, definition.Condition.Count);
+
+            Assert.AreEqual("Signal", definition.Signal.Id);
+            Assert.AreEqual(2, definition.Signal.Parameters.Count);
+            Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
+            Assert.IsTrue(definition.Signal.Parameters.ContainsKey("baz"));
+            Assert.AreEqual("otherstuff", definition.Signal.Parameters["baz"]);
+
+            Assert.AreEqual("Action", definition.Action.Id);
+            Assert.AreEqual(1, definition.Action.Parameters.Count);
+            Assert.IsTrue(definition.Action.Parameters.ContainsKey("foo"));
+            Assert.AreEqual("{{signal.bar}} {{signal.baz}}", definition.Action.Parameters["foo"]);
+        }
+
+        [Test]
         public void CreateDefinitionFromFileWithActionWithParametersReferencingSignal()
         {
             var fileName = "ActionWithParametersReferencingSignal.mmrule";

@@ -7,6 +7,8 @@
 using Metamorphic.Core.Signals;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Metamorphic.Core.Rules
 {
@@ -22,10 +24,11 @@ namespace Metamorphic.Core.Rules
         private static readonly Predicate<object> s_PassThrough = o => true;
 
         /// <summary>
-        /// The condition that the signal parameter has to match in order for the signal to match
+        /// The collection of conditions that the signal parameters have to match in order for the signal to match
         /// the current reference.
         /// </summary>
-        private readonly Predicate<object> m_Condition;
+        private readonly IDictionary<string, Predicate<object>> m_Conditions
+            = new Dictionary<string, Predicate<object>>();
 
         /// <summary>
         /// The name of the parameter.
@@ -33,9 +36,11 @@ namespace Metamorphic.Core.Rules
         private readonly string m_Name;
 
         /// <summary>
-        /// The name of the signal parameter that should be used for the action parameter value.
+        /// The collection containing the ordered list of signal parameter names that should be used for 
+        /// the action parameter value.
         /// </summary>
-        private readonly string m_SignalParameter;
+        private readonly List<string> m_SignalParameters
+            = new List<string>();
 
         /// <summary>
         /// The value of the parameter. May be null if the value should be taken from the signal.
@@ -75,8 +80,9 @@ namespace Metamorphic.Core.Rules
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
-        /// <param name="signalParameter">The name of the signal parameter that should be used as the value.</param>
-        /// <param name="condition">
+        /// <param name="parameterFormat">The format string for the parameter value.</param>
+        /// <param name="signalParameters">The name of the signal parameter that should be used as the value.</param>
+        /// <param name="conditions">
         ///     The predicate used to verify if a given parameter value is allowed for the current
         ///     parameter. If there are no conditions on the parameter then <see langword="null" />
         ///     is allowed.
@@ -88,24 +94,36 @@ namespace Metamorphic.Core.Rules
         ///     Thrown if <paramref name="parameterName"/> is an empty string.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="signalParameter"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="parameterFormat"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="signalParameter"/> is an empty string.
+        ///     Thrown if <paramref name="parameterFormat"/> is an empty string.
         /// </exception>
-        public ActionParameterValue(string parameterName, string signalParameter, Predicate<object> condition = null)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="signalParameters"/> is <see langword="null" />.
+        /// </exception>
+        public ActionParameterValue(string parameterName, string parameterFormat, List<string> signalParameters, IDictionary<string, Predicate<object>> conditions = null)
         {
             {
                 Lokad.Enforce.Argument(() => parameterName);
                 Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
 
-                Lokad.Enforce.Argument(() => signalParameter);
-                Lokad.Enforce.Argument(() => signalParameter, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => parameterFormat);
+                Lokad.Enforce.Argument(() => parameterFormat, Lokad.Rules.StringIs.NotEmpty);
+
+                Lokad.Enforce.Argument(() => signalParameters);
             }
 
             m_Name = parameterName;
-            m_SignalParameter = signalParameter;
-            m_Condition = condition ?? s_PassThrough;
+            m_Value = parameterFormat;
+            m_SignalParameters.AddRange(signalParameters);
+            if (conditions != null)
+            {
+                foreach (var pair in conditions)
+                {
+                    m_Conditions.Add(pair.Key, pair.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -126,17 +144,29 @@ namespace Metamorphic.Core.Rules
                 return false;
             }
 
-            if (m_Value != null)
+            if ((m_Value != null) && (m_SignalParameters.Count == 0))
             {
                 return true;
             }
 
-            if (!signal.ContainsParameter(m_SignalParameter))
+            foreach (var parameterName in m_SignalParameters)
             {
-                return false;
+                if (!signal.ContainsParameter(parameterName))
+                {
+                    return false;
+                }
+
+                if (m_Conditions.ContainsKey(parameterName))
+                {
+                    var condition = m_Conditions[parameterName];
+                    if (!condition(signal.ParameterValue(parameterName)))
+                    {
+                        return false;
+                    }
+                }
             }
 
-            return (m_Condition != null) ? m_Condition(signal.ParameterValue(m_SignalParameter)) : true;
+            return true;
         }
 
         /// <summary>
@@ -153,7 +183,25 @@ namespace Metamorphic.Core.Rules
                 throw new InvalidSignalForRuleException();
             }
 
-            return m_Value ?? signal.ParameterValue(m_SignalParameter);
+            if ((m_Value != null) && (m_SignalParameters.Count == 0))
+            {
+                return m_Value;
+            }
+
+            if (m_SignalParameters.Count == 1)
+            {
+                return signal.ParameterValue(m_SignalParameters[0]);
+            }
+
+            var text = m_Value as string;
+            foreach (var parameter in m_SignalParameters)
+            {
+                text = text.Replace(
+                    "{{signal." + parameter + "}}",
+                    (string)signal.ParameterValue(parameter));
+            }
+
+            return text;
         }
     }
 }

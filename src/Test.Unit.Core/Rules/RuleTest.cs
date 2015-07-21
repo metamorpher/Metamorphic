@@ -47,8 +47,8 @@ namespace Metamorphic.Core.Rules
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", "a"),
-                ["b"] = new ActionParameterValue("b", "b"),
+                ["a"] = new ActionParameterValue("a", "{{signal.a}}", new List<string> { "a" }),
+                ["b"] = new ActionParameterValue("b", "{{signal.b}}", new List<string> { "b" }),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -68,7 +68,14 @@ namespace Metamorphic.Core.Rules
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", "b", o => false),
+                ["a"] = new ActionParameterValue(
+                    "a", 
+                    "{{signal.b}}", 
+                    new List<string> { "b" }, 
+                    new Dictionary<string, Predicate<object>>
+                    {
+                        ["b"] = o => false
+                    }),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -145,7 +152,7 @@ namespace Metamorphic.Core.Rules
             var parameterValue = 10;
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", parameterValue: parameterValue),
+                ["a"] = new ActionParameterValue("a", parameterValue),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
@@ -169,7 +176,14 @@ namespace Metamorphic.Core.Rules
             var actionId = new ActionId("b");
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", "b", o => false),
+                ["a"] = new ActionParameterValue(
+                    "a",
+                    "{{signal.b}}",
+                    new List<string> { "b" },
+                    new Dictionary<string, Predicate<object>>
+                    {
+                        ["b"] = o => false
+                    }),
             };
             var rule = new Rule(sensorId, actionId, parameters);
 
