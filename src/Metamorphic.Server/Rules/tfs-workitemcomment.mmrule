@@ -17,10 +17,10 @@
           pattern : "sometype"
         - name: "comment"
           type: "matchregex"
-          pattern : "^value$"
+          pattern : "^(development complete.)$"
 
     action:
         id: "powershell"
         parameters:
             scriptfile: "start-build.ps1"
-            arguments: "-id {{signal.id}} -user {{signal.user}}"
+            arguments: "-id {{signal.id}} -user {{signal.user}} -comment {{signal.comment}}"
