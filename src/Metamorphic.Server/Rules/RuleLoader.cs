@@ -294,14 +294,14 @@ namespace Metamorphic.Server.Rules
                     {
                         var text = o as string;
                         var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern);
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
                     };
                 case "notmatchregex":
                     return o =>
                     {
                         var text = o as string;
                         var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern);
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
                     };
                 case "startswith":
                     return o =>
