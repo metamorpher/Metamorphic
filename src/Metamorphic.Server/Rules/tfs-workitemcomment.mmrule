@@ -23,4 +23,4 @@
         id: "powershell"
         parameters:
             scriptfile: "start-build.ps1"
-            arguments: "-id {{signal.id}} -user {{signal.user}} -comment {{signal.comment}}"
+            arguments: "-id {{signal.id}} -user {{signal.user}} -comment {{signal.comment}} -Verbose"

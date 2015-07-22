@@ -254,6 +254,7 @@
     <None Include="Rules\tfs-workitemcomment.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scripts\start-build.ps1" />
     <None Include="Scripts\test-powershell.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
