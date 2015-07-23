@@ -1,0 +1,18 @@
+﻿---
+    name: "tfs-approveissue-fromtest"
+    description: "Marks an issue as approved by an automated test."
+    enabled: true
+
+    signal:
+        id: "TestComplete"
+        parameters:
+            projectcollection: "tfs_team_project_collection"
+            projectname: "tfs_project_name"
+            id: "workitem_id"
+            result: "test_result"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "update-issuecomment.ps1"
+            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -comment {{signal.result}}"

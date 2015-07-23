@@ -1,6 +1,6 @@
 ﻿---
-    name: "tfs-publishrelease-fromworkitemchange"
-    description: "Executes a powershell script when a TFS item changes state."
+    name: "tfs-changeworkitemstate-fromchildworkitemstatechange"
+    description: "Changes the state of a Release if all child work items are 'done'."
     enabled: true
 
     signal:
@@ -16,14 +16,14 @@
 
     condition:
         - name: "workitemtype"
-          type: "equals"
+          type: "notequals"
           pattern : "Release"
         - name: "state"
           type: "equals"
-          pattern : "In Development"
+          pattern : "Done"
 
     action:
         id: "powershell"
         parameters:
-            scriptfile: "publish-release.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}}"
+            scriptfile: "update-releasestatus.ps1"
+            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}} -Verbose"

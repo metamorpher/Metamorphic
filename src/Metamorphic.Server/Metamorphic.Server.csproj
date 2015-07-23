@@ -239,25 +239,26 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Rules\test-powershell.mmrule">
+    <None Include="Rules\tfs-approveissue-fromtest.mmrule" />
+    <None Include="Rules\tfs-changeworkitemstate-fromchildworkitemstatechange.mmrule" />
+    <None Include="Rules\tfs-changeworkitemstate-fromissuecomment.mmrule" />
+    <None Include="Rules\tfs-onbuildcomplete-notifytester.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\tfs-buildcomplete.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-checkin.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Rules\tfs-onbuildcomplete-runtests.mmrule" />
     <None Include="Rules\tfs-workitemchange.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Rules\tfs-workitemcomment.mmrule">
+    <None Include="Rules\tfs-startbuild-fromissuecomment.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scripts\Invoke-Tests.ps1" />
+    <None Include="Scripts\Notify-Tester.ps1" />
+    <None Include="Scripts\Publish-Release.ps1" />
     <None Include="Scripts\start-build.ps1" />
-    <None Include="Scripts\test-powershell.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Scripts\Update-IssueComment.ps1" />
+    <None Include="Scripts\Update-IssueStatus.ps1" />
+    <None Include="Scripts\Update-ReleaseStatus.ps1" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

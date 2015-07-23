@@ -1,0 +1,28 @@
+﻿---
+    name: "tfs-changeworkitemstate-fromissuecomment"
+    description: "Changes the state of an issue if all tests have passed."
+    enabled: true
+
+    signal:
+        id: "WorkItemComment"
+        parameters:
+            projectcollection: "tfs_team_project_collection"
+            projectname: "tfs_project_name"
+            workitemtype: "workitem_type"
+            id: "workitem_id"
+            user: "workitem_user"
+            comment: "workitem_comment"
+
+    condition:
+        - name: "workitemtype"
+          type: "notequals"
+          pattern : "Release"
+        - name: "comment"
+          type: "startswith"
+          pattern : "Issue status: Approve:"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "update-issuestatus.ps1"
+            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}} -Verbose"

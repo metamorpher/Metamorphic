@@ -1,0 +1,28 @@
+﻿---
+    name: "tfs-onbuildcomplete-notifytester"
+    description: "Notifies a tester when a build completes."
+    enabled: true
+
+    signal:
+        id: "BuildComplete"
+        parameters:
+            projectcollection: "tfs_team_project_collection"
+            projectname: "tfs_project_name"
+            build: "build_definition_name"
+            buildnumber: "build_number"
+            issuccess: "flag"
+            status: "build_status"
+            user: "build_user"
+            requestedby: "other_build_user"
+            reason: "build_reason"
+
+    condition:
+        - name: "reason"
+          type: "startswith"
+          pattern : "Requested by pipeline:"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "invoke-tests.ps1"
+            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -build {{signal.build}} -buildnumber {{signal.buildnumber}} -user {{signal.requestedby}} -reason {{signal.reason}}"
