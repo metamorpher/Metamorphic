@@ -4,11 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Signals;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
+using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
 {
@@ -19,25 +18,16 @@ namespace Metamorphic.Core.Rules
     public sealed class ActionParameterValue
     {
         /// <summary>
-        /// The predicate that will be used if a parameter does not have any conditions on it.
-        /// </summary>
-        private static readonly Predicate<object> s_PassThrough = o => true;
-
-        /// <summary>
-        /// The collection of conditions that the signal parameters have to match in order for the signal to match
-        /// the current reference.
-        /// </summary>
-        private readonly IDictionary<string, Predicate<object>> m_Conditions
-            = new Dictionary<string, Predicate<object>>();
-
-        /// <summary>
-        /// The name of the parameter.
+        /// The name of the parameter. Note the parameter name is stored in lower case so as to provide 
+        /// case-insensitive comparisons between the signal and rule parameter names.
         /// </summary>
         private readonly string m_Name;
 
         /// <summary>
         /// The collection containing the ordered list of signal parameter names that should be used for 
-        /// the action parameter value.
+        /// the action parameter value. Note that all parameter names are
+        /// stored in lower case so as to provide case-insensitive comparisons between the signal and
+        /// rule parameter names.
         /// </summary>
         private readonly List<string> m_SignalParameters
             = new List<string>();
@@ -72,7 +62,7 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => parameterValue);
             }
 
-            m_Name = parameterName;
+            m_Name = parameterName.ToLower();
             m_Value = parameterValue;
         }
 
@@ -82,11 +72,6 @@ namespace Metamorphic.Core.Rules
         /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterFormat">The format string for the parameter value.</param>
         /// <param name="signalParameters">The name of the signal parameter that should be used as the value.</param>
-        /// <param name="conditions">
-        ///     The predicate used to verify if a given parameter value is allowed for the current
-        ///     parameter. If there are no conditions on the parameter then <see langword="null" />
-        ///     is allowed.
-        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
         /// </exception>
@@ -102,7 +87,7 @@ namespace Metamorphic.Core.Rules
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="signalParameters"/> is <see langword="null" />.
         /// </exception>
-        public ActionParameterValue(string parameterName, string parameterFormat, List<string> signalParameters, IDictionary<string, Predicate<object>> conditions = null)
+        public ActionParameterValue(string parameterName, string parameterFormat, List<string> signalParameters)
         {
             {
                 Lokad.Enforce.Argument(() => parameterName);
@@ -114,15 +99,11 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => signalParameters);
             }
 
-            m_Name = parameterName;
+            m_Name = parameterName.ToLower();
             m_Value = parameterFormat;
-            m_SignalParameters.AddRange(signalParameters);
-            if (conditions != null)
+            foreach (var parameter in signalParameters)
             {
-                foreach (var pair in conditions)
-                {
-                    m_Conditions.Add(pair.Key, pair.Value);
-                }
+                m_SignalParameters.Add(parameter.ToLower());
             }
         }
 
@@ -154,15 +135,6 @@ namespace Metamorphic.Core.Rules
                 if (!signal.ContainsParameter(parameterName))
                 {
                     return false;
-                }
-
-                if (m_Conditions.ContainsKey(parameterName))
-                {
-                    var condition = m_Conditions[parameterName];
-                    if (!condition(signal.ParameterValue(parameterName)))
-                    {
-                        return false;
-                    }
                 }
             }
 

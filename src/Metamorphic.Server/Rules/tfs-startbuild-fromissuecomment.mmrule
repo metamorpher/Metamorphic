@@ -25,4 +25,4 @@
         id: "powershell"
         parameters:
             scriptfile: "start-build.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}} -comment {{signal.comment}} -Verbose"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -user \"{{signal.user}}\" -comment \"{{signal.comment}}\" -Verbose"

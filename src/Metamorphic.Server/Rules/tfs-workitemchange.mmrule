@@ -26,4 +26,4 @@
         id: "powershell"
         parameters:
             scriptfile: "publish-release.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}}"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -user \"{{signal.user}}\" -Verbose"

@@ -15,4 +15,4 @@
         id: "powershell"
         parameters:
             scriptfile: "update-issuecomment.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -comment {{signal.result}}"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -comment \"{{signal.result}}\" -Verbose"

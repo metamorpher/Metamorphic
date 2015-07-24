@@ -25,4 +25,4 @@
         id: "powershell"
         parameters:
             scriptfile: "invoke-tests.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -build {{signal.build}} -buildnumber {{signal.buildnumber}} -user {{signal.requestedby}} -reason {{signal.reason}}"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -build \"{{signal.build}}\" -buildnumber \"{{signal.buildnumber}}\" -user \"{{signal.requestedby}}\" -reason \"{{signal.reason}}\" -Verbose"

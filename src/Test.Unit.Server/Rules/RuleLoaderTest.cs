@@ -808,6 +808,56 @@ namespace Metamorphic.Server.Rules
         }
 
         [Test]
+        public void LoadRuleWithMultipleConditionsOnSignalParametersIntoASingleActionParameterWithParametersMatchingConditions()
+        {
+            var fileName = "RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
+
+            var parameterValue1 = "stuff_bar";
+            var parameterValue2 = "baz_somestuff";
+            var signal = new Signal(
+                new SignalTypeId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["bar"] = parameterValue1,
+                    ["baz"] = parameterValue2,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("foo"));
+            Assert.AreEqual(string.Format("{0} {1}", parameterValue1, parameterValue2), job.ParameterValue("foo"));
+        }
+
+        [Test]
+        public void LoadRuleWithMultipleConditionsOnSignalParametersIntoASingleActionParameterWithParametersNotMatchingConditions()
+        {
+            var fileName = "RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
+
+            var parameterValue1 = "bar_stuff";
+            var parameterValue2 = "somestuff_baz";
+            var signal = new Signal(
+                new SignalTypeId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["bar"] = parameterValue1,
+                    ["baz"] = parameterValue2,
+                });
+            Assert.Throws< InvalidSignalForRuleException>(() => rule.ToJob(signal));
+        }
+
+        [Test]
         public void LoadRuleWithNotEqualsCondition()
         {
             var fileName = "RuleWithNotEqualsCondition.mmrule";

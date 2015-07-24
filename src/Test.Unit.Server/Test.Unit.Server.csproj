@@ -223,6 +223,9 @@
     <None Include="TestFiles\NotMatchRegexCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\RuleWithEndsWithCondition.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

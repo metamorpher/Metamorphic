@@ -71,37 +71,7 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void IsValidForSignalWithMultipleMatchingParameterValueWithCondition()
-        {
-            var parameter1 = "a";
-            var parameter2 = "b";
-            var parameterValue1 = "10";
-            Predicate<object> condition1 = o => o.Equals(parameterValue1);
-            var reference = new ActionParameterValue(
-                "c",
-                "{{signal." + parameter1 + "}} {{signal." + parameter2 + "}}",
-                new List<string>
-                {
-                    parameter1,
-                    parameter2
-                },
-                new Dictionary<string, Predicate<object>>
-                {
-                    [parameter1] = condition1
-                });
-
-            var signal = new Signal(
-                new SignalTypeId("b"),
-                new Dictionary<string, object>
-                {
-                    [parameter1] = "10",
-                    [parameter2] = "15"
-                });
-            Assert.IsTrue(reference.IsValidFor(signal));
-        }
-
-        [Test]
-        public void IsValidForSignalWithMultipleMatchingParameterValueWithoutCondition()
+        public void IsValidForSignalWithMultipleMatchingParameterValue()
         {
             var parameter1 = "a";
             var parameter2 = "b";
@@ -125,33 +95,6 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void IsValidForSignalWithNonMatchingParameterValue()
-        {
-            var parameterName = "a";
-            var parameterValue = "11";
-            Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new ActionParameterValue(
-                "b",
-                "{{signal." + parameterName + "}}",
-                new List<string>
-                {
-                    parameterName
-                },
-                new Dictionary<string, Predicate<object>>
-                {
-                    [parameterName] = condition
-                });
-
-            var signal = new Signal(
-                new SignalTypeId("b"),
-                new Dictionary<string, object>
-                {
-                    { parameterName, "10" }
-                });
-            Assert.IsFalse(reference.IsValidFor(signal));
-        }
-
-        [Test]
         public void IsValidForSignalWithMissingParameter()
         {
             var parameterName = "a";
@@ -161,33 +104,6 @@ namespace Metamorphic.Core.Rules
                 new SignalTypeId("b"),
                 new Dictionary<string, object>());
             Assert.IsFalse(reference.IsValidFor(signal));
-        }
-
-        [Test]
-        public void IsValidForSignalWithSingleMatchingParameterValueWithCondition()
-        {
-            var parameterName = "a";
-            var parameterValue = "10";
-            Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new ActionParameterValue(
-                "b", 
-                "{{signal." + parameterName + "}}", 
-                new List<string>
-                {
-                    parameterName
-                }, 
-                new Dictionary<string, Predicate<object>>
-                {
-                    [parameterName] = condition
-                });
-
-            var signal = new Signal(
-                new SignalTypeId("b"),
-                new Dictionary<string, object>
-                {
-                    { parameterName, "10" }
-                });
-            Assert.IsTrue(reference.IsValidFor(signal));
         }
 
         [Test]

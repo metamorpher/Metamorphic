@@ -20,37 +20,106 @@ namespace Metamorphic.Core.Rules
         public void CreateWithNullActionId()
         {
             var sensorId = new SignalTypeId("a");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>();
-            Assert.Throws<ArgumentNullException>(() => new Rule(sensorId, null, parameters));
+            Assert.Throws<ArgumentNullException>(() => new Rule("a", "b", sensorId, null, conditions, parameters));
+        }
+
+        [Test]
+        public void CreateWithNullConditionCollection()
+        {
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var parameters = new Dictionary<string, ActionParameterValue>();
+            Assert.Throws<ArgumentNullException>(() => new Rule(name, description, sensorId, actionId, null, parameters));
+        }
+
+        [Test]
+        public void CreateWithNullDescription()
+        {
+            var name = "a";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
+            var parameters = new Dictionary<string, ActionParameterValue>();
+            Assert.Throws<ArgumentNullException>(() => new Rule(name, null, sensorId, actionId, conditions, parameters));
+        }
+
+        [Test]
+        public void CreateWithNullName()
+        {
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
+            var parameters = new Dictionary<string, ActionParameterValue>();
+            Assert.Throws<ArgumentNullException>(() => new Rule(null, description, sensorId, actionId, conditions, parameters));
         }
 
         [Test]
         public void CreateWithNullReferenceCollection()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
-            Assert.Throws<ArgumentNullException>(() => new Rule(sensorId, actionId, null));
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
+            Assert.Throws<ArgumentNullException>(() => new Rule(name, description, sensorId, actionId, conditions, null));
         }
 
         [Test]
         public void CreateWithNullSensorId()
         {
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>();
-            Assert.Throws<ArgumentNullException>(() => new Rule(null, actionId, parameters));
+            Assert.Throws<ArgumentNullException>(() => new Rule(name, description, null, actionId, conditions, parameters));
+        }
+
+        [Test]
+        public void ShouldProcessWithBlockingCondition()
+        {
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>
+            {
+                ["a"] = (object obj) => false,
+            };
+            var parameters = new Dictionary<string, ActionParameterValue>
+            {
+                ["a"] = new ActionParameterValue("a", 2),
+            };
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
+
+            var signal = new Signal(
+                sensorId,
+                new Dictionary<string, object>
+                {
+                    ["a"] = 1
+                });
+            Assert.IsFalse(rule.ShouldProcess(signal));
         }
 
         [Test]
         public void ShouldProcessWithMissingParameters()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", "{{signal.a}}", new List<string> { "a" }),
                 ["b"] = new ActionParameterValue("b", "{{signal.b}}", new List<string> { "b" }),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
                 sensorId,
@@ -64,20 +133,19 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNonMatchingParameters()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue(
                     "a", 
                     "{{signal.b}}", 
-                    new List<string> { "b" }, 
-                    new Dictionary<string, Predicate<object>>
-                    {
-                        ["b"] = o => false
-                    }),
+                    new List<string> { "b" }),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
                 sensorId,
@@ -91,16 +159,19 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNonMatchingSensorId()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", 2),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
-                new SignalTypeId("c"),
+                new SignalTypeId("e"),
                 new Dictionary<string, object>
                 {
                     ["a"] = 1
@@ -111,13 +182,16 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcess()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", 2),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
                 sensorId,
@@ -131,14 +205,17 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ShouldProcessWithNullSignal()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", 1),
                 ["b"] = new ActionParameterValue("b", 2),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             Assert.IsFalse(rule.ShouldProcess(null));
         }
@@ -146,15 +223,18 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithDefaultValue()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
 
             var parameterValue = 10;
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", parameterValue),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
                 sensorId,
@@ -172,20 +252,19 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithInvalidSignal()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue(
                     "a",
                     "{{signal.b}}",
-                    new List<string> { "b" },
-                    new Dictionary<string, Predicate<object>>
-                    {
-                        ["b"] = o => false
-                    }),
+                    new List<string> { "b" }),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var signal = new Signal(
                 sensorId,
@@ -199,14 +278,17 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithNullSignal()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", 1),
                 ["b"] = new ActionParameterValue("b", 2),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             Assert.Throws<InvalidSignalForRuleException>(() => rule.ToJob(null));
         }
@@ -214,14 +296,17 @@ namespace Metamorphic.Core.Rules
         [Test]
         public void ToJobWithSignalValue()
         {
-            var sensorId = new SignalTypeId("a");
-            var actionId = new ActionId("b");
+            var name = "a";
+            var description = "b";
+            var sensorId = new SignalTypeId("c");
+            var actionId = new ActionId("d");
 
+            var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue("a", 1),
             };
-            var rule = new Rule(sensorId, actionId, parameters);
+            var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
             var parameterValue = 1;
             var signal = new Signal(

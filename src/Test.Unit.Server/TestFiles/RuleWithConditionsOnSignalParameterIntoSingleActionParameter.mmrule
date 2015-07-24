@@ -9,6 +9,14 @@
             bar: "stuff"
             baz: "otherstuff"
 
+    condition:
+        - name: "bar"
+          type: "startswith"
+          pattern : "stuff"
+        - name: "baz"
+          type: "endswith"
+          pattern : "stuff"
+
     action:
         id: "Action"
         parameters:

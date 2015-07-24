@@ -63,13 +63,11 @@ foreach($build in $builds)
             $buildDefinitionToRun.Save()
         }
 
-        $buildRequest = $buildDefinition.CreateBuildRequest()
+        $buildRequest = $buildDefinitionToRun.CreateBuildRequest()
         $buildRequest.RequestedFor = $user
         $buildRequest.Reason = "Requested by pipeline: Issue: $id"
 
-        $buildServer.QueueBuild($buildRequest) | Out-Null
-
         Write-Output "Queueing build for: $($buildDefinitionToRun.Name)"
-        $buildServer.QueueBuild($buildDefinitionToRun) | Out-Null
+        $buildServer.QueueBuild($buildRequest) | Out-Null
     }
 }

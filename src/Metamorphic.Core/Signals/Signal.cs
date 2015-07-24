@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Core.Properties;
-using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Signals
 {
@@ -19,9 +18,12 @@ namespace Metamorphic.Core.Signals
     public sealed class Signal
     {
         /// <summary>
-        /// The collection that stores the parameters for the signal.
+        /// The collection that stores the parameters for the signal. Note that all parameter names are
+        /// stored in lower case so as to provide case-insensitive comparisons between the signal and
+        /// rule parameter names.
         /// </summary>
-        private readonly IDictionary<string, object> m_Parameters;
+        private readonly IDictionary<string, object> m_Parameters
+            = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Signal"/> class.
@@ -42,7 +44,10 @@ namespace Metamorphic.Core.Signals
             }
 
             Sensor = sensorId;
-            m_Parameters = parameters;
+            foreach (var pair in parameters)
+            {
+                m_Parameters.Add(pair.Key.ToLower(), pair.Value);
+            }
         }
 
         /// <summary>
@@ -60,7 +65,7 @@ namespace Metamorphic.Core.Signals
                 return false;
             }
 
-            return m_Parameters.ContainsKey(name);
+            return m_Parameters.ContainsKey(name.ToLower());
         }
 
         /// <summary>
@@ -82,7 +87,7 @@ namespace Metamorphic.Core.Signals
                         name));
             }
 
-            return m_Parameters[name];
+            return m_Parameters[name.ToLower()];
         }
 
         /// <summary>

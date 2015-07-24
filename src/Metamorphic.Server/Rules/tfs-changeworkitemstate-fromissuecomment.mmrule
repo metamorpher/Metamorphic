@@ -25,4 +25,4 @@
         id: "powershell"
         parameters:
             scriptfile: "update-issuestatus.ps1"
-            arguments: "-projectcollection {{signal.projectcollection}} -project {{signal.projectname}} -id {{signal.id}} -user {{signal.user}} -Verbose"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -user \"{{signal.user}}\" -Verbose"
