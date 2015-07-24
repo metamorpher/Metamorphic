@@ -36,15 +36,17 @@ $commonParameterSwitches =
     }
 
 $content = "All your fake tests have passed!"
-Write-Content -Path "\\tfsbuilds\tfsbduilds\$($build)\$($buildNumber)\testresult.txt" -Force
+Set-Content -Path "\\tfsbuilds\tfsbduilds\$($build)\$($buildNumber)\testresult.txt" -Force
+
+$reasonText = [System.IO.File]::ReadAllText((Join-Path $PSScriptRoot $buildNumber))
 
 $idRegex = '^(?:Requested\s*by\s*pipeline:)\s*(?:Issue:\s*)(.*)'
-if (-not ($reason -match $idRegex))
+if (-not ($reasonText -match $idRegex))
 {
-    throw "$reason does not match the expected build comment of 'Requested by pipeline: Issue: XXXXXX'"
+    throw "$reasonText does not match the expected build comment of 'Requested by pipeline: Issue: XXXXXX'"
 }
 
-$id = [regex]::Replace($reason, $idRegex, '$1')
+$id = [regex]::Replace($reasonText, $idRegex, '$1')
 
 $url = "http://vlt163:7070/api/signal/"
 

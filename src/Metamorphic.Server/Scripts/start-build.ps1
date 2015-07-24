@@ -65,9 +65,25 @@ foreach($build in $builds)
 
         $buildRequest = $buildDefinitionToRun.CreateBuildRequest()
         $buildRequest.RequestedFor = $user
-        $buildRequest.Reason = "Requested by pipeline: Issue: $id"
 
         Write-Output "Queueing build for: $($buildDefinitionToRun.Name)"
-        $buildServer.QueueBuild($buildRequest) | Out-Null
+        $queuedBuild = $buildServer.QueueBuild($buildRequest)
+        while ($queuedBuild.Build -eq $null)
+        {
+            Start-Sleep -Seconds 1
+            $queuedBuild.Refresh([Microsoft.TeamFoundation.Build.Client.QueryOptions]::BatchedRequests)
+            Write-Output "Waiting for build to start running ..."
+        }
+
+        while (-not ($queuedBuild.Build.BuildNumber.StartsWith($buildDefinitionToRun.Name)))
+        {
+            Start-Sleep -Seconds 1
+            $queuedBuild.Refresh([Microsoft.TeamFoundation.Build.Client.QueryOptions]::BatchedRequests)
+            Write-Output "Waiting for build to get it's proper build ID ..."
+        }
+
+        # Can't provide the build with meta data so just write this crap to a file
+        $content = "Requested by pipeline: Issue: $id"
+        Set-Content -Path (Join-Path $PSScriptRoot $queuedBuild.Build.BuildNumber) -Value $content -Verbose -Force
     }
 }
