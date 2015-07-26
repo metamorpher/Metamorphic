@@ -1,6 +1,6 @@
 ﻿---
-    name: "tfs-changeworkitemstate-fromissuecomment"
-    description: "Changes the state of an issue if all tests have passed."
+    name: "tfs-setissuetodone-fromissuecomment"
+    description: "Changes the state of an issue to DONE if all tests have passed and the issue has been approved by a tester."
     enabled: true
 
     signal:

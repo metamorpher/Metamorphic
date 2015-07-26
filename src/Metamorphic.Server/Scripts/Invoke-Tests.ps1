@@ -35,10 +35,16 @@ $commonParameterSwitches =
         ErrorAction = "Stop"
     }
 
-$content = "All your fake tests have passed!"
-Set-Content -Path "\\tfsbuilds\tfsbduilds\$($build)\$($buildNumber)\testresult.txt" -Force
+$reasonFile = Join-Path $PSScriptRoot $buildNumber
+if (-not (Test-Path $reasonFile))
+{
+    return
+}
 
-$reasonText = [System.IO.File]::ReadAllText((Join-Path $PSScriptRoot $buildNumber))
+$content = "All your fake tests have passed!"
+Set-Content -Path "\\AKTFSTSQL02\tfsbuilds\$($build)\$($buildNumber)\testresult.txt" -Value $content -Force
+
+$reasonText = [System.IO.File]::ReadAllText($reasonFile)
 
 $idRegex = '^(?:Requested\s*by\s*pipeline:)\s*(?:Issue:\s*)(.*)'
 if (-not ($reasonText -match $idRegex))
@@ -54,7 +60,7 @@ $content = @"
 {
     "Type" : "TestComplete",
     "ProjectCollection" : "$projectCollection",
-    "Project" : "$project",
+    "ProjectName" : "$project",
     "Id" : "$id",
     "Result" : "Issue status: Approve: Pipeline"
 }

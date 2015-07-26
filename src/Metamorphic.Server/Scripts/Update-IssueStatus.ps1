@@ -58,7 +58,9 @@ foreach($revision in $workItem.Revisions)
 
 if ($approvals -ge 2)
 {
-    Write-Output "Issue has been approved for completeness. Setting state to DONE"
+    $note = "Issue has been approved for completeness by multiple sources."
+    Write-Output "$note. Setting state to DONE"
     $workItem.State = 'Done'
+    $workItem.History = $note
     $workItem.Save()
 }

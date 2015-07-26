@@ -1,5 +1,5 @@
 ﻿---
-    name: "tfs-onbuildcomplete-notifytester"
+    name: "tfs-notifytester-onbuildcomplete"
     description: "Notifies a tester when a build completes."
     enabled: true
 
@@ -15,11 +15,6 @@
             user: "build_user"
             requestedby: "other_build_user"
             reason: "build_reason"
-
-    condition:
-        - name: "reason"
-          type: "startswith"
-          pattern : "Requested by pipeline:"
 
     action:
         id: "powershell"

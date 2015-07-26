@@ -16,11 +16,11 @@ param(
     [string] $tfsServerUri = 'http://tfstest:8080/tfs'
 )
 
-Write-Verbose "Publish-Release: param projectCollection = $projectCollection"
-Write-Verbose "Publish-Release: param project = $project"
-Write-Verbose "Publish-Release: param id = $id"
-Write-Verbose "Publish-Release: param user = $user"
-Write-Verbose "Publish-Release: param tfsServerUri = $tfsServerUri"
+Write-Verbose "Notify-ReleaseManager: param projectCollection = $projectCollection"
+Write-Verbose "Notify-ReleaseManager: param project = $project"
+Write-Verbose "Notify-ReleaseManager: param id = $id"
+Write-Verbose "Notify-ReleaseManager: param user = $user"
+Write-Verbose "Notify-ReleaseManager: param tfsServerUri = $tfsServerUri"
 
 $ErrorActionPreference = 'Stop'
 
@@ -39,23 +39,6 @@ $store = $tfs.GetService([Microsoft.TeamFoundation.WorkItemTracking.Client.WorkI
 
 $workItem = $store.GetWorkItem($id)
 
-# Expecting something like: Products in release: [CardPromotions]
-$buildAndBranchRegex = '^(?:Products\s*in\s*release:)\s*(?:\[)(.*?)(?:\])'
-
-$description = $workItem.Item('Vista.Description')
-if (-not ($description -match $versionNumberRegEx))
-{
-    throw "$description does not match the expected build comment of 'Products in release: [Build1, Build2, ...]'"
-}
-
-$products = ([regex]::Replace($description, $buildAndBranchRegex, '$1')).Split(',')
-
-$note = "All products have been released."
-Write-Output "$note. Setting state to DONE"
-$workItem.State = 'Done'
-$workItem.History = $note
-$workItem.Save()
-
 try
 {
     $settingsText = [System.IO.File]::ReadAllText((Join-Path $PSScriptRoot 'metamorphic.settings.json'))
@@ -63,10 +46,11 @@ try
 
     $to = "$($settings.Email)"
     $from = "The test pipeline <$($settings.Email)>"
-    $subject = "Released products as per release '$($workItem.Title)'"
+    $subject = "Release '$($workItem.Title)' is ready to be published"
     $body = @"
-    The following items have been released:
-$($products | Foreach-Object { "    * " + "$_" + [System.Environment]::NewLine })
+    All the linked children of release item $($workItem.Id) have been marked as done. You can now
+    publish this release. Publication will happen automatically if you set the state of the
+    release item $($workItem.Id) to 'In Development'
 "@
 
     $msg = New-Object System.Net.Mail.MailMessage $from, $to, $subject, $body

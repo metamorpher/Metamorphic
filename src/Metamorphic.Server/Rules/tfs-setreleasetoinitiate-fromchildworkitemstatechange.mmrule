@@ -1,5 +1,5 @@
 ﻿---
-    name: "tfs-changeworkitemstate-fromchildworkitemstatechange"
+    name: "tfs-setreleasetoinitiate-fromchildworkitemstatechange"
     description: "Changes the state of a Release if all child work items are 'done'."
     enabled: true
 

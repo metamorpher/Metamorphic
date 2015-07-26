@@ -1,6 +1,6 @@
 ﻿---
-    name: "tfs-onbuildcomplete-notifytester"
-    description: "Notifies a tester when a build completes."
+    name: "tfs-runtests-onbuildcomplete"
+    description: "Starts a set of automated tests when a build completes."
     enabled: true
 
     signal:
@@ -15,11 +15,6 @@
             user: "build_user"
             requestedby: "other_build_user"
             reason: "build_reason"
-
-    condition:
-        - name: "reason"
-          type: "startswith"
-          pattern : "Requested by pipeline:"
 
     action:
         id: "powershell"
