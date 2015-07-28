@@ -44,6 +44,35 @@ namespace Metamorphic.Server.Rules
         }
 
         [Test]
+        public void CreateDefinitionFromFileWithActionWithParametersReferencingMultipleSignalParameters()
+        {
+            var fileName = "ActionWithParametersReferencingMultipleSignalParameters.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+
+            Assert.AreEqual("Name", definition.Name);
+            Assert.AreEqual("Description", definition.Description);
+            Assert.IsTrue(definition.Enabled);
+
+            Assert.AreEqual(0, definition.Condition.Count);
+
+            Assert.AreEqual("Signal", definition.Signal.Id);
+            Assert.AreEqual(2, definition.Signal.Parameters.Count);
+            Assert.IsTrue(definition.Signal.Parameters.ContainsKey("bar"));
+            Assert.AreEqual("stuff", definition.Signal.Parameters["bar"]);
+            Assert.IsTrue(definition.Signal.Parameters.ContainsKey("baz"));
+            Assert.AreEqual("otherstuff", definition.Signal.Parameters["baz"]);
+
+            Assert.AreEqual("Action", definition.Action.Id);
+            Assert.AreEqual(1, definition.Action.Parameters.Count);
+            Assert.IsTrue(definition.Action.Parameters.ContainsKey("foo"));
+            Assert.AreEqual("{{signal.bar}} {{signal.baz}}", definition.Action.Parameters["foo"]);
+        }
+
+        [Test]
         public void CreateDefinitionFromFileWithActionWithParametersReferencingSignal()
         {
             var fileName = "ActionWithParametersReferencingSignal.mmrule";
@@ -776,6 +805,56 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
+        }
+
+        [Test]
+        public void LoadRuleWithMultipleConditionsOnSignalParametersIntoASingleActionParameterWithParametersMatchingConditions()
+        {
+            var fileName = "RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
+
+            var parameterValue1 = "stuff_bar";
+            var parameterValue2 = "baz_somestuff";
+            var signal = new Signal(
+                new SignalTypeId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["bar"] = parameterValue1,
+                    ["baz"] = parameterValue2,
+                });
+            var job = rule.ToJob(signal);
+            Assert.AreEqual(new ActionId("Action"), job.Action);
+            Assert.AreEqual(1, job.ParameterNames().Count());
+            Assert.IsTrue(job.ContainsParameter("foo"));
+            Assert.AreEqual(string.Format("{0} {1}", parameterValue1, parameterValue2), job.ParameterValue("foo"));
+        }
+
+        [Test]
+        public void LoadRuleWithMultipleConditionsOnSignalParametersIntoASingleActionParameterWithParametersNotMatchingConditions()
+        {
+            var fileName = "RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule";
+
+            var loader = new RuleLoader(
+                s => true,
+                new SystemDiagnostics((l, m) => { }, null));
+            var rule = loader.Load(Path.Combine(RulePath(), fileName));
+            Assert.IsNotNull(rule);
+
+            var parameterValue1 = "bar_stuff";
+            var parameterValue2 = "somestuff_baz";
+            var signal = new Signal(
+                new SignalTypeId("Signal"),
+                new Dictionary<string, object>
+                {
+                    ["bar"] = parameterValue1,
+                    ["baz"] = parameterValue2,
+                });
+            Assert.Throws< InvalidSignalForRuleException>(() => rule.ToJob(signal));
         }
 
         [Test]

@@ -1,0 +1,28 @@
+﻿---
+    name: "tfs-startbuild-fromissuecomment"
+    description: "Starts a build when a comment is made on a TFS issue containing the following text: 'Development complete. Test builds: [Build1, Build2, ...] on branches [Branch1, Branch2, ...]'."
+    enabled: true
+
+    signal:
+        id: "WorkItemComment"
+        parameters:
+            projectcollection: "tfs_team_project_collection"
+            projectname: "tfs_project_name"
+            workitemtype: "workitem_type"
+            id: "workitem_id"
+            user: "workitem_user"
+            comment: "workitem_comment"
+
+    condition:
+        - name: "workitemtype"
+          type: "notequals"
+          pattern : "Release"
+        - name: "comment"
+          type: "startswith"
+          pattern : "Development complete."
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "start-build.ps1"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -user \"{{signal.user}}\" -comment \"{{signal.comment}}\" -Verbose"

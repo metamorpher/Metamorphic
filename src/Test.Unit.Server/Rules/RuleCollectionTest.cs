@@ -25,7 +25,13 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"), 
+                new ActionId("c"), 
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -39,7 +45,14 @@ namespace Metamorphic.Server.Rules
             var diagnostics = new SystemDiagnostics((l, m) => { }, null);
             var collection = new RuleCollection(diagnostics);
 
-            Assert.Throws<ArgumentException>(() => collection.Add(string.Empty, new Rule(new SignalTypeId("a"), new ActionId("b"), new Dictionary<string, ActionParameterValue>())));
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
+            Assert.Throws<ArgumentException>(() => collection.Add(string.Empty, rule));
         }
 
         [Test]
@@ -50,7 +63,13 @@ namespace Metamorphic.Server.Rules
 
             var sensor = new SignalTypeId("b");
             var path = "a";
-            var rule = new Rule(sensor, new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -58,7 +77,13 @@ namespace Metamorphic.Server.Rules
             Assert.AreSame(rule, matchingRules.First());
 
             var path2 = "a";
-            var rule2 = new Rule(sensor, new ActionId("e"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                sensor,
+                new ActionId("e"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             Assert.Throws<RuleAlreadyExistsException>(() => collection.Add(path2, rule2));
         }
 
@@ -70,7 +95,13 @@ namespace Metamorphic.Server.Rules
 
             var sensor = new SignalTypeId("b");
             var path1 = "a";
-            var rule1 = new Rule(sensor, new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path1, rule1);
 
             var matchingRules = collection.RulesForSignal(sensor);
@@ -78,7 +109,13 @@ namespace Metamorphic.Server.Rules
             Assert.AreSame(rule1, matchingRules.First());
 
             var path2 = "d";
-            var rule2 = new Rule(sensor, new ActionId("e"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                sensor, 
+                new ActionId("e"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path2, rule2);
 
             matchingRules = collection.RulesForSignal(sensor);
@@ -91,7 +128,14 @@ namespace Metamorphic.Server.Rules
             var diagnostics = new SystemDiagnostics((l, m) => { }, null);
             var collection = new RuleCollection(diagnostics);
 
-            Assert.Throws<ArgumentNullException>(() => collection.Add(null, new Rule(new SignalTypeId("a"), new ActionId("b"), new Dictionary<string, ActionParameterValue>())));
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
+            Assert.Throws<ArgumentNullException>(() => collection.Add(null, rule));
         }
 
         [Test]
@@ -116,7 +160,13 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -135,7 +185,13 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -156,7 +212,13 @@ namespace Metamorphic.Server.Rules
 
             var sensor = new SignalTypeId("b");
             var path1 = "a";
-            var rule1 = new Rule(sensor, new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path1, rule1);
 
             var matchingRules = collection.RulesForSignal(sensor);
@@ -164,7 +226,13 @@ namespace Metamorphic.Server.Rules
             Assert.AreSame(rule1, matchingRules.First());
 
             var path2 = "d";
-            var rule2 = new Rule(sensor, new ActionId("e"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                sensor,
+                new ActionId("e"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path2, rule2);
 
             matchingRules = collection.RulesForSignal(sensor);
@@ -184,7 +252,13 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -204,7 +278,13 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule);
 
             var matchingRules = collection.RulesForSignal(rule.Sensor);
@@ -224,14 +304,26 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule1 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule1);
 
             var matchingRules = collection.RulesForSignal(rule1.Sensor);
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Update(path, rule2);
 
             matchingRules = collection.RulesForSignal(rule1.Sensor);
@@ -246,14 +338,26 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule1 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule1);
 
             var matchingRules = collection.RulesForSignal(rule1.Sensor);
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             Assert.Throws<ArgumentException>(() => collection.Update(string.Empty, rule2));
         }
 
@@ -264,14 +368,26 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule1 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule1);
 
             var matchingRules = collection.RulesForSignal(rule1.Sensor);
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Update("d", rule2);
 
             matchingRules = collection.RulesForSignal(rule1.Sensor);
@@ -286,14 +402,26 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule1 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule1);
 
             var matchingRules = collection.RulesForSignal(rule1.Sensor);
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, rule2));
         }
 
@@ -304,14 +432,26 @@ namespace Metamorphic.Server.Rules
             var collection = new RuleCollection(diagnostics);
 
             var path = "a";
-            var rule1 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule1 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"),
+                new ActionId("c"),
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             collection.Add(path, rule1);
 
             var matchingRules = collection.RulesForSignal(rule1.Sensor);
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(new SignalTypeId("b"), new ActionId("c"), new Dictionary<string, ActionParameterValue>());
+            var rule2 = new Rule(
+                "a",
+                "b",
+                new SignalTypeId("b"), 
+                new ActionId("c"), 
+                new Dictionary<string, Predicate<object>>(),
+                new Dictionary<string, ActionParameterValue>());
             Assert.Throws<ArgumentNullException>(() => collection.Update(path, null));
         }
     }

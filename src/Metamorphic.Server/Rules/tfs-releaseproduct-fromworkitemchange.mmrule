@@ -1,0 +1,29 @@
+﻿---
+    name: "tfs-publishrelease-fromworkitemchange"
+    description: "Executes a powershell script when a TFS item changes state."
+    enabled: true
+
+    signal:
+        id: "WorkItemChange"
+        parameters:
+            projectcollection: "tfs_team_project_collection"
+            projectname: "tfs_project_name"
+            workitemtype: "workitem_type"
+            id: "workitem_id"
+            user: "workitem_user"
+            state: "workitem_state"
+            title: "workitem_title"
+
+    condition:
+        - name: "workitemtype"
+          type: "equals"
+          pattern : "Release"
+        - name: "state"
+          type: "equals"
+          pattern : "In Development"
+
+    action:
+        id: "powershell"
+        parameters:
+            scriptfile: "publish-release.ps1"
+            arguments: "-projectcollection \"{{signal.projectcollection}}\" -project \"{{signal.projectname}}\" -id {{signal.id}} -user \"{{signal.user}}\" -Verbose"

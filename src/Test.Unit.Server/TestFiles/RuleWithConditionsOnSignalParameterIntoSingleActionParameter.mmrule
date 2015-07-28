@@ -1,0 +1,23 @@
+﻿---
+    name: "Name"
+    description: "Description"
+    enabled: true
+
+    signal:
+        id: "Signal"
+        parameters:
+            bar: "stuff"
+            baz: "otherstuff"
+
+    condition:
+        - name: "bar"
+          type: "startswith"
+          pattern : "stuff"
+        - name: "baz"
+          type: "endswith"
+          pattern : "stuff"
+
+    action:
+        id: "Action"
+        parameters:
+            foo: "{{signal.bar}} {{signal.baz}}"

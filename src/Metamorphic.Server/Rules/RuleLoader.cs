@@ -147,15 +147,19 @@ namespace Metamorphic.Server.Rules
                     var parameterText = pair.Value as string;
                     if (parameterText != null)
                     {
-                        var match = s_TriggerParameterMatcher.Match(parameterText);
-                        if (match.Success)
+                        var matches = s_TriggerParameterMatcher.Matches(parameterText);
+                        if (matches.Count > 0)
                         {
-                            // The name of the parameter is in the first match group. The first item in the groups collection
-                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
-                            var signalParameterName = match.Groups[1].Value;
-                            if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
+                            foreach(Match match in matches)
                             {
-                                return false;
+                                // The first item in the groups collection is the full string that matched 
+                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                                // Given that we only expect one match group we'll just use the first item.
+                                var signalParameterName = match.Groups[1].Value;
+                                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -213,6 +217,16 @@ namespace Metamorphic.Server.Rules
 
             if (definition.Enabled)
             {
+                var signalParameterConditions = new Dictionary<string, Predicate<object>>();
+                foreach (var condition in definition.Condition)
+                {
+                    var pred = ToCondition(condition);
+                    if (pred != null)
+                    {
+                        signalParameterConditions.Add(condition.Name, pred);
+                    }
+                }
+
                 var parameters = new Dictionary<string, ActionParameterValue>();
                 foreach (var pair in definition.Action.Parameters)
                 {
@@ -221,21 +235,21 @@ namespace Metamorphic.Server.Rules
                     var parameterText = pair.Value as string;
                     if (parameterText != null)
                     {
-                        var match = s_TriggerParameterMatcher.Match(parameterText);
-                        if (match.Success)
+                        var matches = s_TriggerParameterMatcher.Matches(parameterText);
+                        if (matches.Count > 0)
                         {
-                            // The name of the parameter is in the first match group. The first item in the groups collection
-                            // is the full string that matched (i.e. {{signal.XXXXX}}), the next items are the match groups.
-                            var signalParameterName = match.Groups[1].Value;
-                            var condition = definition.Condition.Find(c => c.Name.Equals(signalParameterName));
-
-                            Predicate<object> pred = null;
-                            if (condition != null)
+                            var signalParameters = new List<string>();
+                            
+                            foreach (Match match in matches)
                             {
-                                pred = ToCondition(condition);
+                                // The first item in the groups collection is the full string that matched 
+                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                                // Given that we only expect one match group we'll just use the first item.
+                                var signalParameterName = match.Groups[1].Value;
+                                signalParameters.Add(signalParameterName);
                             }
 
-                            reference = new ActionParameterValue(pair.Key, signalParameterName, pred);
+                            reference = new ActionParameterValue(pair.Key, parameterText, signalParameters);
                         }
                     }
 
@@ -248,8 +262,11 @@ namespace Metamorphic.Server.Rules
                 }
 
                 return new Rule(
+                    definition.Name,
+                    definition.Description,
                     new SignalTypeId(definition.Signal.Id),
                     new ActionId(definition.Action.Id),
+                    signalParameterConditions,
                     parameters);
             }
 
@@ -282,14 +299,14 @@ namespace Metamorphic.Server.Rules
                     {
                         var text = o as string;
                         var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern);
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
                     };
                 case "notmatchregex":
                     return o =>
                     {
                         var text = o as string;
                         var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern);
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
                     };
                 case "startswith":
                     return o =>

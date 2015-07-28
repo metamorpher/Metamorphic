@@ -24,9 +24,12 @@ namespace Metamorphic.Core.Jobs
         // - Expiry times
 
         /// <summary>
-        /// The collection of parameters for the current job.
+        /// The collection of parameters for the current job. Note that all parameter names are
+        /// stored in lower case so as to provide case-insensitive comparisons between the signal and
+        /// rule parameter names.
         /// </summary>
-        private readonly Dictionary<string, object> m_Parameters;
+        private readonly Dictionary<string, object> m_Parameters
+            = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Job"/> class.
@@ -47,7 +50,10 @@ namespace Metamorphic.Core.Jobs
             }
 
             Action = action;
-            m_Parameters = new Dictionary<string, object>(parameters);
+            foreach (var pair in parameters)
+            {
+                m_Parameters.Add(pair.Key.ToLower(), pair.Value);
+            }
         }
 
         /// <summary>
@@ -74,7 +80,7 @@ namespace Metamorphic.Core.Jobs
                 return false;
             }
 
-            return m_Parameters.ContainsKey(name);
+            return m_Parameters.ContainsKey(name.ToLower());
         }
 
         /// <summary>
@@ -102,7 +108,7 @@ namespace Metamorphic.Core.Jobs
                         name));
             }
 
-            return m_Parameters[name];
+            return m_Parameters[name.ToLower()];
         }
     }
 }
