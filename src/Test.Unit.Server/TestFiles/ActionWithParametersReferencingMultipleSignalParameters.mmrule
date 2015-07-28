@@ -1,0 +1,15 @@
+﻿---
+    name: "Name"
+    description: "Description"
+    enabled: true
+
+    signal:
+        id: "Signal"
+        parameters:
+            bar: "stuff"
+            baz: "otherstuff"
+
+    action:
+        id: "Action"
+        parameters:
+            foo: "{{signal.bar}} {{signal.baz}}"

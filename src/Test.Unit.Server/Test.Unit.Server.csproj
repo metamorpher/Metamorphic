@@ -169,6 +169,9 @@
     <None Include="TestFiles\ActionWithParameters.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\ActionWithParametersReferencingMultipleSignalParameters.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\ActionWithParametersReferencingSignal.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -218,6 +221,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestFiles\NotMatchRegexCondition.mmrule">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestFiles\RuleWithEndsWithCondition.mmrule">

@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Metamorphic.Core.Signals;
+using Newtonsoft.Json.Linq;
 
 namespace Metamorphic.Server.Signals
 {
@@ -41,30 +43,43 @@ namespace Metamorphic.Server.Signals
             return new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
+                // Content = new StringContent("Yay it worked!"),
             };
         }
 
         /// <summary>
         /// Triggers a new signal.
         /// </summary>
-        /// <param name="signalType">The id of the signal.</param>
-        /// <param name="arguments">The arguments for the signal.</param>
+        /// <param name="jsonData">The JSON data.</param>
         /// <returns>A http response message indicating whether the call was successful.</returns>
         [HttpPost]
-        public HttpResponseMessage Trigger(string signalType, string arguments)
+        public HttpResponseMessage Trigger([FromBody]JToken jsonData)
         {
+            var signalType = jsonData.Children()
+                .Where(t => t is JProperty)
+                .Cast<JProperty>()
+                .Where(t => t.Name.Equals("Type"))
+                .Select(t => string.Join(" ", t.Children()))
+                .FirstOrDefault();
+
+            var arguments = jsonData.Children()
+                .Where(t => t is JProperty)
+                .Cast<JProperty>()
+                .Where(t => !t.Name.Equals("Type"))
+                .ToDictionary(
+                    t => t.Name,
+                    t => (object)string.Join(" ", t.Children()));
+
             var signal = new Signal(
                 new SignalTypeId(signalType),
-                new Dictionary<string, object>
-                {
-                    ["arguments"] = arguments,
-                });
+                arguments);
 
             m_Queue.Enqueue(signal);
 
             return new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.Accepted,
+                // Content = new StringContent(string.Format("Original data: {0}", jsonData.ToString())),
             };
         }
     }

@@ -15,33 +15,39 @@ namespace Metamorphic.Core.Rules
     public sealed class ActionParameterValueTest
     {
         [Test]
-        public void CreateWithEmptyParameterReference()
+        public void CreateWithEmptyParameterFormat()
         {
-            Assert.Throws<ArgumentException>(() => new ActionParameterValue("a", string.Empty));
+            Assert.Throws<ArgumentException>(() => new ActionParameterValue("a", string.Empty, new List<string>()));
         }
 
         [Test]
-        public void CreateWithNullParameterReference()
+        public void CreateWithNullParameterFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", (string)null));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", (string)null, new List<string>()));
+        }
+
+        [Test]
+        public void CreateWithNullParameterList()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", "b", null));
         }
 
         [Test]
         public void CreateWithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", (object)null));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", null));
         }
 
         [Test]
-        public void CreateWithParameterReferenceAndEmptyName()
+        public void CreateWithParameterFormatAndEmptyName()
         {
-            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty, "a"));
+            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty, "a", new List<string>()));
         }
 
         [Test]
-        public void CreateWithParameterReferenceAndNullName()
+        public void CreateWithParameterFormatAndNullName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null, "a"));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null, "a", new List<string>()));
         }
 
         [Test]
@@ -65,64 +71,80 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void IsValidForSignalWithMatchingParameterValueWithCondition()
+        public void IsValidForSignalWithMultipleMatchingParameterValue()
         {
-            var parameterName = "a";
-            var parameterValue = "10";
-            Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new ActionParameterValue("b", parameterName, condition: condition);
+            var parameter1 = "a";
+            var parameter2 = "b";
+            var reference = new ActionParameterValue(
+                "c", 
+                "{{signal." + parameter1 + "}} {{signal." + parameter2 + "}}", 
+                new List<string>
+                {
+                    parameter1,
+                    parameter2
+                });
 
             var signal = new Signal(
                 new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
-                    { parameterName, "10" }
+                    [parameter1] = "10",
+                    [parameter2] = "15"
                 });
             Assert.IsTrue(reference.IsValidFor(signal));
-        }
-
-        [Test]
-        public void IsValidForSignalWithMatchingParameterValueWithoutCondition()
-        {
-            var parameterName = "a";
-            var reference = new ActionParameterValue("b", parameterName);
-
-            var signal = new Signal(
-                new SignalTypeId("b"),
-                new Dictionary<string, object>
-                {
-                    { parameterName, "10" }
-                });
-            Assert.IsTrue(reference.IsValidFor(signal));
-        }
-
-        [Test]
-        public void IsValidForSignalWithNonMatchingParameterValue()
-        {
-            var parameterName = "a";
-            var parameterValue = "11";
-            Predicate<object> condition = o => o.Equals(parameterValue);
-            var reference = new ActionParameterValue("b", parameterName, condition: condition);
-
-            var signal = new Signal(
-                new SignalTypeId("b"),
-                new Dictionary<string, object>
-                {
-                    { parameterName, "10" }
-                });
-            Assert.IsFalse(reference.IsValidFor(signal));
         }
 
         [Test]
         public void IsValidForSignalWithMissingParameter()
         {
             var parameterName = "a";
-            var reference = new ActionParameterValue("b", parameterName);
+            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
 
             var signal = new Signal(
                 new SignalTypeId("b"),
                 new Dictionary<string, object>());
             Assert.IsFalse(reference.IsValidFor(signal));
+        }
+
+        [Test]
+        public void IsValidForSignalWithSingleMatchingParameterValueWithoutCondition()
+        {
+            var parameterName = "a";
+            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
+
+            var signal = new Signal(
+                new SignalTypeId("b"),
+                new Dictionary<string, object>
+                {
+                    { parameterName, "10" }
+                });
+            Assert.IsTrue(reference.IsValidFor(signal));
+        }
+
+        [Test]
+        public void ValueForMultipleParameterWithoutDefaultValue()
+        {
+            var parameter1 = "a";
+            var parameterValue1 = "10";
+            var parameter2 = "b";
+            var parameterValue2 = "11";
+            var reference = new ActionParameterValue(
+                "c",
+                "{{signal." + parameter1 + "}}-{{signal." + parameter2 + "}}",
+                new List<string>
+                {
+                    parameter1,
+                    parameter2
+                });
+
+            var signal = new Signal(
+                new SignalTypeId("b"),
+                new Dictionary<string, object>
+                {
+                    [parameter1] = parameterValue1,
+                    [parameter2] = parameterValue2
+                });
+            Assert.AreEqual(string.Format("{0}-{1}", parameterValue1, parameterValue2), reference.ValueForParameter(signal));
         }
 
         [Test]
@@ -142,17 +164,17 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void ValueForParameterWithoutDefaultValue()
+        public void ValueForSingleParameterWithoutDefaultValue()
         {
             var parameterName = "a";
             var parameterValue = 10;
-            var reference = new ActionParameterValue("b", parameterName);
+            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
 
             var signal = new Signal(
                 new SignalTypeId("b"),
                 new Dictionary<string, object>
                 {
-                    { parameterName, parameterValue }
+                    [parameterName] = parameterValue
                 });
             Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
         }
