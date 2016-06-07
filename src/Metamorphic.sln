@@ -1,21 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{38E97CAA-B0BB-4DF6-B1F3-62972C7AA06B}"
 	ProjectSection(SolutionItems) = preProject
-		..\.gitattributes = ..\.gitattributes
-		..\.gitignore = ..\.gitignore
-		..\LICENSE = ..\LICENSE
-		..\metamorphic.msbuild = ..\metamorphic.msbuild
-		..\nuget.config = ..\nuget.config
-		..\packages.config = ..\packages.config
-		..\README.md = ..\README.md
+		..\build.settings.props = ..\build.settings.props
+		..\deploy.settings.props = ..\deploy.settings.props
+		..\entrypoint.msbuild = ..\entrypoint.msbuild
+		..\environment.props = ..\environment.props
 		..\settings.props = ..\settings.props
+		..\test.settings.props = ..\test.settings.props
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Agent", "Metamorphic.Agent\Metamorphic.Agent.csproj", "{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Server", "Metamorphic.Server\Metamorphic.Server.csproj", "{5083E0C3-486C-48D7-971C-7F04CEC98B11}"
 EndProject
@@ -30,6 +26,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{967C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Server", "Test.Unit.Server\Test.Unit.Server.csproj", "{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{B658E693-98FC-40DF-B017-46F8296A4F56}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\Settings.StyleCop = ..\Settings.StyleCop
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vcs", "vcs", "{E14ECB1F-1DF7-44D9-9063-6A7998CBB5F0}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{B187B696-12D5-40CE-983A-0AFAC8218AEC}"
+	ProjectSection(SolutionItems) = preProject
+		..\nuget.config = ..\nuget.config
+		..\packages.config = ..\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,12 +52,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Deploy|Any CPU.Build.0 = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
@@ -68,5 +77,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38E97CAA-B0BB-4DF6-B1F3-62972C7AA06B} = {B658E693-98FC-40DF-B017-46F8296A4F56}
+		{E14ECB1F-1DF7-44D9-9063-6A7998CBB5F0} = {B658E693-98FC-40DF-B017-46F8296A4F56}
+		{B187B696-12D5-40CE-983A-0AFAC8218AEC} = {B658E693-98FC-40DF-B017-46F8296A4F56}
 	EndGlobalSection
 EndGlobal
