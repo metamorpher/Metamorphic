@@ -206,11 +206,8 @@
     <Compile Include="Nuclei\ExceptionHandling\TopLevelExceptionGuard.cs" />
     <Compile Include="Nuclei\LogBasedExceptionProcessor.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
-    <Compile Include="Properties\AssemblyInfo.Company.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.InternalsVisibleTo.cs" />
-    <Compile Include="Properties\AssemblyInfo.VersionNumber.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

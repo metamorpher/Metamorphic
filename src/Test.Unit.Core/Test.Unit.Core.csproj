@@ -153,9 +153,6 @@
     <Compile Include="Actions\MissingActionParameterExceptionTest.cs" />
     <Compile Include="Actions\PowershellActionBuilderTest.cs" />
     <Compile Include="Jobs\JobTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
-    <Compile Include="Properties\AssemblyInfo.Company.cs" />
-    <Compile Include="Properties\AssemblyInfo.VersionNumber.cs" />
     <Compile Include="Rules\InvalidRuleDefinitionExceptionTest.cs" />
     <Compile Include="Rules\InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="Rules\RuleTest.cs" />

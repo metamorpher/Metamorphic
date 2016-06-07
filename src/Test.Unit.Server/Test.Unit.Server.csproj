@@ -149,9 +149,6 @@
     <Compile Include="Actions\ActionStorageTest.cs" />
     <Compile Include="Actions\DuplicateActionDefinitionExceptionTest.cs" />
     <Compile Include="Jobs\JobQueueTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.BuildInformation.cs" />
-    <Compile Include="Properties\AssemblyInfo.Company.cs" />
-    <Compile Include="Properties\AssemblyInfo.VersionNumber.cs" />
     <Compile Include="Rules\InvalidConditionTypeExceptionTest.cs" />
     <Compile Include="Rules\RuleAlreadyExistsExceptionTest.cs" />
     <Compile Include="Rules\RuleCollectionTest.cs" />
