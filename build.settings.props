@@ -251,6 +251,7 @@
             </Groups>
         </BuildStepsToExecute>
         -->
+        <!--
         <BuildStepsToExecute Include="$(BuildStepsAnalyzeBinariesFxCop)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -260,6 +261,7 @@
                 Analyze;
             </Groups>
         </BuildStepsToExecute>
+        -->
 
         <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildApiDocumentationWithSandcastle)">
