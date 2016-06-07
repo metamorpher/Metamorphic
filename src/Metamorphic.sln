@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{38E97CAA
 		..\settings.props = ..\settings.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Agent", "Metamorphic.Agent\Metamorphic.Agent.csproj", "{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Server", "Metamorphic.Server\Metamorphic.Server.csproj", "{5083E0C3-486C-48D7-971C-7F04CEC98B11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core", "Metamorphic.Core\Metamorphic.Core.csproj", "{48FD1176-8944-4424-911F-76903B0BD61F}"
@@ -37,12 +35,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Deploy|Any CPU.Build.0 = Debug|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{991DADC5-FC26-4AAA-81BE-6C35DBC8A8F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5083E0C3-486C-48D7-971C-7F04CEC98B11}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
