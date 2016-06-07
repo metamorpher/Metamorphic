@@ -10,7 +10,7 @@
             This value is defined here just so that there is a value when no other value is specified. Do not comment this
             value out unless you know what you are doing!
         -->
-        <IsTest Condition=" '$(IsTest)' == '' ">false</IsTest>
+        <IsTest Condition=" '$(IsTest)' == '' ">$(ProjectTypeGuids.Contains('{3AC096D0-A1C2-E12C-1390-A8335801FDAB}'))</IsTest>
     </PropertyGroup>
 
     <!-- Build configuration -->
@@ -66,11 +66,13 @@
             If documentation should only be generated for non-test assemblies then add the '!$(IsTest)' condition
             to the property.
         -->
-        <GenerateDocumentation>true</GenerateDocumentation>
+        <GenerateDocumentation>false</GenerateDocumentation>
+        <GenerateDocumentation Condition="!$(IsTest)">true</GenerateDocumentation>
+
         <!--
             The full file path where the XML documentation file should be created.
         -->
-        <DocumentationFile Condition="$(GenerateDocumentation) AND !$(IsTest)">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
+        <DocumentationFile Condition=" '$(GenerateDocumentation)' == 'true' AND !$(IsTest)">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
     </PropertyGroup>
 
     <!-- Strong name the binaries -->
