@@ -15,7 +15,7 @@ namespace Metamorphic.Core.Signals
     /// Stores information about an event that has occurred.
     /// </summary>
     [Serializable]
-    public sealed class Signal
+    public sealed class Signal : ITranslateToDataObject<SignalData>
     {
         /// <summary>
         /// The collection that stores the parameters for the signal. Note that all parameter names are
@@ -106,6 +106,19 @@ namespace Metamorphic.Core.Signals
         public SignalTypeId Sensor
         {
             get;
+        }
+
+        /// <summary>
+        /// Creates a new data object with the data from the current object.
+        /// </summary>
+        /// <returns>A data object that represents the data on the current object.</returns>
+        SignalData ITranslateToDataObject<SignalData>.ToDataObject()
+        {
+            return new SignalData
+                {
+                    SensorId = Sensor.ToString(),
+                    Parameters = new Dictionary<string, object>(m_Parameters),
+                };
         }
     }
 }
