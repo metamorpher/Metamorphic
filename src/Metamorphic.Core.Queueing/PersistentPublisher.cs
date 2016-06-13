@@ -18,6 +18,7 @@ namespace Metamorphic.Core.Queueing
     /// <typeparam name="TItem">The type of item that should be published.</typeparam>
     /// <typeparam name="TDataItem">The type of data object that stores all the data of the {TItem} instance.</typeparam>
     internal abstract class PersistentPublisher<TItem, TDataItem> : IPublishItems<TItem> 
+        where TItem : class
         where TDataItem : class
     {
         /// <summary>
@@ -84,8 +85,16 @@ namespace Metamorphic.Core.Queueing
         /// Publishes an item.
         /// </summary>
         /// <param name="item">The item that should be published.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="item"/> is <see langword="null" />.
+        /// </exception>
         public void Publish(TItem item)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
             var itemIdentity = item.ToString();
             var dataObject = ToDataObject(item);
             m_Bus.SendAsync(m_StoreName, dataObject)
