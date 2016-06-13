@@ -19,7 +19,6 @@ using Metamorphic.Server.Actions;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Rules;
 using Metamorphic.Server.Signals;
-using NLog;
 using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
@@ -125,7 +124,7 @@ namespace Metamorphic.Server
                             {
                                 logger.Log(msg);
                             }
-                            catch (NLogRuntimeException)
+                            catch (NLog.NLogRuntimeException)
                             {
                                 // Ignore it and move on to the next logger.
                             }

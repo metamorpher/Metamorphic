@@ -9,6 +9,9 @@ using Nuclei.Configuration;
 
 namespace Metamorphic.Core.Queueing
 {
+    /// <summary>
+    /// Defines the <see cref="ConfigurationKey"/> objects for queueing of signals, jobs and actions.
+    /// </summary>
     public static class QueueingConfigurationKeys
     {
         /// <summary>
