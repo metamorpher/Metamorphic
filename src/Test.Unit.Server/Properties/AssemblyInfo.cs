@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
 //     Copyright (c) - Metamorphic. All rights reserved.
 // </copyright>
@@ -15,13 +15,13 @@ using Nuclei.Build;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("Test.Unit.Server")]
 
-[assembly: AssemblyCompany("Metamorphic")]
-[assembly: AssemblyCopyright("Copyright (c) - Metamorphic 2015 - 2016. All rights reserved.")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("Copyright (c)")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyConfiguration("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -31,9 +31,9 @@ using Nuclei.Build;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("63a5eaac-305b-461e-a5e5-a5ff70fb986f")]
 
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.18")]
-[assembly: AssemblyInformationalVersion("0.2.0-nbuildkit080upgrade.1+18")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyInformationalVersion("0.1.0")]
 
-[assembly: AssemblyBuildTime(buildTime: "2016-06-07T18:00:38.0277296+12:00")]
-[assembly: AssemblyBuildInformation(buildNumber: 18, versionControlInformation: "4df4bb1dfe7e29f8fa2bce9a7099c27de09d98a5")]
+[assembly: AssemblyBuildTime(buildTime: "1900-01-01T00:00:00.0000+12:00")]
+[assembly: AssemblyBuildInformation(buildNumber: 0, versionControlInformation: "1234567890")]

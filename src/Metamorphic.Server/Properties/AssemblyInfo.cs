@@ -1,10 +1,11 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
 //     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Nuclei.Build;
 
@@ -15,13 +16,15 @@ using Nuclei.Build;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("Metamorphic.Server")]
 
-[assembly: AssemblyCompany("Metamorphic")]
-[assembly: AssemblyCopyright("Copyright (c) - Metamorphic 2015 - 2016. All rights reserved.")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("Copyright (c)")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyConfiguration("")]
+
+[assembly: InternalsVisibleTo("Test.Unit.Server")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -31,9 +34,9 @@ using Nuclei.Build;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("5083e0c3-486c-48d7-971c-7f04cec98b11")]
 
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.18")]
-[assembly: AssemblyInformationalVersion("0.2.0-nbuildkit080upgrade.1+18")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyInformationalVersion("0.1.0")]
 
-[assembly: AssemblyBuildTime(buildTime: "2016-06-07T18:00:38.0277296+12:00")]
-[assembly: AssemblyBuildInformation(buildNumber: 18, versionControlInformation: "4df4bb1dfe7e29f8fa2bce9a7099c27de09d98a5")]
+[assembly: AssemblyBuildTime(buildTime: "1900-01-01T00:00:00.0000+12:00")]
+[assembly: AssemblyBuildInformation(buildNumber: 0, versionControlInformation: "1234567890")]
