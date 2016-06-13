@@ -128,5 +128,21 @@ namespace Metamorphic.Core.Signals
 
             Assert.AreEqual("b", signal.ParameterValue("a"));
         }
+
+        [Test]
+        public void ToDataObject()
+        {
+            var typeId = "a";
+            var type = new SignalTypeId(typeId);
+            var parameters = new Dictionary<string, object>
+                {
+                    { "a", "b" }
+                };
+            var signal = new Signal(type, parameters);
+
+            var obj = ((ITranslateToDataObject<SignalData>)signal).ToDataObject();
+            Assert.AreEqual(typeId, obj.SensorId);
+            Assert.That(obj.Parameters, Is.EquivalentTo(parameters));
+        }
     }
 }
