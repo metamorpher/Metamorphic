@@ -6,7 +6,7 @@
     <ProjectGuid>{9A388CFC-0200-43FE-8118-B16E8179E12B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Test.Unit.Core.Queueing</RootNamespace>
+    <RootNamespace>Metamorphic.Core.Queueing</RootNamespace>
     <AssemblyName>Test.Unit.Core.Queueing</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
