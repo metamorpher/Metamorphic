@@ -99,6 +99,15 @@ namespace Metamorphic.Core.Queueing
                 };
         }
 
+        private static void RegisterDispensers(ContainerBuilder builder)
+        {
+            builder.Register(c => new PersistentSignalDispenser(
+                    c.Resolve<IBus>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IDispenseSignals>()
+                .SingleInstance();
+        }
+
         private static void RegisterQueues(ContainerBuilder builder)
         {
             builder.Register(c => new PersistentSignalPublisher(
@@ -143,6 +152,7 @@ namespace Metamorphic.Core.Queueing
         {
             base.Load(builder);
 
+            RegisterDispensers(builder);
             RegisterQueues(builder);
             RegisterRabbitMQ(builder);
         }
