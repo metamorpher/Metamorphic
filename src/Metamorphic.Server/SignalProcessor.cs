@@ -40,16 +40,16 @@ namespace Metamorphic.Server
         private readonly IStoreRules m_RuleCollection;
 
         /// <summary>
-        /// The queue that stores the location of the non-processed packages.
+        /// The object that dispenses signals that need to be processed.
         /// </summary>
-        private readonly IDispenseSignals m_SignalQueue;
+        private readonly IDispenseSignals m_SignalDispenser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
         /// </summary>
         /// <param name="jobQueue">The object that queues jobs that need to be processed.</param>
         /// <param name="ruleCollection">The object that stores all the known rules for the application.</param>
-        /// <param name="signalQueue">The object that queues signals that need to be processed.</param>
+        /// <param name="signalDispenser">The object that dispenses signals that need to be processed.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="jobQueue"/> is <see langword="null" />.
@@ -58,7 +58,7 @@ namespace Metamorphic.Server
         ///     Thrown if <paramref name="ruleCollection"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="signalQueue"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="signalDispenser"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
@@ -66,21 +66,21 @@ namespace Metamorphic.Server
         public SignalProcessor(
             IQueueJobs jobQueue,
             IStoreRules ruleCollection,
-            IDispenseSignals signalQueue,
+            IDispenseSignals signalDispenser,
             SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => jobQueue);
                 Lokad.Enforce.Argument(() => ruleCollection);
-                Lokad.Enforce.Argument(() => signalQueue);
+                Lokad.Enforce.Argument(() => signalDispenser);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_Diagnostics = diagnostics;
             m_JobQueue = jobQueue;
             m_RuleCollection = ruleCollection;
-            m_SignalQueue = signalQueue;
-            m_SignalQueue.OnItemAvailable += HandleOnEnqueue;
+            m_SignalDispenser = signalDispenser;
+            m_SignalDispenser.OnItemAvailable += HandleOnEnqueue;
         }
 
         private void HandleOnEnqueue(object sender, ItemEventArgs<Signal> e)
