@@ -150,6 +150,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Signals\PersistentSignalProcessorTest.cs" />
     <Compile Include="Signals\PersistentSignalPublisherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

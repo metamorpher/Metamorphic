@@ -163,6 +163,7 @@
     <Compile Include="Rules\ActionParameterValueTest.cs" />
     <Compile Include="Sensors\SensorIdTest.cs" />
     <Compile Include="ParameterNotFoundExceptionTest.cs" />
+    <Compile Include="Signals\SignalDataTest.cs" />
     <Compile Include="Signals\SignalTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

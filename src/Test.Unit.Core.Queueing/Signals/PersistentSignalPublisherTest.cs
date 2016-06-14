@@ -1,4 +1,11 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="Metamorphic">
+//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// </copyright>
+//-----------------------------------------------------------------------
+
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
