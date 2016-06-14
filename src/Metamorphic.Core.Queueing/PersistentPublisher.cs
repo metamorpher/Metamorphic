@@ -7,6 +7,7 @@
 using System;
 using System.Globalization;
 using EasyNetQ;
+using Metamorphic.Core.Queueing.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -68,7 +69,7 @@ namespace Metamorphic.Core.Queueing
 
             if (string.IsNullOrWhiteSpace(storeName))
             {
-                throw new ArgumentException("The name should not be an empty string", "storeName");
+                throw new ArgumentException(Resources.Exceptions_Messages_ArgumentShouldNotBeAnEmptyString, "storeName");
             }
 
             if (diagnostics == null)
@@ -107,7 +108,7 @@ namespace Metamorphic.Core.Queueing
                                 LevelToLog.Warn,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
-                                    "Failed to publish [{0}] to the persistent store.",
+                                    Resources.Log_Messages_PersistentPublisher_FailedToPublish_WithId,
                                     itemIdentity));
                         }
                         else
@@ -116,7 +117,7 @@ namespace Metamorphic.Core.Queueing
                                 LevelToLog.Debug,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
-                                    "Published [{0}] to the persistent store.",
+                                    Resources.Log_Messages_PersistentPublisher_Published_WithId,
                                     itemIdentity));
                         }
                     });
