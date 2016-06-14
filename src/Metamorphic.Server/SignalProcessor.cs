@@ -6,19 +6,18 @@
 
 using System;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
+using Metamorphic.Core.Queueing;
+using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Signals;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Properties;
 using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
 namespace Metamorphic.Server
 {
-    internal sealed class SignalProcessor : IProcessSignals, IDisposable
+    internal sealed class SignalProcessor
     {
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -43,22 +42,7 @@ namespace Metamorphic.Server
         /// <summary>
         /// The queue that stores the location of the non-processed packages.
         /// </summary>
-        private readonly IProcessSignals m_SignalQueue;
-
-        /// <summary>
-        /// The cancellation source that is used to cancel the worker task.
-        /// </summary>
-        private CancellationTokenSource m_CancellationSource;
-
-        /// <summary>
-        /// A flag indicating if the processing of symbols has started or not.
-        /// </summary>
-        private bool m_IsStarted;
-
-        /// <summary>
-        /// The task that handles the actual symbol indexing process.
-        /// </summary>
-        private Task m_Worker;
+        private readonly IDispenseSignals m_SignalQueue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
@@ -82,7 +66,7 @@ namespace Metamorphic.Server
         public SignalProcessor(
             IQueueJobs jobQueue,
             IStoreRules ruleCollection,
-            IQueueSignals signalQueue,
+            IDispenseSignals signalQueue,
             SystemDiagnostics diagnostics)
         {
             {
@@ -96,190 +80,46 @@ namespace Metamorphic.Server
             m_JobQueue = jobQueue;
             m_RuleCollection = ruleCollection;
             m_SignalQueue = signalQueue;
-            m_SignalQueue.OnEnqueue += HandleOnEnqueue;
+            m_SignalQueue.OnItemAvailable += HandleOnEnqueue;
         }
 
-        private void CleanUpWorkerTask()
+        private void HandleOnEnqueue(object sender, ItemEventArgs<Signal> e)
         {
-            lock (m_Lock)
+            m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_StartingSignalProcessing);
+
+            Signal signal = e.Item;
+            if (signal == null)
+            {
+                return;
+            }
+
+            m_Diagnostics.Log(
+                LevelToLog.Info,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
+                    signal.Sensor));
+
+            foreach (var parameter in signal.Parameters())
             {
                 m_Diagnostics.Log(
-                    LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_CleaningUpWorker);
-
-                m_CancellationSource = null;
-                m_Worker = null;
-            }
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            var task = Stop(false);
-            task.Wait();
-        }
-
-        private void HandleOnEnqueue(object sender, EventArgs e)
-        {
-            lock (m_Lock)
-            {
-                if (!m_IsStarted)
-                {
-                    m_Diagnostics.Log(
-                        LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted);
-
-                    return;
-                }
-
-                if (m_Worker != null)
-                {
-                    m_Diagnostics.Log(
-                        LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists);
-
-                    return;
-                }
-
-                m_Diagnostics.Log(
-                    LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_NewItemInQueue_StartingThread);
-
-                m_CancellationSource = new CancellationTokenSource();
-                m_Worker = Task.Factory.StartNew(
-                    () => ProcessSignals(m_CancellationSource.Token),
-                    m_CancellationSource.Token,
-                    TaskCreationOptions.LongRunning,
-                    TaskScheduler.Default);
-            }
-        }
-
-        private void ProcessSignals(CancellationToken token)
-        {
-            try
-            {
-                m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_StartingSignalProcessing);
-
-                while (!token.IsCancellationRequested)
-                {
-                    if (m_SignalQueue.IsEmpty)
-                    {
-                        m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_QueueEmpty);
-                        break;
-                    }
-
-                    Signal signal = null;
-                    if (!m_SignalQueue.IsEmpty)
-                    {
-                        signal = m_SignalQueue.Dequeue();
-                    }
-
-                    if (signal == null)
-                    {
-                        continue;
-                    }
-
-                    m_Diagnostics.Log(
-                        LevelToLog.Info,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
-                            signal.Sensor));
-
-                    foreach (var parameter in signal.Parameters())
-                    {
-                        m_Diagnostics.Log(
-                            LevelToLog.Info,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                Resources.Log_Messages_SignalProcessor_ProcessSignal_ForParameters,
-                                parameter,
-                                signal.ParameterValue(parameter)));
-                    }
-
-                    var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
-                    foreach (var rule in rules)
-                    {
-                        if (rule.ShouldProcess(signal))
-                        {
-                            var job = rule.ToJob(signal);
-                            m_JobQueue.Enqueue(job);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                m_Diagnostics.Log(
-                    LevelToLog.Error,
+                    LevelToLog.Info,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException,
-                        e));
+                        Resources.Log_Messages_SignalProcessor_ProcessSignal_ForParameters,
+                        parameter,
+                        signal.ParameterValue(parameter)));
             }
-            finally
+
+            var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
+            foreach (var rule in rules)
             {
-                CleanUpWorkerTask();
-            }
-        }
-
-        /// <summary>
-        /// Starts the signal processing.
-        /// </summary>
-        public void Start()
-        {
-            lock (m_Lock)
-            {
-                m_IsStarted = true;
-            }
-        }
-
-        /// <summary>
-        /// Stops the signal processing.
-        /// </summary>
-        /// <param name="clearCurrentQueue">
-        /// Indicates if the elements currently in the queue need to be processed before stopping or not.
-        /// </param>
-        /// <returns>A task that completes when the indexer has stopped.</returns>
-        public Task Stop(bool clearCurrentQueue)
-        {
-            m_IsStarted = false;
-
-            var result = Task.Factory.StartNew(
-                () =>
+                if (rule.ShouldProcess(signal))
                 {
-                    m_Diagnostics.Log(
-                        LevelToLog.Info,
-                        Resources.Log_Messages_SignalProcessor_StoppingProcessing);
-
-                    if (!clearCurrentQueue && !m_SignalQueue.IsEmpty)
-                    {
-                        lock (m_Lock)
-                        {
-                            if (m_CancellationSource != null)
-                            {
-                                m_CancellationSource.Cancel();
-                            }
-                        }
-                    }
-
-                    Task worker;
-                    lock (m_Lock)
-                    {
-                        worker = m_Worker;
-                    }
-
-                    if (worker != null)
-                    {
-                        worker.Wait();
-                    }
-
-                    CleanUpWorkerTask();
-                });
-
-            return result;
+                    var job = rule.ToJob(signal);
+                    m_JobQueue.Enqueue(job);
+                }
+            }
         }
     }
 }

@@ -74,9 +74,8 @@ namespace Metamorphic.Server
                 builder.Register(c => new SignalProcessor(
                         c.Resolve<IQueueJobs>(),
                         c.Resolve<IStoreRules>(),
-                        c.Resolve<IQueueSignals>(),
+                        c.Resolve<IDispenseSignals>(),
                         c.Resolve<SystemDiagnostics>()))
-                    .As<IProcessSignals>()
                     .SingleInstance();
             }
 

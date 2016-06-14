@@ -191,7 +191,6 @@
     <Compile Include="Actions\DuplicateActionDefinitionException.cs" />
     <Compile Include="Actions\IStoreActions.cs" />
     <Compile Include="DependencyInjection.cs" />
-    <Compile Include="IProcessSignals.cs" />
     <Compile Include="Jobs\IProcessJobs.cs" />
     <Compile Include="Jobs\IQueueJobs.cs" />
     <Compile Include="Jobs\JobProcessor.cs" />
