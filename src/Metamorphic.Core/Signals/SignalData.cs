@@ -103,7 +103,10 @@ namespace Metamorphic.Core.Signals
         public SignalData(string sensorId, IDictionary<string, object> parameters)
         {
             SensorId = sensorId;
-            Parameters = new Dictionary<string, object>(parameters);
+            if (parameters != null)
+            {
+                Parameters = new Dictionary<string, object>(parameters);
+            }
         }
 
         /// <summary>
@@ -219,7 +222,11 @@ namespace Metamorphic.Core.Signals
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ SensorId.GetHashCode();
+                if (SensorId != null)
+                {
+                    hash = (hash * 23) ^ SensorId.GetHashCode();
+                }
+
                 if (Parameters != null)
                 {
                     foreach (var map in Parameters)
