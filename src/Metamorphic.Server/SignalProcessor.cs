@@ -85,8 +85,6 @@ namespace Metamorphic.Server
 
         private void HandleOnEnqueue(object sender, ItemEventArgs<Signal> e)
         {
-            m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_StartingSignalProcessing);
-
             Signal signal = e.Item;
             if (signal == null)
             {
