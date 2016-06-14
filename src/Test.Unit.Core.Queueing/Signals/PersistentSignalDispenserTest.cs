@@ -31,14 +31,14 @@ namespace Test.Unit.Core.Queueing.Signals
         public void CreateWithMissingBus()
         {
             var diag = new SystemDiagnostics((l, m) => { }, null);
-            Assert.Throws<ArgumentNullException>(() => new PersistentSignalProcessor(null, diag));
+            Assert.Throws<ArgumentNullException>(() => new PersistentSignalDispenser(null, diag));
         }
 
         [Test]
         public void CreateWithMissingDiagnostics()
         {
             var bus = new Mock<IBus>();
-            Assert.Throws<ArgumentNullException>(() => new PersistentSignalProcessor(bus.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new PersistentSignalDispenser(bus.Object, null));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Test.Unit.Core.Queueing.Signals
 
             var diag = new SystemDiagnostics((l, m) => { }, null);
 
-            var publisher = new PersistentSignalProcessor(bus.Object, diag);
+            var publisher = new PersistentSignalDispenser(bus.Object, diag);
 
             Assert.IsNotNull(processAction);
             Assert.DoesNotThrow(() => processAction(null));
@@ -98,8 +98,8 @@ namespace Test.Unit.Core.Queueing.Signals
                     createdSignal = e.Item;
                 };
 
-            var publisher = new PersistentSignalProcessor(bus.Object, diag);
-            publisher.OnEnqueue += handler;
+            var publisher = new PersistentSignalDispenser(bus.Object, diag);
+            publisher.OnItemAvailable += handler;
 
             var typeId = "a";
             var type = new SignalTypeId(typeId);
@@ -158,8 +158,8 @@ namespace Test.Unit.Core.Queueing.Signals
                     throw new Exception();
                 };
 
-            var publisher = new PersistentSignalProcessor(bus.Object, diag);
-            publisher.OnEnqueue += handler;
+            var publisher = new PersistentSignalDispenser(bus.Object, diag);
+            publisher.OnItemAvailable += handler;
 
             var typeId = "a";
             var type = new SignalTypeId(typeId);

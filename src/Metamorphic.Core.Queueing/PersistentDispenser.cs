@@ -13,11 +13,11 @@ using Nuclei.Diagnostics.Logging;
 namespace Metamorphic.Core.Queueing
 {
     /// <summary>
-    /// Defines a processor that processes items from a persistent data store.
+    /// Defines a processor that dispenses items from a persistent data store.
     /// </summary>
-    /// <typeparam name="TItem">The type of item that should be processed.</typeparam>
+    /// <typeparam name="TItem">The type of item that should be dispensed.</typeparam>
     /// <typeparam name="TDataItem">The type of data object that stores all the data of the {TItem} instance.</typeparam>
-    internal abstract class PersistentProcessor<TItem, TDataItem> : IProcessItems<TItem>, IDisposable
+    internal abstract class PersistentDispenser<TItem, TDataItem> : IDispenseItems<TItem>, IDisposable
         where TItem : class
         where TDataItem : class
     {
@@ -37,10 +37,10 @@ namespace Metamorphic.Core.Queueing
         private IDisposable m_Subscription;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersistentProcessor{TItem, TDataItem}"/> class.
+        /// Initializes a new instance of the <see cref="PersistentDispenser{TItem, TDataItem}"/> class.
         /// </summary>
         /// <param name="bus">The RabbitMQ bus that is used to send and get items from</param>
-        /// <param name="storeName">The name of the store to which data is published.</param>
+        /// <param name="storeName">The name of the store from which data is dispensed.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="bus"/> is <see langword="null" />.
@@ -54,7 +54,7 @@ namespace Metamorphic.Core.Queueing
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        protected PersistentProcessor(IBus bus, string storeName, SystemDiagnostics diagnostics)
+        protected PersistentDispenser(IBus bus, string storeName, SystemDiagnostics diagnostics)
         {
             if (bus == null)
             {
@@ -110,7 +110,7 @@ namespace Metamorphic.Core.Queueing
         /// <summary>
         /// An event raised when a new item is available in the queue.
         /// </summary>
-        public event EventHandler<ItemEventArgs<TItem>> OnEnqueue;
+        public event EventHandler<ItemEventArgs<TItem>> OnItemAvailable;
 
         private void ProcessDataItem(TDataItem dataItem)
         {
@@ -123,7 +123,7 @@ namespace Metamorphic.Core.Queueing
             try
             {
                 var item = FromDataItem(dataItem);
-                RaiseOnEnqueue(item);
+                RaiseOnItemAvailable(item);
 
                 m_Diagnostics.Log(
                     LevelToLog.Debug,
@@ -144,9 +144,9 @@ namespace Metamorphic.Core.Queueing
             }
         }
 
-        private void RaiseOnEnqueue(TItem item)
+        private void RaiseOnItemAvailable(TItem item)
         {
-            var onEnqueue = OnEnqueue;
+            var onEnqueue = OnItemAvailable;
             if (onEnqueue != null)
             {
                 onEnqueue(this, new ItemEventArgs<TItem>(item));

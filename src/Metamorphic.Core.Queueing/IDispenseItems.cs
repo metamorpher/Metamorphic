@@ -12,11 +12,11 @@ namespace Metamorphic.Core.Queueing
     /// Defines the interface for objects that implement a persistent queue.
     /// </summary>
     /// <typeparam name="T">The type of object that is stored in the queue.</typeparam>
-    public interface IProcessItems<T>
+    public interface IDispenseItems<T>
     {
         /// <summary>
         /// An event raised when a new item is available in the queue.
         /// </summary>
-        event EventHandler<ItemEventArgs<T>> OnEnqueue;
+        event EventHandler<ItemEventArgs<T>> OnItemAvailable;
     }
 }

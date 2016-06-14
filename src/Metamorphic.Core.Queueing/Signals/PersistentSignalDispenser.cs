@@ -15,10 +15,10 @@ namespace Metamorphic.Core.Queueing.Signals
     /// <summary>
     /// Defines a processor that processes signals.
     /// </summary>
-    internal sealed class PersistentSignalProcessor : PersistentProcessor<Signal, SignalData>, IProcessSignals
+    internal sealed class PersistentSignalDispenser : PersistentDispenser<Signal, SignalData>, IDispenseSignals
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersistentSignalProcessor"/> class.
+        /// Initializes a new instance of the <see cref="PersistentSignalDispenser"/> class.
         /// </summary>
         /// <param name="bus">The RabbitMQ bus that is used to send and get items from</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
@@ -28,7 +28,7 @@ namespace Metamorphic.Core.Queueing.Signals
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public PersistentSignalProcessor(IBus bus, SystemDiagnostics diagnostics) 
+        public PersistentSignalDispenser(IBus bus, SystemDiagnostics diagnostics) 
             : base(bus, StoreNames.Signal, diagnostics)
         {
         }

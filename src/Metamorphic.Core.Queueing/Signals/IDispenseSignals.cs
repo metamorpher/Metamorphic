@@ -11,7 +11,7 @@ namespace Metamorphic.Core.Queueing.Signals
     /// <summary>
     /// Defines the interface for objects that process signals.
     /// </summary>
-    public interface IProcessSignals : IProcessItems<Signal>
+    public interface IDispenseSignals : IDispenseItems<Signal>
     {
     }
 }

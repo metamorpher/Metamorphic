@@ -136,17 +136,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProcessItems.cs" />
+    <Compile Include="IDispenseItems.cs" />
     <Compile Include="IPublishItems.cs" />
     <Compile Include="ItemEventArgs.cs" />
-    <Compile Include="PersistentProcessor.cs" />
+    <Compile Include="PersistentDispenser.cs" />
     <Compile Include="PersistentPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueingConfigurationKeys.cs" />
     <Compile Include="QueueingModule.cs" />
-    <Compile Include="Signals\IProcessSignals.cs" />
+    <Compile Include="Signals\IDispenseSignals.cs" />
     <Compile Include="Signals\IPublishSignals.cs" />
-    <Compile Include="Signals\PersistentSignalProcessor.cs" />
+    <Compile Include="Signals\PersistentSignalDispenser.cs" />
     <Compile Include="Signals\PersistentSignalPublisher.cs" />
     <Compile Include="StoreNames.cs" />
   </ItemGroup>
