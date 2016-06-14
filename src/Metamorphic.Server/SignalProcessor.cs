@@ -43,7 +43,7 @@ namespace Metamorphic.Server
         /// <summary>
         /// The queue that stores the location of the non-processed packages.
         /// </summary>
-        private readonly IQueueSignals m_SignalQueue;
+        private readonly IProcessSignals m_SignalQueue;
 
         /// <summary>
         /// The cancellation source that is used to cancel the worker task.

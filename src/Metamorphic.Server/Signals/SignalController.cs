@@ -4,10 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Signals;
 using Newtonsoft.Json.Linq;
 
@@ -18,19 +18,19 @@ namespace Metamorphic.Server.Signals
     /// </summary>
     public sealed class SignalController : ApiController
     {
-        private readonly IQueueSignals m_Queue;
+        private readonly IPublishSignals m_Publisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalController"/> class.
         /// </summary>
-        /// <param name="signalQueue">The queue that holds all the signals.</param>
-        internal SignalController(IQueueSignals signalQueue)
+        /// <param name="signalPublisher">The publisher that publishes all the signals.</param>
+        internal SignalController(IPublishSignals signalPublisher)
         {
             {
-                Lokad.Enforce.Argument(() => signalQueue);
+                Lokad.Enforce.Argument(() => signalPublisher);
             }
 
-            m_Queue = signalQueue;
+            m_Publisher = signalPublisher;
         }
 
         /// <summary>
@@ -43,7 +43,6 @@ namespace Metamorphic.Server.Signals
             return new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
-                // Content = new StringContent("Yay it worked!"),
             };
         }
 
@@ -74,12 +73,11 @@ namespace Metamorphic.Server.Signals
                 new SignalTypeId(signalType),
                 arguments);
 
-            m_Queue.Enqueue(signal);
+            m_Publisher.Publish(signal);
 
             return new HttpResponseMessage
             {
                 StatusCode = System.Net.HttpStatusCode.Accepted,
-                // Content = new StringContent(string.Format("Original data: {0}", jsonData.ToString())),
             };
         }
     }

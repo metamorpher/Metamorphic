@@ -14,6 +14,8 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
+using Metamorphic.Core.Queueing;
+using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Signals;
 using Metamorphic.Server.Actions;
 using Metamorphic.Server.Jobs;
@@ -67,6 +69,8 @@ namespace Metamorphic.Server
                 RegisterRules(builder);
                 RegisterSignals(builder);
 
+                builder.RegisterModule(new QueueingModule());
+
                 builder.Register(c => new SignalProcessor(
                         c.Resolve<IQueueJobs>(),
                         c.Resolve<IStoreRules>(),
@@ -105,7 +109,7 @@ namespace Metamorphic.Server
 
         private static void RegisterControllers(ContainerBuilder builder)
         {
-            builder.Register(c => new SignalController(c.Resolve<IQueueSignals>()))
+            builder.Register(c => new SignalController(c.Resolve<IPublishSignals>()))
                 .InstancePerRequest();
         }
 
@@ -201,10 +205,6 @@ namespace Metamorphic.Server
         {
             builder.Register(c => new WebCallSignalGenerator())
                 .As<IGenerateSignals>()
-                .SingleInstance();
-
-            builder.Register(c => new SignalQueue())
-                .As<IQueueSignals>()
                 .SingleInstance();
         }
     }
