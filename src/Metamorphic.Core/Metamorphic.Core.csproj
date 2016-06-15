@@ -143,6 +143,7 @@
     <Compile Include="CoreConfigurationKeys.cs" />
     <Compile Include="CoreConstants.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="IHaveIdentity.cs" />
     <Compile Include="ITranslateToDataObject.cs" />
     <Compile Include="Jobs\Job.cs" />
     <Compile Include="MissingConfigurationException.cs" />

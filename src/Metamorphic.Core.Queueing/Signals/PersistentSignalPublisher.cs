@@ -14,7 +14,7 @@ namespace Metamorphic.Core.Queueing.Signals
     /// <summary>
     /// Defines a publisher that writes signals to a persistent data store for later processing.
     /// </summary>
-    internal sealed class PersistentSignalPublisher : PersistentPublisher<Signal, SignalData>, IPublishSignals
+    internal sealed class PersistentSignalPublisher : PersistentPublisher<Signal, SignalTypeId, SignalData>, IPublishSignals
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistentSignalPublisher"/> class.

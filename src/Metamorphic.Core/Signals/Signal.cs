@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Core.Properties;
+using Nuclei;
 
 namespace Metamorphic.Core.Signals
 {
@@ -15,7 +16,7 @@ namespace Metamorphic.Core.Signals
     /// Stores information about an event that has occurred.
     /// </summary>
     [Serializable]
-    public sealed class Signal : ITranslateToDataObject<SignalData>
+    public sealed class Signal : ITranslateToDataObject<SignalData>, IHaveIdentity<SignalTypeId>
     {
         /// <summary>
         /// The collection that stores the parameters for the signal. Note that all parameter names are
@@ -66,6 +67,29 @@ namespace Metamorphic.Core.Signals
             }
 
             return m_Parameters.ContainsKey(name.ToLower());
+        }
+
+        /// <summary>
+        /// Gets the ID for the current instance.
+        /// </summary>
+        public IIsId<SignalTypeId> Id
+        {
+            get
+            {
+                return Sensor;
+            }
+        }
+
+        /// <summary>
+        /// Returns the ID of the current instance as a human readable string.
+        /// </summary>
+        /// <returns>The ID as a human readable string.</returns>
+        public string IdAsText()
+        {
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "Signal[{0}]",
+                Sensor);
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using System;
 using System.Globalization;
 using EasyNetQ;
 using Metamorphic.Core.Queueing.Properties;
+using Nuclei;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -17,9 +18,11 @@ namespace Metamorphic.Core.Queueing
     /// Defines a publisher that writes items to a persistent data store for later processing.
     /// </summary>
     /// <typeparam name="TItem">The type of item that should be published.</typeparam>
+    /// <typeparam name="TId">The type of the ID instance that is used to identity the current {TItem} instance.</typeparam>
     /// <typeparam name="TDataItem">The type of data object that stores all the data of the {TItem} instance.</typeparam>
-    internal abstract class PersistentPublisher<TItem, TDataItem> : IPublishItems<TItem> 
-        where TItem : class
+    internal abstract class PersistentPublisher<TItem, TId, TDataItem> : IPublishItems<TItem> 
+        where TItem : class, IHaveIdentity<TId>
+        where TId : IIsId<TId>
         where TDataItem : class
     {
         /// <summary>
@@ -38,7 +41,7 @@ namespace Metamorphic.Core.Queueing
         private readonly string m_StoreName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersistentPublisher{TItem, TDataItem}"/> class.
+        /// Initializes a new instance of the <see cref="PersistentPublisher{TItem, TId, TDataItem}"/> class.
         /// </summary>
         /// <param name="bus">The RabbitMQ bus that is used to send and get items from</param>
         /// <param name="storeName">The name of the store to which data is published.</param>
@@ -96,7 +99,7 @@ namespace Metamorphic.Core.Queueing
                 throw new ArgumentNullException("item");
             }
 
-            var itemIdentity = item.ToString();
+            var itemIdentity = item.IdAsText();
             var dataObject = ToDataObject(item);
             m_Bus.SendAsync(m_StoreName, dataObject)
                 .ContinueWith(

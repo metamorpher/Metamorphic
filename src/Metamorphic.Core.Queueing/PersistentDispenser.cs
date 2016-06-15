@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
 using Metamorphic.Core.Queueing.Properties;
+using Nuclei;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -19,9 +20,11 @@ namespace Metamorphic.Core.Queueing
     /// Defines a processor that dispenses items from a persistent data store.
     /// </summary>
     /// <typeparam name="TItem">The type of item that should be dispensed.</typeparam>
+    /// <typeparam name="TId">The type of the ID instance that is used to identity the current {TItem} instance.</typeparam>
     /// <typeparam name="TDataItem">The type of data object that stores all the data of the {TItem} instance.</typeparam>
-    internal abstract class PersistentDispenser<TItem, TDataItem> : IDispenseItems<TItem>, IDisposable
-        where TItem : class
+    internal abstract class PersistentDispenser<TItem, TId, TDataItem> : IDispenseItems<TItem>, IDisposable
+        where TItem : class, IHaveIdentity<TId>
+        where TId : IIsId<TId>
         where TDataItem : class
     {
         /// <summary>
@@ -45,7 +48,7 @@ namespace Metamorphic.Core.Queueing
         private IDisposable m_Subscription;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersistentDispenser{TItem, TDataItem}"/> class.
+        /// Initializes a new instance of the <see cref="PersistentDispenser{TItem, TId, TDataItem}"/> class.
         /// </summary>
         /// <param name="bus">The RabbitMQ bus that is used to send and get items from</param>
         /// <param name="storeName">The name of the store from which data is dispensed.</param>
@@ -128,35 +131,52 @@ namespace Metamorphic.Core.Queueing
         {
             return Task.Factory.StartNew(
                 () => 
-        {
-            if (dataItem == null)
-            {
-                return;
-            }
+                {
+                    if (dataItem == null)
+                    {
+                        return;
+                    }
 
-            var itemIdentity = dataItem.ToString();
-            try
-            {
-                var item = FromDataItem(dataItem);
-                RaiseOnItemAvailable(item);
+                    TItem item = null;
+                    try
+                    {
+                        item = FromDataItem(dataItem);
+                    }
+                    catch(Exception)
+                    {
+                        m_Diagnostics.Log(
+                            LevelToLog.Warn,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Log_Messages_PersistentDispenser_FailedToConvert_WithTypes,
+                                dataItem.GetType(),
+                                typeof(TItem)));
+                        throw;
+                    }
 
-                m_Diagnostics.Log(
-                    LevelToLog.Debug,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_PersistentDispenser_Processed_WithId,
-                        itemIdentity));
-            }
-            catch (Exception)
-            {
-                m_Diagnostics.Log(
-                    LevelToLog.Warn,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_PersistentDispenser_FailedToProcess_WithId,
-                        itemIdentity));
-                throw;
-            }
+                    var itemIdentity = item.IdAsText();
+                    try
+                    {
+                        
+                        RaiseOnItemAvailable(item);
+
+                        m_Diagnostics.Log(
+                            LevelToLog.Debug,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Log_Messages_PersistentDispenser_Processed_WithId,
+                                itemIdentity));
+                    }
+                    catch (Exception)
+                    {
+                        m_Diagnostics.Log(
+                            LevelToLog.Warn,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Log_Messages_PersistentDispenser_FailedToProcess_WithId,
+                                itemIdentity));
+                        throw;
+                    }
                 },
                 new CancellationToken(),
                 TaskCreationOptions.None,

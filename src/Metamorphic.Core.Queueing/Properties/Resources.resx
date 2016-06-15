@@ -120,6 +120,9 @@
   <data name="Exceptions_Messages_ArgumentShouldNotBeAnEmptyString" xml:space="preserve">
     <value>The argument should not be an empty string.</value>
   </data>
+  <data name="Log_Messages_PersistentDispenser_FailedToConvert_WithTypes" xml:space="preserve">
+    <value>Failed to deserialize from type [{0}] to an item of type [{1}] for processing.</value>
+  </data>
   <data name="Log_Messages_PersistentDispenser_FailedToProcess_WithId" xml:space="preserve">
     <value>Failed to process [{0}].</value>
   </data>

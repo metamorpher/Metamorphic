@@ -70,6 +70,15 @@ namespace Metamorphic.Core.Queueing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to deserialize from type [{0}] to an item of type [{1}] for processing..
+        /// </summary>
+        internal static string Log_Messages_PersistentDispenser_FailedToConvert_WithTypes {
+            get {
+                return ResourceManager.GetString("Log_Messages_PersistentDispenser_FailedToConvert_WithTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to process [{0}]..
         /// </summary>
         internal static string Log_Messages_PersistentDispenser_FailedToProcess_WithId {
