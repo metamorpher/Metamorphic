@@ -25,6 +25,7 @@ using Nuclei.Build;
 [assembly: AssemblyConfiguration("")]
 
 [assembly: InternalsVisibleTo("Test.Unit.Server")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
