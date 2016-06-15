@@ -49,6 +49,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core.Queueing",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Queueing", "Test.Unit.Core.Queueing\Test.Unit.Core.Queueing.csproj", "{9A388CFC-0200-43FE-8118-B16E8179E12B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{88E9546C-3566-45A3-A25B-51D514271E7B}"
+	ProjectSection(SolutionItems) = preProject
+		base.props = base.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
