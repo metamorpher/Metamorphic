@@ -49,6 +49,8 @@ namespace Metamorphic.Server
             {
                 builder.Register(c => new XmlConfiguration(
                         ServerConfigurationKeys.ToCollection()
+                            .Append(CoreConfigurationKeys.ToCollection())
+                            .Append(QueueingConfigurationKeys.ToCollection())
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
                             .ToList(),
                         ServerConstants.ConfigurationSectionApplicationSettings))

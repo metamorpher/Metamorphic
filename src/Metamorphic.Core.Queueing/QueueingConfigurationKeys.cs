@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Nuclei.Configuration;
 
@@ -32,7 +33,7 @@ namespace Metamorphic.Core.Queueing
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
         public static readonly ConfigurationKey RabbitMqHosts
-            = new ConfigurationKey("RabbitMQHosts", typeof(string[]));
+            = new ConfigurationKey("RabbitMqHosts", typeof(string[]));
 
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the default port for the RabbitMQ instances.
@@ -42,7 +43,7 @@ namespace Metamorphic.Core.Queueing
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
         public static readonly ConfigurationKey RabbitMqDefaultPort
-            = new ConfigurationKey("RabbitMQDefaultPort", typeof(ushort));
+            = new ConfigurationKey("RabbitMqDefaultPort", typeof(ushort));
 
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the user name used to connect to the RabbitMQ instances.
@@ -72,6 +73,23 @@ namespace Metamorphic.Core.Queueing
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
         public static readonly ConfigurationKey RabbitMqVirtualHostName
-            = new ConfigurationKey("RabbitMQVirtualHostName", typeof(string));
+            = new ConfigurationKey("RabbitMqVirtualHostName", typeof(string));
+
+        /// <summary>
+        /// Returns a collection containing all the configuration keys for the application.
+        /// </summary>
+        /// <returns>A collection containing all the configuration keys for the application.</returns>
+        public static IEnumerable<ConfigurationKey> ToCollection()
+        {
+            return new List<ConfigurationKey>
+                {
+                    RabbitMqHeartbeatInSeconds,
+                    RabbitMqHosts,
+                    RabbitMqDefaultPort,
+                    RabbitMqUserName,
+                    RabbitMqUserPassword,
+                    RabbitMqVirtualHostName,
+                };
+        }
     }
 }
