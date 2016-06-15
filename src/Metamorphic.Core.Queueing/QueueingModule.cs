@@ -119,29 +119,30 @@ namespace Metamorphic.Core.Queueing
 
         private static void RegisterRabbitMQ(ContainerBuilder builder)
         {
-            RabbitHutch.SetContainerFactory(
-                () =>
-                {
-                    var localBuilder = new ContainerBuilder();
-                    return new EasyNetQ.DI.AutofacAdapter(localBuilder);
-                });
-
             builder.Register(
                     (c,p) => 
                     {
                         var configuration = c.Resolve<IConfiguration>();
+                        var ctx = c.Resolve<IComponentContext>();
                         return RabbitHutch.CreateBus(
                             RabbitMQConnectionFromConfiguration(configuration),
-                            advancedBusEventHandlers: null,
-                            registerServices: 
                                 x => 
                                 {
+                                // logger
+                                x.Register(serviceProvider => ctx.Resolve<IEasyNetQLogger>());
+
                                     // In a cluster 
                                     x.Register<IClusterHostSelectionStrategy<ConnectionFactoryInfo>, RandomClusterHostSelectionStrategy<ConnectionFactoryInfo>>();
                                 });
                     })
                 .As<IBus>()
                 .SingleInstance();
+        }
+
+        private static void RegisterRabbitMQOverrides(ContainerBuilder builder)
+        {
+            builder.Register(c => new EasyNetQLogger(c.Resolve<SystemDiagnostics>()))
+                .As<IEasyNetQLogger>();
         }
 
         /// <summary>
@@ -155,6 +156,7 @@ namespace Metamorphic.Core.Queueing
             RegisterDispensers(builder);
             RegisterQueues(builder);
             RegisterRabbitMQ(builder);
+            RegisterRabbitMQOverrides(builder);
         }
     }
 }
