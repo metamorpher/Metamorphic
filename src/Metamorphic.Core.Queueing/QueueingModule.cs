@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using EasyNetQ;
@@ -36,16 +37,14 @@ namespace Metamorphic.Core.Queueing
 
         private static ConnectionConfiguration RabbitMQConnectionFromConfiguration(IConfiguration configuration)
         {
+            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserName))
             {
-                if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserName))
-                {
-                    throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserName);
-                }
+                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserName);
+            }
 
-                if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserPassword))
-                {
-                    throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserPassword);
-                }
+            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserPassword))
+            {
+                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserPassword);
             }
 
             var hosts = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHosts)
@@ -53,14 +52,15 @@ namespace Metamorphic.Core.Queueing
                     .Select(
                         s => 
                         {
-                            var uri = new Uri("http://" + s);
+                            var uri = new Uri(s);
                             return new HostConfiguration
                             {
                                 Host = uri.DnsSafeHost,
                                 Port = (ushort)uri.Port
                             };
                         })
-                : new[]
+                    .ToList()
+                : new List<HostConfiguration>
                     {
                         new HostConfiguration
                         {
@@ -126,14 +126,14 @@ namespace Metamorphic.Core.Queueing
                         var ctx = c.Resolve<IComponentContext>();
                         return RabbitHutch.CreateBus(
                             RabbitMQConnectionFromConfiguration(configuration),
-                                x => 
-                                {
+                            x => 
+                            {
                                 // logger
                                 x.Register(serviceProvider => ctx.Resolve<IEasyNetQLogger>());
 
-                                    // In a cluster 
-                                    x.Register<IClusterHostSelectionStrategy<ConnectionFactoryInfo>, RandomClusterHostSelectionStrategy<ConnectionFactoryInfo>>();
-                                });
+                                // In a cluster 
+                                x.Register<IClusterHostSelectionStrategy<ConnectionFactoryInfo>, RandomClusterHostSelectionStrategy<ConnectionFactoryInfo>>();
+                            });
                     })
                 .As<IBus>()
                 .SingleInstance();
