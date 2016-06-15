@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Core.Properties;
+using Nuclei;
 
 namespace Metamorphic.Core.Signals
 {
@@ -15,7 +16,7 @@ namespace Metamorphic.Core.Signals
     /// Stores information about an event that has occurred.
     /// </summary>
     [Serializable]
-    public sealed class Signal
+    public sealed class Signal : ITranslateToDataObject<SignalData>, IHaveIdentity<SignalTypeId>
     {
         /// <summary>
         /// The collection that stores the parameters for the signal. Note that all parameter names are
@@ -69,6 +70,29 @@ namespace Metamorphic.Core.Signals
         }
 
         /// <summary>
+        /// Gets the ID for the current instance.
+        /// </summary>
+        public IIsId<SignalTypeId> Id
+        {
+            get
+            {
+                return Sensor;
+            }
+        }
+
+        /// <summary>
+        /// Returns the ID of the current instance as a human readable string.
+        /// </summary>
+        /// <returns>The ID as a human readable string.</returns>
+        public string IdAsText()
+        {
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "Signal[{0}]",
+                Sensor);
+        }
+
+        /// <summary>
         /// Returns the value of the parameter with the given name if it exists.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
@@ -106,6 +130,19 @@ namespace Metamorphic.Core.Signals
         public SignalTypeId Sensor
         {
             get;
+        }
+
+        /// <summary>
+        /// Creates a new data object with the data from the current object.
+        /// </summary>
+        /// <returns>A data object that represents the data on the current object.</returns>
+        SignalData ITranslateToDataObject<SignalData>.ToDataObject()
+        {
+            return new SignalData
+                {
+                    SensorId = Sensor.ToString(),
+                    Parameters = new Dictionary<string, object>(m_Parameters),
+                };
         }
     }
 }

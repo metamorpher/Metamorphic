@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -14,12 +14,13 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
+using Metamorphic.Core.Queueing;
+using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Signals;
 using Metamorphic.Server.Actions;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Rules;
 using Metamorphic.Server.Signals;
-using NLog;
 using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
@@ -48,6 +49,8 @@ namespace Metamorphic.Server
             {
                 builder.Register(c => new XmlConfiguration(
                         ServerConfigurationKeys.ToCollection()
+                            .Append(CoreConfigurationKeys.ToCollection())
+                            .Append(QueueingConfigurationKeys.ToCollection())
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
                             .ToList(),
                         ServerConstants.ConfigurationSectionApplicationSettings))
@@ -68,12 +71,13 @@ namespace Metamorphic.Server
                 RegisterRules(builder);
                 RegisterSignals(builder);
 
+                builder.RegisterModule(new QueueingModule());
+
                 builder.Register(c => new SignalProcessor(
                         c.Resolve<IQueueJobs>(),
                         c.Resolve<IStoreRules>(),
-                        c.Resolve<IQueueSignals>(),
+                        c.Resolve<IDispenseSignals>(),
                         c.Resolve<SystemDiagnostics>()))
-                    .As<IProcessSignals>()
                     .SingleInstance();
             }
 
@@ -106,7 +110,7 @@ namespace Metamorphic.Server
 
         private static void RegisterControllers(ContainerBuilder builder)
         {
-            builder.Register(c => new SignalController(c.Resolve<IQueueSignals>()))
+            builder.Register(c => new SignalController(c.Resolve<IPublishSignals>()))
                 .InstancePerRequest();
         }
 
@@ -125,7 +129,7 @@ namespace Metamorphic.Server
                             {
                                 logger.Log(msg);
                             }
-                            catch (NLogRuntimeException)
+                            catch (NLog.NLogRuntimeException)
                             {
                                 // Ignore it and move on to the next logger.
                             }
@@ -202,10 +206,6 @@ namespace Metamorphic.Server
         {
             builder.Register(c => new WebCallSignalGenerator())
                 .As<IGenerateSignals>()
-                .SingleInstance();
-
-            builder.Register(c => new SignalQueue())
-                .As<IQueueSignals>()
                 .SingleInstance();
         }
     }

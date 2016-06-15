@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ namespace Metamorphic.Server
         /// <summary>
         /// The object that processes signals.
         /// </summary>
-        private IProcessSignals m_SignalProcessor;
+        private SignalProcessor m_SignalProcessor;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -92,12 +92,11 @@ namespace Metamorphic.Server
             m_JobProcessor = m_Container.Resolve<IProcessJobs>();
             m_RuleWatcher = m_Container.Resolve<IWatchRules>();
             m_SignalGenerator = m_Container.Resolve<IGenerateSignals>();
-            m_SignalProcessor = m_Container.Resolve<IProcessSignals>();
+            m_SignalProcessor = m_Container.Resolve<SignalProcessor>();
             m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
 
             m_JobProcessor.Start();
             m_RuleWatcher.Enable();
-            m_SignalProcessor.Start();
             m_SignalGenerator.Start();
 
             m_Diagnostics.Log(
@@ -140,9 +139,6 @@ namespace Metamorphic.Server
 
                 if (m_SignalProcessor != null)
                 {
-                    var clearingTask =  m_SignalProcessor.Stop(true);
-                    clearingTask.Wait();
-
                     m_SignalProcessor = null;
                 }
 

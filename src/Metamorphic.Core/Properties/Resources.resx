@@ -147,4 +147,10 @@
   <data name="PowershellActionBuilder_Output_ProcessCompleted" xml:space="preserve">
     <value>Powershell script finished</value>
   </data>
+  <data name="Exceptions_Messages_MissingConfiguration" xml:space="preserve">
+    <value>A required configuration value was not provided.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingConfiguration_WithKey" xml:space="preserve">
+    <value>The required configuration value with key [{0}] was not provided.</value>
+  </data>
 </root>

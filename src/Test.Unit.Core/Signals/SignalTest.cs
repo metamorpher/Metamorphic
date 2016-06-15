@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -127,6 +127,22 @@ namespace Metamorphic.Core.Signals
             var signal = new Signal(type, parameters);
 
             Assert.AreEqual("b", signal.ParameterValue("a"));
+        }
+
+        [Test]
+        public void ToDataObject()
+        {
+            var typeId = "a";
+            var type = new SignalTypeId(typeId);
+            var parameters = new Dictionary<string, object>
+                {
+                    { "a", "b" }
+                };
+            var signal = new Signal(type, parameters);
+
+            var obj = ((ITranslateToDataObject<SignalData>)signal).ToDataObject();
+            Assert.AreEqual(typeId, obj.SensorId);
+            Assert.That(obj.Parameters, Is.EquivalentTo(parameters));
         }
     }
 }

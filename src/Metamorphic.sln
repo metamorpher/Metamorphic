@@ -45,6 +45,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{B187B696
 		..\packages.config = ..\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core.Queueing", "Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj", "{113B00BC-537A-4AE7-B844-FBF18F1A4E20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Queueing", "Test.Unit.Core.Queueing\Test.Unit.Core.Queueing.csproj", "{9A388CFC-0200-43FE-8118-B16E8179E12B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,18 @@ Global
 		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
 		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{113B00BC-537A-4AE7-B844-FBF18F1A4E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
