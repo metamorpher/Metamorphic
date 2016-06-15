@@ -7,9 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using EasyNetQ;
@@ -44,13 +41,13 @@ namespace Test.Unit.Core.Queueing.Signals
         [Test]
         public void ProcessWithNullSignal()
         {
-            var queueName = string.Empty;
-            Action<SignalData> processAction = null;
+            string queueName = string.Empty;
+            Func<SignalData, Task> processAction = null;
             var bus = new Mock<IBus>();
             {
-                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Action<SignalData>>()))
-                    .Callback<string, Action<SignalData>>(
-                        (q, a) => 
+                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Func<SignalData, Task>>()))
+                    .Callback<string, Func<SignalData, Task>>(
+                        (q, a) =>
                         {
                             queueName = q;
                             processAction = a;
@@ -59,21 +56,21 @@ namespace Test.Unit.Core.Queueing.Signals
 
             var diag = new SystemDiagnostics((l, m) => { }, null);
 
-            var publisher = new PersistentSignalDispenser(bus.Object, diag);
+            var publisher = new PersistentSignalDispenser(bus.Object, diag, new CurrentThreadTaskScheduler());
 
             Assert.IsNotNull(processAction);
-            Assert.DoesNotThrow(() => processAction(null));
+            Assert.DoesNotThrow(() => processAction(null).Wait());
         }
 
         [Test]
         public void Process()
         {
             string queueName = string.Empty;
-            Action<SignalData> processAction = null;
+            Func<SignalData, Task> processAction = null;
             var bus = new Mock<IBus>();
             {
-                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Action<SignalData>>()))
-                    .Callback<string, Action<SignalData>>(
+                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Func<SignalData, Task>>()))
+                    .Callback<string, Func<SignalData, Task>>(
                         (q, a) =>
                         {
                             queueName = q;
@@ -98,7 +95,7 @@ namespace Test.Unit.Core.Queueing.Signals
                     createdSignal = e.Item;
                 };
 
-            var publisher = new PersistentSignalDispenser(bus.Object, diag);
+            var publisher = new PersistentSignalDispenser(bus.Object, diag, new CurrentThreadTaskScheduler());
             publisher.OnItemAvailable += handler;
 
             var typeId = "a";
@@ -112,7 +109,7 @@ namespace Test.Unit.Core.Queueing.Signals
                     SensorId = typeId,
                     Parameters = parameters,
                 };
-            processAction(signalData);
+            processAction(signalData).Wait();
 
             Assert.IsNotNull(createdSignal);
 
@@ -128,11 +125,11 @@ namespace Test.Unit.Core.Queueing.Signals
         public void ProcessWithFailure()
         {
             string queueName = string.Empty;
-            Action<SignalData> processAction = null;
+            Func<SignalData, Task> processAction = null;
             var bus = new Mock<IBus>();
             {
-                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Action<SignalData>>()))
-                    .Callback<string, Action<SignalData>>(
+                bus.Setup(b => b.Receive<SignalData>(It.IsAny<string>(), It.IsAny<Func<SignalData, Task>>()))
+                    .Callback<string, Func<SignalData, Task>>(
                         (q, a) =>
                         {
                             queueName = q;
@@ -158,7 +155,7 @@ namespace Test.Unit.Core.Queueing.Signals
                     throw new Exception();
                 };
 
-            var publisher = new PersistentSignalDispenser(bus.Object, diag);
+            var publisher = new PersistentSignalDispenser(bus.Object, diag, new CurrentThreadTaskScheduler());
             publisher.OnItemAvailable += handler;
 
             var typeId = "a";
@@ -172,7 +169,7 @@ namespace Test.Unit.Core.Queueing.Signals
                 SensorId = typeId,
                 Parameters = parameters,
             };
-            Assert.Throws<Exception>(() => processAction(signalData));
+            Assert.Throws<AggregateException>(() => processAction(signalData).Wait());
 
             Assert.IsNotNull(createdSignal);
 
