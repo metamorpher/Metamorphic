@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -76,8 +77,8 @@ namespace Metamorphic.Core.Rules
             var parameter1 = "a";
             var parameter2 = "b";
             var reference = new ActionParameterValue(
-                "c", 
-                "{{signal." + parameter1 + "}} {{signal." + parameter2 + "}}", 
+                "c",
+                "{{signal." + parameter1 + "}} {{signal." + parameter2 + "}}",
                 new List<string>
                 {
                     parameter1,

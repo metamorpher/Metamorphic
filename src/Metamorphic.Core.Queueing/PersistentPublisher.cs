@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ namespace Metamorphic.Core.Queueing
     /// <typeparam name="TItem">The type of item that should be published.</typeparam>
     /// <typeparam name="TId">The type of the ID instance that is used to identity the current {TItem} instance.</typeparam>
     /// <typeparam name="TDataItem">The type of data object that stores all the data of the {TItem} instance.</typeparam>
-    internal abstract class PersistentPublisher<TItem, TId, TDataItem> : IPublishItems<TItem> 
+    internal abstract class PersistentPublisher<TItem, TId, TDataItem> : IPublishItems<TItem>
         where TItem : class, IHaveIdentity<TId>
         where TId : IIsId<TId>
         where TDataItem : class
@@ -28,17 +29,17 @@ namespace Metamorphic.Core.Queueing
         /// <summary>
         /// The bus that is used to send data to RabbitMQ.
         /// </summary>
-        private readonly IBus m_Bus;
+        private readonly IBus _bus;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The name of the 'store' to which data is published.
         /// </summary>
-        private readonly string m_StoreName;
+        private readonly string _storeName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistentPublisher{TItem, TId, TDataItem}"/> class.
@@ -80,9 +81,9 @@ namespace Metamorphic.Core.Queueing
                 throw new ArgumentNullException("diagnostics");
             }
 
-            m_Bus = bus;
-            m_StoreName = storeName;
-            m_Diagnostics = diagnostics;
+            _bus = bus;
+            _storeName = storeName;
+            _diagnostics = diagnostics;
         }
 
         /// <summary>
@@ -101,13 +102,13 @@ namespace Metamorphic.Core.Queueing
 
             var itemIdentity = item.IdAsText();
             var dataObject = ToDataObject(item);
-            m_Bus.SendAsync(m_StoreName, dataObject)
+            _bus.SendAsync(_storeName, dataObject)
                 .ContinueWith(
-                    t => 
+                    t =>
                     {
                         if (t.IsFaulted)
                         {
-                            m_Diagnostics.Log(
+                            _diagnostics.Log(
                                 LevelToLog.Warn,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
@@ -116,7 +117,7 @@ namespace Metamorphic.Core.Queueing
                         }
                         else
                         {
-                            m_Diagnostics.Log(
+                            _diagnostics.Log(
                                 LevelToLog.Debug,
                                 string.Format(
                                     CultureInfo.InvariantCulture,

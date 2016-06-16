@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -50,7 +51,7 @@ namespace Metamorphic.Core.Queueing
             var hosts = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHosts)
                 ? configuration.Value<string[]>(QueueingConfigurationKeys.RabbitMqHosts)
                     .Select(
-                        s => 
+                        s =>
                         {
                             var uri = new Uri(s);
                             return new HostConfiguration
@@ -70,33 +71,33 @@ namespace Metamorphic.Core.Queueing
                     };
 
             return new ConnectionConfiguration
-                {
-                    VirtualHost = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqVirtualHostName) 
-                        ? configuration.Value<string>(QueueingConfigurationKeys.RabbitMqVirtualHostName) 
+            {
+                VirtualHost = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqVirtualHostName)
+                        ? configuration.Value<string>(QueueingConfigurationKeys.RabbitMqVirtualHostName)
                         : DefaultVirtualHostName,
-                    Port = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqDefaultPort) 
-                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqDefaultPort) 
+                Port = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqDefaultPort)
+                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqDefaultPort)
                         : DefaultPort,
 
-                    Hosts = hosts,
+                Hosts = hosts,
 
-                    UserName = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserName),
-                    Password = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserPassword),
+                UserName = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserName),
+                Password = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserPassword),
 
-                    RequestedHeartbeat = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds) 
-                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds) 
+                RequestedHeartbeat = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds)
+                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds)
                         : DefaultRequestedHeartbeatTimeInSeconds,
 
-                    // Persist the messages so that we have them even if the queue goes down
-                    PersistentMessages = true,
+                // Persist the messages so that we have them even if the queue goes down
+                PersistentMessages = true,
 
-                    // Confirm when a message has been published
-                    PublisherConfirms = true,
+                // Confirm when a message has been published
+                PublisherConfirms = true,
 
-                    // Get one message, process it and get the next one after we acknowledge. This
-                    // enables load balancing and also ensures we don't have to handle keeping the messages safe
-                    PrefetchCount = 1,
-                };
+                // Get one message, process it and get the next one after we acknowledge. This
+                // enables load balancing and also ensures we don't have to handle keeping the messages safe
+                PrefetchCount = 1,
+            };
         }
 
         private static void RegisterDispensers(ContainerBuilder builder)
@@ -120,18 +121,18 @@ namespace Metamorphic.Core.Queueing
         private static void RegisterRabbitMQ(ContainerBuilder builder)
         {
             builder.Register(
-                    (c,p) => 
+                    (c, p) =>
                     {
                         var configuration = c.Resolve<IConfiguration>();
                         var ctx = c.Resolve<IComponentContext>();
                         return RabbitHutch.CreateBus(
                             RabbitMQConnectionFromConfiguration(configuration),
-                            x => 
+                            x =>
                             {
                                 // logger
                                 x.Register(serviceProvider => ctx.Resolve<IEasyNetQLogger>());
 
-                                // In a cluster 
+                                // In a cluster
                                 x.Register<IClusterHostSelectionStrategy<ConnectionFactoryInfo>, RandomClusterHostSelectionStrategy<ConnectionFactoryInfo>>();
                             });
                     })

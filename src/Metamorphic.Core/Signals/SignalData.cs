@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ namespace Metamorphic.Core.Signals
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalData"/> class.
         /// </summary>
-        public SignalData() 
+        public SignalData()
             : this(null, null)
         {
         }
@@ -83,17 +84,19 @@ namespace Metamorphic.Core.Signals
         /// Initializes a new instance of the <see cref="SignalData"/> class.
         /// </summary>
         /// <param name="sensorId">The ID of the sensor that created the signal</param>
-        public SignalData(string sensorId) 
+        public SignalData(string sensorId)
             : this(sensorId, null)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalData"/> class.
         /// </summary>
         /// <param name="parameters">The parameters for the signal</param>
-        public SignalData(IDictionary<string, object> parameters) 
+        public SignalData(IDictionary<string, object> parameters)
             : this(null, parameters)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalData"/> class.
@@ -135,7 +138,9 @@ namespace Metamorphic.Core.Signals
         ///     <see langword="true"/> if the specified <see cref="SignalData"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool Equals(SignalData other)
         {
@@ -181,13 +186,15 @@ namespace Metamorphic.Core.Signals
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// Determines whether the specified <see cref="object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public sealed override bool Equals(object obj)
         {
@@ -207,7 +214,7 @@ namespace Metamorphic.Core.Signals
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public sealed override int GetHashCode()
         {
@@ -240,10 +247,10 @@ namespace Metamorphic.Core.Signals
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// A <see cref="string"/> that represents this instance.
         /// </returns>
         public override string ToString()
         {

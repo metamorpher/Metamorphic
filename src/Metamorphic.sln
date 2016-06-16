@@ -30,7 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{B658
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
-		..\Settings.StyleCop = ..\Settings.StyleCop
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vcs", "vcs", "{E14ECB1F-1DF7-44D9-9063-6A7998CBB5F0}"
@@ -48,6 +47,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core.Queueing", "Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj", "{113B00BC-537A-4AE7-B844-FBF18F1A4E20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Queueing", "Test.Unit.Core.Queueing\Test.Unit.Core.Queueing.csproj", "{9A388CFC-0200-43FE-8118-B16E8179E12B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{88E9546C-3566-45A3-A25B-51D514271E7B}"
+	ProjectSection(SolutionItems) = preProject
+		base.props = base.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analysis", "analysis", "{F99763F9-270D-4937-A7AF-C97C1CE78AA9}"
+	ProjectSection(SolutionItems) = preProject
+		default.ruleset = default.ruleset
+		stylecop.json = stylecop.json
+		test.ruleset = test.ruleset
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,5 +109,7 @@ Global
 		{38E97CAA-B0BB-4DF6-B1F3-62972C7AA06B} = {B658E693-98FC-40DF-B017-46F8296A4F56}
 		{E14ECB1F-1DF7-44D9-9063-6A7998CBB5F0} = {B658E693-98FC-40DF-B017-46F8296A4F56}
 		{B187B696-12D5-40CE-983A-0AFAC8218AEC} = {B658E693-98FC-40DF-B017-46F8296A4F56}
+		{88E9546C-3566-45A3-A25B-51D514271E7B} = {B658E693-98FC-40DF-B017-46F8296A4F56}
+		{F99763F9-270D-4937-A7AF-C97C1CE78AA9} = {B658E693-98FC-40DF-B017-46F8296A4F56}
 	EndGlobalSection
 EndGlobal

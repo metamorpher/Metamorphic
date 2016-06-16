@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ namespace Metamorphic.Core
         /// <summary>
         /// The object that stores constant values for the application.
         /// </summary>
-        private readonly ApplicationConstants m_Constants;
+        private readonly ApplicationConstants _constants;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileConstants"/> class.
@@ -30,7 +31,7 @@ namespace Metamorphic.Core
                 Lokad.Enforce.Argument(() => constants);
             }
 
-            m_Constants = constants;
+            _constants = constants;
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace Metamorphic.Core
         public string CompanyCommonPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, _constants.CompanyName);
 
             return companyDirectory;
         }
@@ -93,13 +94,13 @@ namespace Metamorphic.Core
         public string CompanyUserPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, _constants.CompanyName);
 
             return companyDirectory;
         }
 
         /// <summary>
-        /// Returns the path for the directory where the global 
+        /// Returns the path for the directory where the global
         /// settings for the product are written to.
         /// </summary>
         /// <returns>
@@ -109,14 +110,14 @@ namespace Metamorphic.Core
         public string ProductSettingsCommonPath()
         {
             var companyDirectory = CompanyCommonPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, _constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, _constants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }
 
         /// <summary>
-        /// Returns the path for the directory where the global 
+        /// Returns the path for the directory where the global
         /// settings for the product are written to.
         /// </summary>
         /// <returns>
@@ -126,8 +127,8 @@ namespace Metamorphic.Core
         public string ProductSettingsUserPath()
         {
             var companyDirectory = CompanyUserPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, _constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, _constants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }

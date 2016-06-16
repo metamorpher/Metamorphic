@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ namespace Metamorphic.Core.Queueing
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EasyNetQLogger"/> class.
@@ -36,12 +37,12 @@ namespace Metamorphic.Core.Queueing
                 throw new ArgumentNullException("diagnostics");
             }
 
-            m_Diagnostics = diagnostics;
+            _diagnostics = diagnostics;
         }
 
         public void DebugWrite(string format, params object[] args)
         {
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Debug,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -51,14 +52,14 @@ namespace Metamorphic.Core.Queueing
 
         public void ErrorWrite(Exception exception)
         {
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Error,
                 exception.ToString());
         }
 
         public void ErrorWrite(string format, params object[] args)
         {
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Error,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -68,7 +69,7 @@ namespace Metamorphic.Core.Queueing
 
         public void InfoWrite(string format, params object[] args)
         {
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,

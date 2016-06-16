@@ -43,17 +43,17 @@
         <!--
             The code analysis rule set that should be used for non-test assemblies.
         -->
-        <CodeAnalysisRuleSet Condition="$(ShouldPerformCodeAnalysis) AND !$(IsTest)">$(SolutionDir)\codeanalysis.base.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet Condition=" '$(IsTest)' == 'false' ">$(SolutionDir)\default.ruleset</CodeAnalysisRuleSet>
         <!--
             The code analysis rule set that should be used for test assemblies. If no code analysis should be executed on test
             assemblies then it can be turned off in the settings for the different build configurations below.
         -->
-        <CodeAnalysisRuleSet Condition="$(ShouldPerformCodeAnalysis) AND $(IsTest)">$(SolutionDir)\codeanalysis.test.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet Condition=" '$(IsTest)' == 'true' ">$(SolutionDir)\test.ruleset</CodeAnalysisRuleSet>
         <!--
             The culture which will be used by the code analysis when searching for spelling errors. The culture name should
             be formatted using the .NET culture format.
         -->
-        <CodeAnalysisCulture Condition="$(ShouldPerformCodeAnalysis)">en-US</CodeAnalysisCulture>
+        <CodeAnalysisCulture>en-US</CodeAnalysisCulture>
     </PropertyGroup>
 
     <!-- Generate the XML documentation file -->
@@ -67,12 +67,12 @@
             to the property.
         -->
         <GenerateDocumentation>false</GenerateDocumentation>
-        <GenerateDocumentation Condition="!$(IsTest)">true</GenerateDocumentation>
+        <GenerateDocumentation Condition=" '$(IsTest)' == 'false' ">true</GenerateDocumentation>
 
         <!--
             The full file path where the XML documentation file should be created.
         -->
-        <DocumentationFile Condition=" '$(GenerateDocumentation)' == 'true' AND !$(IsTest)">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
+        <DocumentationFile Condition=" '$(GenerateDocumentation)' == 'true' AND '$(IsTest)' == 'false'">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
     </PropertyGroup>
 
     <!-- Strong name the binaries -->
@@ -81,12 +81,12 @@
             A flag that indicates whether or not the assemblies should be strong named during the compilation process.
         -->
         <ShouldSign Condition=" '$(ShouldSign)' == '' ">false</ShouldSign>
-        <SignAssembly Condition="$(ShouldSign)">false</SignAssembly>
-        <DelaySign Condition="$(ShouldSign)">false</DelaySign>
+        <SignAssembly Condition=" '$(ShouldSign)' == 'true' ">false</SignAssembly>
+        <DelaySign Condition=" '$(ShouldSign)' == 'true' ">false</DelaySign>
         <!--
             The full path of the key file that will be used to sign the assemblies during the compilation process.
         -->
-        <AssemblyOriginatorKeyFile Condition="$(ShouldSign)">$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile Condition=" '$(ShouldSign)' == 'true' ">$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <!-- Compiler specific configurations -->
@@ -137,4 +137,9 @@
         <Optimize>true</Optimize>
         <RunCodeAnalysis>$(ShouldPerformCodeAnalysis)</RunCodeAnalysis>
     </PropertyGroup>
+
+    <!-- Default includes -->
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
+    </ItemGroup>
 </Project>

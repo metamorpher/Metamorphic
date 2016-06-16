@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ namespace Metamorphic.Core.Signals
         /// stored in lower case so as to provide case-insensitive comparisons between the signal and
         /// rule parameter names.
         /// </summary>
-        private readonly IDictionary<string, object> m_Parameters
+        private readonly IDictionary<string, object> _parameters
             = new Dictionary<string, object>();
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Metamorphic.Core.Signals
             Sensor = sensorId;
             foreach (var pair in parameters)
             {
-                m_Parameters.Add(pair.Key.ToLower(), pair.Value);
+                _parameters.Add(pair.Key.ToLower(), pair.Value);
             }
         }
 
@@ -66,7 +67,7 @@ namespace Metamorphic.Core.Signals
                 return false;
             }
 
-            return m_Parameters.ContainsKey(name.ToLower());
+            return _parameters.ContainsKey(name.ToLower());
         }
 
         /// <summary>
@@ -111,17 +112,17 @@ namespace Metamorphic.Core.Signals
                         name));
             }
 
-            return m_Parameters[name.ToLower()];
+            return _parameters[name.ToLower()];
         }
 
         /// <summary>
-        /// Returns an enumerator that can be used to enumerate over the 
+        /// Returns an enumerator that can be used to enumerate over the
         /// different parameters for the signal.
         /// </summary>
         /// <returns>The enumerator that can be used to enumerate over the parameters for the signal.</returns>
         public IEnumerable<string> Parameters()
         {
-            return m_Parameters.Keys;
+            return _parameters.Keys;
         }
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace Metamorphic.Core.Signals
             return new SignalData
                 {
                     SensorId = Sensor.ToString(),
-                    Parameters = new Dictionary<string, object>(m_Parameters),
+                    Parameters = new Dictionary<string, object>(_parameters),
                 };
         }
     }

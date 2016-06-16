@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -22,27 +23,27 @@ namespace Metamorphic.Server
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The queue that contains the jobs that should be executed.
         /// </summary>
-        private readonly IQueueJobs m_JobQueue;
+        private readonly IQueueJobs _jobQueue;
 
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly object m_Lock = new object();
+        private readonly object _lock = new object();
 
         /// <summary>
         /// The collection containing all the rules.
         /// </summary>
-        private readonly IStoreRules m_RuleCollection;
+        private readonly IStoreRules _ruleCollection;
 
         /// <summary>
         /// The object that dispenses signals that need to be processed.
         /// </summary>
-        private readonly IDispenseSignals m_SignalDispenser;
+        private readonly IDispenseSignals _signalDispenser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
@@ -76,11 +77,11 @@ namespace Metamorphic.Server
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_Diagnostics = diagnostics;
-            m_JobQueue = jobQueue;
-            m_RuleCollection = ruleCollection;
-            m_SignalDispenser = signalDispenser;
-            m_SignalDispenser.OnItemAvailable += HandleOnEnqueue;
+            _diagnostics = diagnostics;
+            _jobQueue = jobQueue;
+            _ruleCollection = ruleCollection;
+            _signalDispenser = signalDispenser;
+            _signalDispenser.OnItemAvailable += HandleOnEnqueue;
         }
 
         private void HandleOnEnqueue(object sender, ItemEventArgs<Signal> e)
@@ -91,7 +92,7 @@ namespace Metamorphic.Server
                 return;
             }
 
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -100,7 +101,7 @@ namespace Metamorphic.Server
 
             foreach (var parameter in signal.Parameters())
             {
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Info,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -109,13 +110,13 @@ namespace Metamorphic.Server
                         signal.ParameterValue(parameter)));
             }
 
-            var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
+            var rules = _ruleCollection.RulesForSignal(signal.Sensor);
             foreach (var rule in rules)
             {
                 if (rule.ShouldProcess(signal))
                 {
                     var job = rule.ToJob(signal);
-                    m_JobQueue.Enqueue(job);
+                    _jobQueue.Enqueue(job);
                 }
             }
         }

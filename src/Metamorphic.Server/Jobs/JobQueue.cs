@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ namespace Metamorphic.Server.Jobs
         /// <summary>
         /// Stores the full path to the queued jobs.
         /// </summary>
-        private readonly ConcurrentQueue<Job> m_Queue
+        private readonly ConcurrentQueue<Job> _queue
             = new ConcurrentQueue<Job>();
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace Metamorphic.Server.Jobs
         public Job Dequeue()
         {
             Job signal;
-            if (m_Queue.TryDequeue(out signal))
+            if (_queue.TryDequeue(out signal))
             {
                 return signal;
             }
@@ -49,7 +50,7 @@ namespace Metamorphic.Server.Jobs
                 Lokad.Enforce.Argument(() => job);
             }
 
-            m_Queue.Enqueue(job);
+            _queue.Enqueue(job);
             RaiseOnEnqueue();
         }
 
@@ -60,7 +61,7 @@ namespace Metamorphic.Server.Jobs
         {
             get
             {
-                return m_Queue.IsEmpty;
+                return _queue.IsEmpty;
             }
         }
 

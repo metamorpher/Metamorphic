@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ namespace Metamorphic.Core.Rules
         }
 
         /// <summary>
-        /// The collection of parameters for the trigger.
+        /// Gets or sets the collection of parameters for the trigger.
         /// </summary>
         public Dictionary<string, object> Parameters
         {
@@ -31,7 +32,7 @@ namespace Metamorphic.Core.Rules
         }
 
         /// <summary>
-        /// The ID of trigger.
+        /// Gets or sets the ID of trigger.
         /// </summary>
         public string Id
         {

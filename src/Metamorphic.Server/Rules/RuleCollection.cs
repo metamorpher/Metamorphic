@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -17,22 +18,22 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The collection that maps file paths to rules.
         /// </summary>
-        private readonly Dictionary<string, Rule> m_FileToRuleMap = new Dictionary<string, Rule>();
+        private readonly Dictionary<string, Rule> _fileToRuleMap = new Dictionary<string, Rule>();
 
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly object m_Lock = new object();
+        private readonly object _lock = new object();
 
         /// <summary>
         /// The collection that maps signal types to rules.
         /// </summary>
-        private readonly Dictionary<SignalTypeId, List<Rule>> m_SignalTypeToRuleMap = new Dictionary<SignalTypeId, List<Rule>>();
+        private readonly Dictionary<SignalTypeId, List<Rule>> _signalTypeToRuleMap = new Dictionary<SignalTypeId, List<Rule>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleCollection"/> class.
@@ -47,7 +48,7 @@ namespace Metamorphic.Server.Rules
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_Diagnostics = diagnostics;
+            _diagnostics = diagnostics;
         }
 
         /// <summary>
@@ -73,20 +74,21 @@ namespace Metamorphic.Server.Rules
                 Lokad.Enforce.Argument(() => rule);
             }
 
-            lock (m_Lock)
+            lock (_lock)
             {
-                if (m_FileToRuleMap.ContainsKey(filePath))
+                if (_fileToRuleMap.ContainsKey(filePath))
                 {
                     throw new RuleAlreadyExistsException();
                 }
 
-                m_FileToRuleMap.Add(filePath, rule);
+                _fileToRuleMap.Add(filePath, rule);
 
-                if (!m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
+                if (!_signalTypeToRuleMap.ContainsKey(rule.Sensor))
                 {
-                    m_SignalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
+                    _signalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
                 }
-                List<Rule> collection = m_SignalTypeToRuleMap[rule.Sensor];
+
+                List<Rule> collection = _signalTypeToRuleMap[rule.Sensor];
                 if (!collection.Contains(rule))
                 {
                     collection.Add(rule);
@@ -105,25 +107,25 @@ namespace Metamorphic.Server.Rules
                 return;
             }
 
-            lock(m_Lock)
+            lock (_lock)
             {
                 Rule rule = null;
-                if (m_FileToRuleMap.ContainsKey(filePath))
+                if (_fileToRuleMap.ContainsKey(filePath))
                 {
-                    rule = m_FileToRuleMap[filePath];
-                    m_FileToRuleMap.Remove(filePath);
+                    rule = _fileToRuleMap[filePath];
+                    _fileToRuleMap.Remove(filePath);
                 }
 
                 if (rule != null)
                 {
-                    if (m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
+                    if (_signalTypeToRuleMap.ContainsKey(rule.Sensor))
                     {
-                        var collection = m_SignalTypeToRuleMap[rule.Sensor];
+                        var collection = _signalTypeToRuleMap[rule.Sensor];
                         collection.Remove(rule);
 
                         if (collection.Count == 0)
                         {
-                            m_SignalTypeToRuleMap.Remove(rule.Sensor);
+                            _signalTypeToRuleMap.Remove(rule.Sensor);
                         }
                     }
                 }
@@ -134,14 +136,14 @@ namespace Metamorphic.Server.Rules
         /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
         /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
-        /// <returns></returns>
+        /// <returns>A collection that contains all the rules that apply to the given signal.</returns>
         public IEnumerable<Rule> RulesForSignal(SignalTypeId sensorId)
         {
-            lock(m_Lock)
+            lock (_lock)
             {
-                if (m_SignalTypeToRuleMap.ContainsKey(sensorId))
+                if (_signalTypeToRuleMap.ContainsKey(sensorId))
                 {
-                    return new List<Rule>(m_SignalTypeToRuleMap[sensorId]);
+                    return new List<Rule>(_signalTypeToRuleMap[sensorId]);
                 }
                 else
                 {
@@ -173,35 +175,35 @@ namespace Metamorphic.Server.Rules
                 Lokad.Enforce.Argument(() => rule);
             }
 
-            lock (m_Lock)
+            lock (_lock)
             {
                 Rule ruleToReplace = null;
-                if (m_FileToRuleMap.ContainsKey(filePath))
+                if (_fileToRuleMap.ContainsKey(filePath))
                 {
-                    ruleToReplace = m_FileToRuleMap[filePath];
-                    m_FileToRuleMap[filePath] = rule;
+                    ruleToReplace = _fileToRuleMap[filePath];
+                    _fileToRuleMap[filePath] = rule;
                 }
 
                 if (ruleToReplace != null)
                 {
                     List<Rule> oldCollection = null;
-                    if (m_SignalTypeToRuleMap.ContainsKey(ruleToReplace.Sensor))
+                    if (_signalTypeToRuleMap.ContainsKey(ruleToReplace.Sensor))
                     {
-                        oldCollection = m_SignalTypeToRuleMap[ruleToReplace.Sensor];
+                        oldCollection = _signalTypeToRuleMap[ruleToReplace.Sensor];
                         oldCollection.Remove(ruleToReplace);
                     }
 
-                    if (!m_SignalTypeToRuleMap.ContainsKey(rule.Sensor))
+                    if (!_signalTypeToRuleMap.ContainsKey(rule.Sensor))
                     {
-                        m_SignalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
+                        _signalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
                     }
 
-                    var newCollection = m_SignalTypeToRuleMap[rule.Sensor];
+                    var newCollection = _signalTypeToRuleMap[rule.Sensor];
                     newCollection.Add(rule);
 
                     if ((oldCollection != null) && (oldCollection.Count == 0))
                     {
-                        m_SignalTypeToRuleMap.Remove(rule.Sensor);
+                        _signalTypeToRuleMap.Remove(rule.Sensor);
                     }
                 }
             }

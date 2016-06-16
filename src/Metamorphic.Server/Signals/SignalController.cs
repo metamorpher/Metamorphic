@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ namespace Metamorphic.Server.Signals
     /// </summary>
     public sealed class SignalController : ApiController
     {
-        private readonly IPublishSignals m_Publisher;
+        private readonly IPublishSignals _publisher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalController"/> class.
@@ -30,7 +31,7 @@ namespace Metamorphic.Server.Signals
                 Lokad.Enforce.Argument(() => signalPublisher);
             }
 
-            m_Publisher = signalPublisher;
+            _publisher = signalPublisher;
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Metamorphic.Server.Signals
                 new SignalTypeId(signalType),
                 arguments);
 
-            m_Publisher.Publish(signal);
+            _publisher.Publish(signal);
 
             return new HttpResponseMessage
             {

@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -9,6 +10,9 @@ using Metamorphic.Core.Actions;
 
 namespace Metamorphic.Server.Actions
 {
+    /// <summary>
+    /// Defines the interface for objects that store actions.
+    /// </summary>
     internal interface IStoreActions
     {
         /// <summary>
@@ -32,7 +36,9 @@ namespace Metamorphic.Server.Actions
         /// <returns>
         ///   <see langword="true" /> if the storage has a definition with the given ID; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         bool HasActionFor(ActionId action);
     }

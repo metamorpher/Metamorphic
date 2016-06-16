@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ namespace Metamorphic.Core.Queueing
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the list of hosts for the RabbitMQ instances.
         /// </summary>
         [SuppressMessage(
-            "Microsoft.Security", 
+            "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
         public static readonly ConfigurationKey RabbitMqHosts

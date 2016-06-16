@@ -1,4 +1,11 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="Metamorphic">
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Runtime.Serialization;
 using Metamorphic.Core.Properties;
 
@@ -41,7 +48,7 @@ namespace Metamorphic.Core.Actions
         /// Initializes a new instance of the <see cref="MissingActionParameterException"/> class.
         /// </summary>
         /// <param name="info">
-        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized 
+        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized
         ///     object data about the exception being thrown.
         /// </param>
         /// <param name="context">

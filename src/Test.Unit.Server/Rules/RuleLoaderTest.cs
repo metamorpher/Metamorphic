@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -20,6 +21,12 @@ namespace Metamorphic.Server.Rules
     [TestFixture]
     public sealed class RuleLoaderTest
     {
+        private static string RulePath()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"TestFiles");
+            return path;
+        }
+
         [Test]
         public void CreateDefinitionFromFileWithActionWithParameters()
         {
@@ -854,7 +861,7 @@ namespace Metamorphic.Server.Rules
                     ["bar"] = parameterValue1,
                     ["baz"] = parameterValue2,
                 });
-            Assert.Throws< InvalidSignalForRuleException>(() => rule.ToJob(signal));
+            Assert.Throws<InvalidSignalForRuleException>(() => rule.ToJob(signal));
         }
 
         [Test]
@@ -930,12 +937,6 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("bar"));
             Assert.AreEqual(parameterValue, job.ParameterValue("bar"));
-        }
-
-        private static string RulePath()
-        {
-            var path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"TestFiles");
-            return path;
         }
     }
 }

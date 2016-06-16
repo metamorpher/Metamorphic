@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -23,17 +24,17 @@ namespace Metamorphic.Server.Rules
 {
     internal sealed class RuleLoader : ILoadRules
     {
-        private static readonly Regex s_TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
+        private static readonly Regex TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The predicate that is used to determine if a given <see cref="ActionId"/> exists.
         /// </summary>
-        private readonly Predicate<string> m_DoesActionIdExist;
+        private readonly Predicate<string> _doesActionIdExist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleLoader"/> class.
@@ -53,8 +54,8 @@ namespace Metamorphic.Server.Rules
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_DoesActionIdExist = doesActionIdExist;
-            m_Diagnostics = diagnostics;
+            _doesActionIdExist = doesActionIdExist;
+            _diagnostics = diagnostics;
         }
 
         internal RuleDefinition CreateDefinitionFromFile(string filePath)
@@ -72,10 +73,14 @@ namespace Metamorphic.Server.Rules
         /// <summary>
         /// Returns a value indicating whether the current rule definition is valid or not.
         /// </summary>
+        /// <param name="definition">The definition of the rule.</param>
+        /// <param name="doesActionIdExist">The predicate used to determine if a the action ID exists.</param>
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         internal bool IsValid(
             RuleDefinition definition,
@@ -147,12 +152,12 @@ namespace Metamorphic.Server.Rules
                     var parameterText = pair.Value as string;
                     if (parameterText != null)
                     {
-                        var matches = s_TriggerParameterMatcher.Matches(parameterText);
+                        var matches = TriggerParameterMatcher.Matches(parameterText);
                         if (matches.Count > 0)
                         {
-                            foreach(Match match in matches)
+                            foreach (Match match in matches)
                             {
-                                // The first item in the groups collection is the full string that matched 
+                                // The first item in the groups collection is the full string that matched
                                 // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
                                 // Given that we only expect one match group we'll just use the first item.
                                 var signalParameterName = match.Groups[1].Value;
@@ -173,7 +178,7 @@ namespace Metamorphic.Server.Rules
         {
             switch (conditionType)
             {
-                case "equals" :
+                case "equals":
                 case "notequals":
                 case "lessthan":
                 case "greaterthan":
@@ -203,9 +208,9 @@ namespace Metamorphic.Server.Rules
             }
 
             var definition = CreateDefinitionFromFile(filePath);
-            if (!IsValid(definition, m_DoesActionIdExist))
+            if (!IsValid(definition, _doesActionIdExist))
             {
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Warn,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -235,14 +240,14 @@ namespace Metamorphic.Server.Rules
                     var parameterText = pair.Value as string;
                     if (parameterText != null)
                     {
-                        var matches = s_TriggerParameterMatcher.Matches(parameterText);
+                        var matches = TriggerParameterMatcher.Matches(parameterText);
                         if (matches.Count > 0)
                         {
                             var signalParameters = new List<string>();
-                            
+
                             foreach (Match match in matches)
                             {
-                                // The first item in the groups collection is the full string that matched 
+                                // The first item in the groups collection is the full string that matched
                                 // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
                                 // Given that we only expect one match group we'll just use the first item.
                                 var signalParameterName = match.Groups[1].Value;
@@ -286,13 +291,13 @@ namespace Metamorphic.Server.Rules
                     return o =>
                     {
                         var comparable = o as IComparable;
-                        return (comparable.CompareTo(comparisonValue) < 0);
+                        return comparable.CompareTo(comparisonValue) < 0;
                     };
                 case "greaterthan":
                     return o =>
                     {
                         var comparable = o as IComparable;
-                        return (comparable.CompareTo(comparisonValue) > 0);
+                        return comparable.CompareTo(comparisonValue) > 0;
                     };
                 case "matchregex":
                     return o =>
