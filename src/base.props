@@ -48,7 +48,7 @@
             The code analysis rule set that should be used for test assemblies. If no code analysis should be executed on test
             assemblies then it can be turned off in the settings for the different build configurations below.
         -->
-        <CodeAnalysisRuleSet Condition=" '$(IsTest)' == 'true' ">$(SolutionDir)\default.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet Condition=" '$(IsTest)' == 'true' ">$(SolutionDir)\test.ruleset</CodeAnalysisRuleSet>
         <!--
             The culture which will be used by the code analysis when searching for spelling errors. The culture name should
             be formatted using the .NET culture format.
