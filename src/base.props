@@ -140,6 +140,6 @@
 
     <!-- Default includes -->
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" />
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" />
     </ItemGroup>
 </Project>
