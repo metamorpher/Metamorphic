@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -26,12 +27,12 @@ namespace Metamorphic.Core.Actions
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The full path to the directory that contains all the powershell scripts
         /// </summary>
-        private readonly string m_ScriptPath;
+        private readonly string _scriptPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowershellActionBuilder"/> class.
@@ -51,15 +52,15 @@ namespace Metamorphic.Core.Actions
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_Diagnostics = diagnostics;
+            _diagnostics = diagnostics;
 
-            m_ScriptPath = configuration.HasValueFor(CoreConfigurationKeys.ScriptDirectory)
+            _scriptPath = configuration.HasValueFor(CoreConfigurationKeys.ScriptDirectory)
                 ? configuration.Value<string>(CoreConfigurationKeys.ScriptDirectory)
                 : CoreConstants.DefaultScriptDirectory;
-            if (!Path.IsPathRooted(m_ScriptPath))
+            if (!Path.IsPathRooted(_scriptPath))
             {
                 var exeDirectoryPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
-                m_ScriptPath = Path.GetFullPath(Path.Combine(exeDirectoryPath, m_ScriptPath));
+                _scriptPath = Path.GetFullPath(Path.Combine(exeDirectoryPath, _scriptPath));
             }
         }
 
@@ -68,7 +69,7 @@ namespace Metamorphic.Core.Actions
             var scriptFullPath = scriptFile;
             if (!Path.IsPathRooted(scriptFullPath))
             {
-                scriptFullPath = Path.GetFullPath(Path.Combine(m_ScriptPath, scriptFullPath));
+                scriptFullPath = Path.GetFullPath(Path.Combine(_scriptPath, scriptFullPath));
             }
 
             var startInfo = new ProcessStartInfo();
@@ -90,7 +91,7 @@ namespace Metamorphic.Core.Actions
                 // Redirect the standard output / error streams
                 startInfo.RedirectStandardOutput = true;
                 startInfo.RedirectStandardError = true;
-            };
+            }
 
             try
             {
@@ -117,7 +118,7 @@ namespace Metamorphic.Core.Actions
                                 CultureInfo.InvariantCulture,
                                 Resources.PowershellActionBuilder_ErrorWhileRunningPowershell_WithError,
                                 e.Data);
-                            m_Diagnostics.Log(
+                            _diagnostics.Log(
                                 LevelToLog.Warn,
                                 output);
                         }
@@ -130,7 +131,7 @@ namespace Metamorphic.Core.Actions
                                 CultureInfo.InvariantCulture,
                                 Resources.PowershellActionBuilder_OutputWhileRunning_WithOutput,
                                 e.Data);
-                            m_Diagnostics.Log(
+                            _diagnostics.Log(
                                 LevelToLog.Debug,
                                 output);
                         }
@@ -146,7 +147,7 @@ namespace Metamorphic.Core.Actions
 
                     // Notify the user that the process has exited.
                     {
-                        m_Diagnostics.Log(
+                        _diagnostics.Log(
                             LevelToLog.Info,
                             Resources.PowershellActionBuilder_Output_ProcessCompleted);
                     }
@@ -158,7 +159,7 @@ namespace Metamorphic.Core.Actions
                     CultureInfo.InvariantCulture,
                     Resources.PowershellActionbuilder_Error_FailedToRunExe_WithError,
                     e);
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Error,
                     log);
             }

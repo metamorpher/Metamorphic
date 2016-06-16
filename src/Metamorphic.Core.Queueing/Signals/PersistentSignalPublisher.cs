@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ namespace Metamorphic.Core.Queueing.Signals
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public PersistentSignalPublisher(IBus bus, SystemDiagnostics diagnostics) 
+        public PersistentSignalPublisher(IBus bus, SystemDiagnostics diagnostics)
             : base(bus, StoreNames.Signal, diagnostics)
         {
         }

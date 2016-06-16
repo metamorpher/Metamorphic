@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ namespace Metamorphic.Core
         /// Initializes a new instance of the <see cref="MissingConfigurationException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public MissingConfigurationException(string message) 
+        public MissingConfigurationException(string message)
             : base(message)
         {
         }

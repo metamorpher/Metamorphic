@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -47,7 +48,7 @@ namespace Metamorphic.Core.Actions
 
             var wasInvoked = false;
             var value = string.Empty;
-            Action<string> action = s => 
+            Action<string> action = s =>
                 {
                     value = s;
                     wasInvoked = true;
@@ -55,7 +56,7 @@ namespace Metamorphic.Core.Actions
             var definition = new ActionDefinition(id, parameters, action);
 
             var input = "input";
-            var values = new[] 
+            var values = new[]
                 {
                     new ActionParameterValueMap(parameters[0], input),
                 };

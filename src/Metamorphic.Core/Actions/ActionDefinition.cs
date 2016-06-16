@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -21,12 +22,12 @@ namespace Metamorphic.Core.Actions
         /// <summary>
         /// The delegate that should be invoked when the action is invoked.
         /// </summary>
-        private readonly Delegate m_ActionToExecute;
+        private readonly Delegate _actionToExecute;
 
         /// <summary>
         /// The collection of parameters for the action.
         /// </summary>
-        private readonly List<ActionParameterDefinition> m_Parameters;
+        private readonly List<ActionParameterDefinition> _parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionDefinition"/> class.
@@ -52,8 +53,8 @@ namespace Metamorphic.Core.Actions
             }
 
             Id = id;
-            m_Parameters = new List<ActionParameterDefinition>(parameters);
-            m_ActionToExecute = actionToExecute;
+            _parameters = new List<ActionParameterDefinition>(parameters);
+            _actionToExecute = actionToExecute;
         }
 
         /// <summary>
@@ -69,17 +70,16 @@ namespace Metamorphic.Core.Actions
         /// Invokes the command and returns the command return value.
         /// </summary>
         /// <param name="parameters">The parameters for the command.</param>
-        /// <returns>The return value for the command.</returns>
         public void Invoke(ActionParameterValueMap[] parameters)
         {
             {
                 Lokad.Enforce.Argument(() => parameters);
             }
 
-            var mappedParameterValues = new object[m_Parameters.Count];
-            for (int i = 0; i < m_Parameters.Count; i++)
+            var mappedParameterValues = new object[_parameters.Count];
+            for (int i = 0; i < _parameters.Count; i++)
             {
-                var expectedParameter = m_Parameters[i];
+                var expectedParameter = _parameters[i];
                 var providedParameter = parameters.FirstOrDefault(
                     m => string.Equals(m.Parameter.Name, expectedParameter.Name, StringComparison.OrdinalIgnoreCase));
                 if (providedParameter == null)
@@ -94,7 +94,7 @@ namespace Metamorphic.Core.Actions
                 mappedParameterValues[i] = providedParameter.Value;
             }
 
-            m_ActionToExecute.DynamicInvoke(mappedParameterValues);
+            _actionToExecute.DynamicInvoke(mappedParameterValues);
         }
     }
 }

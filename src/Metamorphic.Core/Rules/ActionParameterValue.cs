@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -18,24 +19,24 @@ namespace Metamorphic.Core.Rules
     public sealed class ActionParameterValue
     {
         /// <summary>
-        /// The name of the parameter. Note the parameter name is stored in lower case so as to provide 
+        /// The name of the parameter. Note the parameter name is stored in lower case so as to provide
         /// case-insensitive comparisons between the signal and rule parameter names.
         /// </summary>
-        private readonly string m_Name;
+        private readonly string _name;
 
         /// <summary>
-        /// The collection containing the ordered list of signal parameter names that should be used for 
+        /// The collection containing the ordered list of signal parameter names that should be used for
         /// the action parameter value. Note that all parameter names are
         /// stored in lower case so as to provide case-insensitive comparisons between the signal and
         /// rule parameter names.
         /// </summary>
-        private readonly List<string> m_SignalParameters
+        private readonly List<string> _signalParameters
             = new List<string>();
 
         /// <summary>
         /// The value of the parameter. May be null if the value should be taken from the signal.
         /// </summary>
-        private readonly object m_Value;
+        private readonly object _value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
@@ -62,8 +63,8 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => parameterValue);
             }
 
-            m_Name = parameterName.ToLower();
-            m_Value = parameterValue;
+            _name = parameterName.ToLower();
+            _value = parameterValue;
         }
 
         /// <summary>
@@ -99,11 +100,11 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => signalParameters);
             }
 
-            m_Name = parameterName.ToLower();
-            m_Value = parameterFormat;
+            _name = parameterName.ToLower();
+            _value = parameterFormat;
             foreach (var parameter in signalParameters)
             {
-                m_SignalParameters.Add(parameter.ToLower());
+                _signalParameters.Add(parameter.ToLower());
             }
         }
 
@@ -112,11 +113,12 @@ namespace Metamorphic.Core.Rules
         /// parameter reference.
         /// </summary>
         /// <param name="signal">The signal.</param>
-        /// <returns></returns>
         /// <returns>
         ///     <see langword="true" /> if the given signal has a parameter that matches the current reference; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool IsValidFor(Signal signal)
         {
@@ -125,12 +127,12 @@ namespace Metamorphic.Core.Rules
                 return false;
             }
 
-            if ((m_Value != null) && (m_SignalParameters.Count == 0))
+            if ((_value != null) && (_signalParameters.Count == 0))
             {
                 return true;
             }
 
-            foreach (var parameterName in m_SignalParameters)
+            foreach (var parameterName in _signalParameters)
             {
                 if (!signal.ContainsParameter(parameterName))
                 {
@@ -155,18 +157,18 @@ namespace Metamorphic.Core.Rules
                 throw new InvalidSignalForRuleException();
             }
 
-            if ((m_Value != null) && (m_SignalParameters.Count == 0))
+            if ((_value != null) && (_signalParameters.Count == 0))
             {
-                return m_Value;
+                return _value;
             }
 
-            if (m_SignalParameters.Count == 1)
+            if (_signalParameters.Count == 1)
             {
-                return signal.ParameterValue(m_SignalParameters[0]);
+                return signal.ParameterValue(_signalParameters[0]);
             }
 
-            var text = m_Value as string;
-            foreach (var parameter in m_SignalParameters)
+            var text = _value as string;
+            foreach (var parameter in _signalParameters)
             {
                 text = text.Replace(
                     "{{signal." + parameter + "}}",

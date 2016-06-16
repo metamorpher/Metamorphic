@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -23,37 +24,37 @@ namespace Metamorphic.Server.Jobs
         /// <summary>
         /// The collection that contains all the actions for the application.
         /// </summary>
-        private readonly IStoreActions m_ActionStorage;
+        private readonly IStoreActions _actionStorage;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// The queue that contains the jobs that should be executed.
         /// </summary>
-        private readonly IQueueJobs m_JobQueue;
+        private readonly IQueueJobs _jobQueue;
 
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly object m_Lock = new object();
+        private readonly object _lock = new object();
 
         /// <summary>
         /// The cancellation source that is used to cancel the worker task.
         /// </summary>
-        private CancellationTokenSource m_CancellationSource;
+        private CancellationTokenSource _cancellationSource;
 
         /// <summary>
         /// A flag indicating if the processing of symbols has started or not.
         /// </summary>
-        private bool m_IsStarted;
+        private bool _isStarted;
 
         /// <summary>
         /// The task that handles the actual symbol indexing process.
         /// </summary>
-        private Task m_Worker;
+        private Task _worker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobProcessor"/> class.
@@ -81,22 +82,22 @@ namespace Metamorphic.Server.Jobs
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_ActionStorage = actions;
-            m_Diagnostics = diagnostics;
-            m_JobQueue = jobQueue;
-            m_JobQueue.OnEnqueue += HandleOnEnqueue;
+            _actionStorage = actions;
+            _diagnostics = diagnostics;
+            _jobQueue = jobQueue;
+            _jobQueue.OnEnqueue += HandleOnEnqueue;
         }
 
         private void CleanUpWorkerTask()
         {
-            lock (m_Lock)
+            lock (_lock)
             {
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Trace,
                     Resources.Log_Messages_JobProcessor_CleaningUpWorker);
 
-                m_CancellationSource = null;
-                m_Worker = null;
+                _cancellationSource = null;
+                _worker = null;
             }
         }
 
@@ -111,34 +112,34 @@ namespace Metamorphic.Server.Jobs
 
         private void HandleOnEnqueue(object sender, EventArgs e)
         {
-            lock (m_Lock)
+            lock (_lock)
             {
-                if (!m_IsStarted)
+                if (!_isStarted)
                 {
-                    m_Diagnostics.Log(
+                    _diagnostics.Log(
                         LevelToLog.Trace,
                         Resources.Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted);
 
                     return;
                 }
 
-                if (m_Worker != null)
+                if (_worker != null)
                 {
-                    m_Diagnostics.Log(
+                    _diagnostics.Log(
                         LevelToLog.Trace,
                         Resources.Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists);
 
                     return;
                 }
 
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Trace,
                     Resources.Log_Messages_JobProcessor_NewItemInQueue_StartingThread);
 
-                m_CancellationSource = new CancellationTokenSource();
-                m_Worker = Task.Factory.StartNew(
-                    () => ProcessJobs(m_CancellationSource.Token),
-                    m_CancellationSource.Token,
+                _cancellationSource = new CancellationTokenSource();
+                _worker = Task.Factory.StartNew(
+                    () => ProcessJobs(_cancellationSource.Token),
+                    _cancellationSource.Token,
                     TaskCreationOptions.LongRunning,
                     TaskScheduler.Default);
             }
@@ -148,20 +149,20 @@ namespace Metamorphic.Server.Jobs
         {
             try
             {
-                m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_StartingJobProcessing);
+                _diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_StartingJobProcessing);
 
                 while (!token.IsCancellationRequested)
                 {
-                    if (m_JobQueue.IsEmpty)
+                    if (_jobQueue.IsEmpty)
                     {
-                        m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_QueueEmpty);
+                        _diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_JobProcessor_QueueEmpty);
                         break;
                     }
 
                     Job job = null;
-                    if (!m_JobQueue.IsEmpty)
+                    if (!_jobQueue.IsEmpty)
                     {
-                        job = m_JobQueue.Dequeue();
+                        job = _jobQueue.Dequeue();
                     }
 
                     if (job == null)
@@ -169,7 +170,7 @@ namespace Metamorphic.Server.Jobs
                         continue;
                     }
 
-                    m_Diagnostics.Log(
+                    _diagnostics.Log(
                         LevelToLog.Info,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -178,7 +179,7 @@ namespace Metamorphic.Server.Jobs
 
                     foreach (var parameter in job.ParameterNames())
                     {
-                        m_Diagnostics.Log(
+                        _diagnostics.Log(
                             LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -188,9 +189,9 @@ namespace Metamorphic.Server.Jobs
                     }
 
                     // Find the action
-                    if (!m_ActionStorage.HasActionFor(job.Action))
+                    if (!_actionStorage.HasActionFor(job.Action))
                     {
-                        m_Diagnostics.Log(
+                        _diagnostics.Log(
                             LevelToLog.Error,
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -199,7 +200,7 @@ namespace Metamorphic.Server.Jobs
                         continue;
                     }
 
-                    var action = m_ActionStorage.Action(job.Action);
+                    var action = _actionStorage.Action(job.Action);
                     try
                     {
                         var parameters = ToParameterData(job);
@@ -207,7 +208,7 @@ namespace Metamorphic.Server.Jobs
                     }
                     catch (Exception e)
                     {
-                        m_Diagnostics.Log(
+                        _diagnostics.Log(
                             LevelToLog.Error,
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -219,7 +220,7 @@ namespace Metamorphic.Server.Jobs
             }
             catch (Exception e)
             {
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -237,9 +238,9 @@ namespace Metamorphic.Server.Jobs
         /// </summary>
         public void Start()
         {
-            lock (m_Lock)
+            lock (_lock)
             {
-                m_IsStarted = true;
+                _isStarted = true;
             }
         }
 
@@ -252,30 +253,30 @@ namespace Metamorphic.Server.Jobs
         /// <returns>A task that completes when the processor has stopped.</returns>
         public Task Stop(bool clearCurrentQueue)
         {
-            m_IsStarted = false;
+            _isStarted = false;
 
             var result = Task.Factory.StartNew(
                 () =>
                 {
-                    m_Diagnostics.Log(
+                    _diagnostics.Log(
                         LevelToLog.Info,
                         Resources.Log_Messages_JobProcessor_StoppingProcessing);
 
-                    if (!clearCurrentQueue && !m_JobQueue.IsEmpty)
+                    if (!clearCurrentQueue && !_jobQueue.IsEmpty)
                     {
-                        lock (m_Lock)
+                        lock (_lock)
                         {
-                            if (m_CancellationSource != null)
+                            if (_cancellationSource != null)
                             {
-                                m_CancellationSource.Cancel();
+                                _cancellationSource.Cancel();
                             }
                         }
                     }
 
                     Task worker;
-                    lock (m_Lock)
+                    lock (_lock)
                     {
-                        worker = m_Worker;
+                        worker = _worker;
                     }
 
                     if (worker != null)
@@ -292,7 +293,7 @@ namespace Metamorphic.Server.Jobs
         private ActionParameterValueMap[] ToParameterData(Job job)
         {
             var namedParameters = new List<ActionParameterValueMap>();
-            foreach(var name in job.ParameterNames())
+            foreach (var name in job.ParameterNames())
             {
                 var value = job.ParameterValue(name);
 

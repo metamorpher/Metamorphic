@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -141,8 +142,8 @@ namespace Metamorphic.Core.Rules
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue(
-                    "a", 
-                    "{{signal.b}}", 
+                    "a",
+                    "{{signal.b}}",
                     new List<string> { "b" }),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);

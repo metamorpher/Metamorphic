@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -21,12 +22,12 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// The predicate that will be used if a parameter does not have any conditions on it.
         /// </summary>
-        private static readonly Predicate<object> s_PassThrough = o => true;
+        private static readonly Predicate<object> PassThrough = o => true;
 
         /// <summary>
         /// The ID of the action that should be executed in response to signals that match the current rule.
         /// </summary>
-        private readonly ActionId m_Action;
+        private readonly ActionId _action;
 
         /// <summary>
         /// The collection of conditions that the signal parameters have to match in order for the signal to match
@@ -34,13 +35,13 @@ namespace Metamorphic.Core.Rules
         /// stored in lower case so as to provide case-insensitive comparisons between the signal and
         /// rule parameter names.
         /// </summary>
-        private readonly IDictionary<string, Predicate<object>> m_Conditions
+        private readonly IDictionary<string, Predicate<object>> _conditions
             = new Dictionary<string, Predicate<object>>();
 
         /// <summary>
         /// The collection containing the required parameter references.
         /// </summary>
-        private readonly Dictionary<string, ActionParameterValue> m_References;
+        private readonly Dictionary<string, ActionParameterValue> _references;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Rule"/> class.
@@ -96,17 +97,17 @@ namespace Metamorphic.Core.Rules
             Description = description;
 
             Sensor = signalId;
-            m_Action = actionId;
+            _action = actionId;
 
             if (signalParameterConditions != null)
             {
                 foreach (var pair in signalParameterConditions)
                 {
-                    m_Conditions.Add(pair.Key.ToLower(), pair.Value);
+                    _conditions.Add(pair.Key.ToLower(), pair.Value);
                 }
             }
 
-            m_References = new Dictionary<string, ActionParameterValue>(parameterReferences);
+            _references = new Dictionary<string, ActionParameterValue>(parameterReferences);
         }
 
         /// <summary>
@@ -132,7 +133,9 @@ namespace Metamorphic.Core.Rules
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool ShouldProcess(Signal signal)
         {
@@ -148,9 +151,9 @@ namespace Metamorphic.Core.Rules
 
             foreach (var parameterName in signal.Parameters())
             {
-                if (m_Conditions.ContainsKey(parameterName))
+                if (_conditions.ContainsKey(parameterName))
                 {
-                    var condition = m_Conditions[parameterName];
+                    var condition = _conditions[parameterName];
                     if (!condition(signal.ParameterValue(parameterName)))
                     {
                         return false;
@@ -158,7 +161,7 @@ namespace Metamorphic.Core.Rules
                 }
             }
 
-            foreach (var pair in m_References)
+            foreach (var pair in _references)
             {
                 if (!pair.Value.IsValidFor(signal))
                 {
@@ -170,7 +173,7 @@ namespace Metamorphic.Core.Rules
         }
 
         /// <summary>
-        /// Gets or sets the signal identifier to which this rule applies.
+        /// Gets the signal identifier to which this rule applies.
         /// </summary>
         public SignalTypeId Sensor
         {
@@ -190,7 +193,7 @@ namespace Metamorphic.Core.Rules
             }
 
             var parameters = new Dictionary<string, object>();
-            foreach (var pair in m_References)
+            foreach (var pair in _references)
             {
                 // If the given parameter reference points to a signal parameter
                 // then the signal needs to have that parameter and it needs to
@@ -199,7 +202,7 @@ namespace Metamorphic.Core.Rules
             }
 
             return new Job(
-                m_Action,
+                _action,
                 parameters);
         }
     }

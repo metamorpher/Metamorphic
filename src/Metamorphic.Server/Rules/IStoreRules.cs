@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ namespace Metamorphic.Server.Rules
         /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
         /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
-        /// <returns></returns>
+        /// <returns>A collection containing all the rules that apply to the given signal.</returns>
         IEnumerable<Rule> RulesForSignal(SignalTypeId sensorId);
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -23,58 +24,58 @@ namespace Metamorphic.Server
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly object m_Lock = new object();
+        private readonly object _lock = new object();
 
         /// <summary>
         /// The IOC container for the service.
         /// </summary>
-        private IContainer m_Container;
+        private IContainer _container;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private SystemDiagnostics m_Diagnostics;
+        private SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// A flag that indicates that the application has been stopped.
         /// </summary>
-        private volatile bool m_HasBeenStopped;
+        private volatile bool _hasBeenStopped;
 
         /// <summary>
         /// A flag that indicates if the service has been disposed or not.
         /// </summary>
-        private volatile bool m_IsDisposed;
+        private volatile bool _isDisposed;
 
         /// <summary>
         /// The object that is used to process queued jobs.
         /// </summary>
-        private IProcessJobs m_JobProcessor;
+        private IProcessJobs _jobProcessor;
 
         /// <summary>
         /// The object that is used to keep track of the available rules.
         /// </summary>
-        private IWatchRules m_RuleWatcher;
+        private IWatchRules _ruleWatcher;
 
         /// <summary>
         /// The object that generates the signals.
         /// </summary>
-        private IGenerateSignals m_SignalGenerator;
+        private IGenerateSignals _signalGenerator;
 
         /// <summary>
         /// The object that processes signals.
         /// </summary>
-        private SignalProcessor m_SignalProcessor;
+        private SignalProcessor _signalProcessor;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            if (!m_IsDisposed)
+            if (!_isDisposed)
             {
                 OnStop();
 
-                m_IsDisposed = true;
+                _isDisposed = true;
             }
         }
 
@@ -86,20 +87,20 @@ namespace Metamorphic.Server
         /// </summary>
         public void OnStart()
         {
-            m_Container = DependencyInjection.CreateContainer();
-            WebCallStartup.Container = m_Container;
+            _container = DependencyInjection.CreateContainer();
+            WebCallStartup.Container = _container;
 
-            m_JobProcessor = m_Container.Resolve<IProcessJobs>();
-            m_RuleWatcher = m_Container.Resolve<IWatchRules>();
-            m_SignalGenerator = m_Container.Resolve<IGenerateSignals>();
-            m_SignalProcessor = m_Container.Resolve<SignalProcessor>();
-            m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
+            _jobProcessor = _container.Resolve<IProcessJobs>();
+            _ruleWatcher = _container.Resolve<IWatchRules>();
+            _signalGenerator = _container.Resolve<IGenerateSignals>();
+            _signalProcessor = _container.Resolve<SignalProcessor>();
+            _diagnostics = _container.Resolve<SystemDiagnostics>();
 
-            m_JobProcessor.Start();
-            m_RuleWatcher.Enable();
-            m_SignalGenerator.Start();
+            _jobProcessor.Start();
+            _ruleWatcher.Enable();
+            _signalGenerator.Start();
 
-            m_Diagnostics.Log(
+            _diagnostics.Log(
                 LevelToLog.Info,
                 ServerConstants.LogPrefix,
                 Resources.Log_Messages_ServiceStarted);
@@ -113,9 +114,9 @@ namespace Metamorphic.Server
         public void OnStop()
         {
             bool hasBeenStopped;
-            lock (m_Lock)
+            lock (_lock)
             {
-                hasBeenStopped = m_HasBeenStopped;
+                hasBeenStopped = _hasBeenStopped;
             }
 
             if (hasBeenStopped)
@@ -125,48 +126,48 @@ namespace Metamorphic.Server
 
             try
             {
-                if (m_RuleWatcher != null)
+                if (_ruleWatcher != null)
                 {
-                    m_RuleWatcher.Disable();
-                    m_RuleWatcher = null;
+                    _ruleWatcher.Disable();
+                    _ruleWatcher = null;
                 }
 
-                if (m_SignalGenerator != null)
+                if (_signalGenerator != null)
                 {
-                    m_SignalGenerator.Stop();
-                    m_SignalGenerator = null;
+                    _signalGenerator.Stop();
+                    _signalGenerator = null;
                 }
 
-                if (m_SignalProcessor != null)
+                if (_signalProcessor != null)
                 {
-                    m_SignalProcessor = null;
+                    _signalProcessor = null;
                 }
 
-                if (m_JobProcessor != null)
+                if (_jobProcessor != null)
                 {
-                    var clearingTask = m_JobProcessor.Stop(true);
+                    var clearingTask = _jobProcessor.Stop(true);
                     clearingTask.Wait();
 
-                    m_JobProcessor = null;
+                    _jobProcessor = null;
                 }
 
                 // Do what ever we need to do to stop the service here
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Info,
                     ServerConstants.LogPrefix,
                     Resources.Log_Messages_ServiceStopped);
 
-                if (m_Container != null)
+                if (_container != null)
                 {
-                    m_Container.Dispose();
-                    m_Container = null;
+                    _container.Dispose();
+                    _container = null;
                 }
             }
             finally
             {
-                lock (m_Lock)
+                lock (_lock)
                 {
-                    m_HasBeenStopped = true;
+                    _hasBeenStopped = true;
                 }
             }
         }

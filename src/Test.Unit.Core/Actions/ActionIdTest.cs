@@ -1,14 +1,15 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Nuclei.Nunit.Extensions;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Metamorphic.Core.Actions
 {
@@ -17,9 +18,9 @@ namespace Metamorphic.Core.Actions
     {
         private sealed class ActionIdEqualityContractVerifier : EqualityContractVerifier<ActionId>
         {
-            private readonly ActionId m_First = new ActionId("a");
+            private readonly ActionId _first = new ActionId("a");
 
-            private readonly ActionId m_Second = new ActionId("b");
+            private readonly ActionId _second = new ActionId("b");
 
             protected override ActionId Copy(ActionId original)
             {
@@ -30,7 +31,7 @@ namespace Metamorphic.Core.Actions
             {
                 get
                 {
-                    return m_First;
+                    return _first;
                 }
             }
 
@@ -38,7 +39,7 @@ namespace Metamorphic.Core.Actions
             {
                 get
                 {
-                    return m_Second;
+                    return _second;
                 }
             }
 
@@ -53,7 +54,7 @@ namespace Metamorphic.Core.Actions
 
         private sealed class ActionIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            private readonly IEnumerable<ActionId> m_DistinctInstances
+            private readonly IEnumerable<ActionId> _distinctInstances
                 = new List<ActionId>
                      {
                         new ActionId("a"),
@@ -68,19 +69,19 @@ namespace Metamorphic.Core.Actions
 
             protected override IEnumerable<int> GetHashcodes()
             {
-                return m_DistinctInstances.Select(i => i.GetHashCode());
+                return _distinctInstances.Select(i => i.GetHashCode());
             }
         }
 
-        private readonly ActionIdHashcodeContractVerfier m_HashcodeVerifier = new ActionIdHashcodeContractVerfier();
+        private readonly ActionIdHashcodeContractVerfier _hashcodeVerifier = new ActionIdHashcodeContractVerfier();
 
-        private readonly ActionIdEqualityContractVerifier m_EqualityVerifier = new ActionIdEqualityContractVerifier();
+        private readonly ActionIdEqualityContractVerifier _equalityVerifier = new ActionIdEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {
             get
             {
-                return m_HashcodeVerifier;
+                return _hashcodeVerifier;
             }
         }
 
@@ -88,7 +89,7 @@ namespace Metamorphic.Core.Actions
         {
             get
             {
-                return m_EqualityVerifier;
+                return _equalityVerifier;
             }
         }
 

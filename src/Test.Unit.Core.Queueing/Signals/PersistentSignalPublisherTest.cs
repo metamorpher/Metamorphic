@@ -1,9 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
-
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace Test.Unit.Core.Queueing
             {
                 bus.Setup(b => b.SendAsync(It.IsAny<string>(), It.IsAny<SignalData>()))
                     .Callback<string, SignalData>(
-                        (t, s) => 
+                        (t, s) =>
                         {
                             queueName = t;
                             publishedSignalData = s;
@@ -73,11 +73,11 @@ namespace Test.Unit.Core.Queueing
             var lastLevel = LevelToLog.None;
             var lastMessage = string.Empty;
             var diag = new SystemDiagnostics(
-                (l, m) => 
+                (l, m) =>
                 {
                     lastLevel = l;
                     lastMessage = m;
-                }, 
+                },
                 null);
 
             var publisher = new PersistentSignalPublisher(bus.Object, diag);

@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -9,19 +10,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http;
 using Autofac;
-using Autofac.Integration.WebApi;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
-using Metamorphic.Core.Signals;
 using Metamorphic.Server.Actions;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Rules;
 using Metamorphic.Server.Signals;
-using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -167,9 +164,7 @@ namespace Metamorphic.Server
             var assemblyInfo = Assembly.GetExecutingAssembly().GetName();
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
-                    new DebugLogTemplate(
-                        c.Resolve<IConfiguration>(),
-                        () => DateTimeOffset.Now),
+                    new DebugLogTemplate(c.Resolve<IConfiguration>(), () => DateTimeOffset.Now),
                     assemblyInfo.Name,
                     assemblyInfo.Version))
                 .As<ILogger>()
@@ -183,7 +178,7 @@ namespace Metamorphic.Server
                 .SingleInstance();
 
             builder.Register(
-                    c => 
+                    c =>
                     {
                         var ctx = c.Resolve<IComponentContext>();
                         return new RuleLoader(

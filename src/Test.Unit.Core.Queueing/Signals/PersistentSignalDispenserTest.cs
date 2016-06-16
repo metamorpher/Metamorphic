@@ -1,9 +1,9 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
-
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace Test.Unit.Core.Queueing.Signals
 {
     [TestFixture]
-    public sealed class PersistentSignalProcessorTest
+    public sealed class PersistentSignalDispenserTest
     {
         [Test]
         public void CreateWithMissingBus()
@@ -89,8 +89,8 @@ namespace Test.Unit.Core.Queueing.Signals
                 null);
 
             Signal createdSignal = null;
-            EventHandler<ItemEventArgs<Signal>> handler = 
-                (o, e) => 
+            EventHandler<ItemEventArgs<Signal>> handler =
+                (o, e) =>
                 {
                     createdSignal = e.Item;
                 };
@@ -105,10 +105,10 @@ namespace Test.Unit.Core.Queueing.Signals
                     { "a", "b" }
                 };
             var signalData = new SignalData
-                {
-                    SensorId = typeId,
-                    Parameters = parameters,
-                };
+            {
+                SensorId = typeId,
+                Parameters = parameters,
+            };
             processAction(signalData).Wait();
 
             Assert.IsNotNull(createdSignal);

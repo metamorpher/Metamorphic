@@ -1,15 +1,16 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Actions;
-using Metamorphic.Core.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Properties;
 
 namespace Metamorphic.Core.Jobs
 {
@@ -28,7 +29,7 @@ namespace Metamorphic.Core.Jobs
         /// stored in lower case so as to provide case-insensitive comparisons between the signal and
         /// rule parameter names.
         /// </summary>
-        private readonly Dictionary<string, object> m_Parameters
+        private readonly Dictionary<string, object> _parameters
             = new Dictionary<string, object>();
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace Metamorphic.Core.Jobs
             Action = action;
             foreach (var pair in parameters)
             {
-                m_Parameters.Add(pair.Key.ToLower(), pair.Value);
+                _parameters.Add(pair.Key.ToLower(), pair.Value);
             }
         }
 
@@ -71,7 +72,9 @@ namespace Metamorphic.Core.Jobs
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool ContainsParameter(string name)
         {
@@ -80,7 +83,7 @@ namespace Metamorphic.Core.Jobs
                 return false;
             }
 
-            return m_Parameters.ContainsKey(name.ToLower());
+            return _parameters.ContainsKey(name.ToLower());
         }
 
         /// <summary>
@@ -89,7 +92,7 @@ namespace Metamorphic.Core.Jobs
         /// <returns>The collection of parameter names.</returns>
         public IEnumerable<string> ParameterNames()
         {
-            return m_Parameters.Keys;
+            return _parameters.Keys;
         }
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace Metamorphic.Core.Jobs
                         name));
             }
 
-            return m_Parameters[name.ToLower()];
+            return _parameters[name.ToLower()];
         }
     }
 }

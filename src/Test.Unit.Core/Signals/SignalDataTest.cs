@@ -1,14 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
@@ -19,10 +17,10 @@ namespace Metamorphic.Core.Signals
     {
         private sealed class SignalDataEqualityContractVerifier : EqualityContractVerifier<SignalData>
         {
-            private readonly SignalData m_First = new SignalData();
+            private readonly SignalData _first = new SignalData();
 
-            private readonly SignalData m_Second = new SignalData(
-                "b", 
+            private readonly SignalData _second = new SignalData(
+                "b",
                 new Dictionary<string, object>
                 {
                     { "a", 1 },
@@ -38,7 +36,7 @@ namespace Metamorphic.Core.Signals
             {
                 get
                 {
-                    return m_First;
+                    return _first;
                 }
             }
 
@@ -46,7 +44,7 @@ namespace Metamorphic.Core.Signals
             {
                 get
                 {
-                    return m_Second;
+                    return _second;
                 }
             }
 
@@ -61,7 +59,7 @@ namespace Metamorphic.Core.Signals
 
         private sealed class SignalDataHashcodeContractVerfier : HashcodeContractVerifier
         {
-            private readonly IEnumerable<SignalData> m_DistinctInstances
+            private readonly IEnumerable<SignalData> _distinctInstances
                 = new List<SignalData>
                      {
                         new SignalData(),
@@ -103,19 +101,19 @@ namespace Metamorphic.Core.Signals
 
             protected override IEnumerable<int> GetHashcodes()
             {
-                return m_DistinctInstances.Select(i => i.GetHashCode());
+                return _distinctInstances.Select(i => i.GetHashCode());
             }
         }
 
-        private readonly SignalDataHashcodeContractVerfier m_HashcodeVerifier = new SignalDataHashcodeContractVerfier();
+        private readonly SignalDataHashcodeContractVerfier _hashcodeVerifier = new SignalDataHashcodeContractVerfier();
 
-        private readonly SignalDataEqualityContractVerifier m_EqualityVerifier = new SignalDataEqualityContractVerifier();
+        private readonly SignalDataEqualityContractVerifier _equalityVerifier = new SignalDataEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {
             get
             {
-                return m_HashcodeVerifier;
+                return _hashcodeVerifier;
             }
         }
 
@@ -123,7 +121,7 @@ namespace Metamorphic.Core.Signals
         {
             get
             {
-                return m_EqualityVerifier;
+                return _equalityVerifier;
             }
         }
     }

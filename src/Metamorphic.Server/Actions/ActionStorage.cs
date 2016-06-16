@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2015 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -16,7 +17,7 @@ namespace Metamorphic.Server.Actions
         /// <summary>
         /// The collection of known actions.
         /// </summary>
-        private readonly Dictionary<ActionId, ActionDefinition> m_Actions = new Dictionary<ActionId, ActionDefinition>();
+        private readonly Dictionary<ActionId, ActionDefinition> _actions = new Dictionary<ActionId, ActionDefinition>();
 
         /// <summary>
         /// Returns the <see cref="ActionDefinition"/> which the given <see cref="ActionId"/>.
@@ -30,7 +31,7 @@ namespace Metamorphic.Server.Actions
                 return null;
             }
 
-            return m_Actions[action];
+            return _actions[action];
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Metamorphic.Server.Actions
                     Resources.Exceptions_Messages_DuplicateActionDefinition);
             }
 
-            m_Actions.Add(definition.Id, definition);
+            _actions.Add(definition.Id, definition);
         }
 
         /// <summary>
@@ -57,7 +58,9 @@ namespace Metamorphic.Server.Actions
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool HasActionFor(ActionId action)
         {
@@ -66,7 +69,7 @@ namespace Metamorphic.Server.Actions
                 return false;
             }
 
-            return m_Actions.ContainsKey(action);
+            return _actions.ContainsKey(action);
         }
     }
 }
