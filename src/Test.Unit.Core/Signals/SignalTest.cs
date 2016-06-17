@@ -138,7 +138,7 @@ namespace Metamorphic.Core.Signals
             var type = new SignalTypeId(typeId);
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signal = new Signal(type, parameters);
 

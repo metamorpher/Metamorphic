@@ -102,7 +102,7 @@ namespace Test.Unit.Core.Queueing
             var type = new SignalTypeId(typeId);
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signal = new Signal(type, parameters);
             publisher.Publish(signal);
@@ -155,7 +155,7 @@ namespace Test.Unit.Core.Queueing
             var type = new SignalTypeId(typeId);
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signal = new Signal(type, parameters);
             publisher.Publish(signal);

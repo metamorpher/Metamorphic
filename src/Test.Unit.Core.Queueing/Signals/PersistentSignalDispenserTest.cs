@@ -113,7 +113,7 @@ namespace Test.Unit.Core.Queueing.Signals
             var typeId = "a";
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signalData = new SignalData
             {
@@ -172,7 +172,7 @@ namespace Test.Unit.Core.Queueing.Signals
             var typeId = "a";
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signalData = new SignalData
             {
