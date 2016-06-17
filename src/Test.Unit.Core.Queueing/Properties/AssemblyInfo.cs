@@ -5,6 +5,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Nuclei.Build;
@@ -21,6 +23,8 @@ using Nuclei.Build;
 [assembly: AssemblyTrademark("")]
 
 [assembly: AssemblyCulture("")]
+
+[assembly: CLSCompliant(true)]
 
 [assembly: AssemblyConfiguration("")]
 
@@ -47,4 +51,9 @@ using Nuclei.Build;
 [assembly: AssemblyInformationalVersion("0.1.0")]
 
 [assembly: AssemblyBuildTime(buildTime: "1900-01-01T00:00:00.0000+12:00")]
+
+[assembly: SuppressMessage(
+    "Microsoft.Usage",
+    "CA2243:AttributeStringLiteralsShouldParseCorrectly",
+    Justification = "It is not a version, it's version control information.")]
 [assembly: AssemblyBuildInformation(buildNumber: 0, versionControlInformation: "1234567890")]
