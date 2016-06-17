@@ -13,6 +13,9 @@ namespace Metamorphic.Core.Rules
     /// <summary>
     /// Stores information that describes a <see cref="Rule"/>.
     /// </summary>
+    /// <remarks>
+    /// The naming of the members of this class is linked to the contents of the rule files.
+    /// </remarks>
     public class RuleDefinition
     {
         /// <summary>

@@ -93,7 +93,7 @@ namespace Metamorphic.Server.Rules
                     return false;
                 }
 
-                if (!IsValidConditionType(condition.ComparisonMethod))
+                if (!IsValidConditionType(condition.Type))
                 {
                     return false;
                 }
@@ -166,7 +166,7 @@ namespace Metamorphic.Server.Rules
         private static Predicate<object> ToCondition(ConditionRuleDefinition condition)
         {
             object comparisonValue = condition.Pattern;
-            switch (condition.ComparisonMethod)
+            switch (condition.Type)
             {
                 case "equals":
                     return o => o.Equals(comparisonValue);

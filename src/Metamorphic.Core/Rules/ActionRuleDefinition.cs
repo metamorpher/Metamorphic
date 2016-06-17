@@ -13,6 +13,9 @@ namespace Metamorphic.Core.Rules
     /// <summary>
     /// Stores the information about an action reference and the parameter necessary for the given action.
     /// </summary>
+    /// <remarks>
+    /// The naming of the members of this class is linked to the contents of the rule files.
+    /// </remarks>
     public class ActionRuleDefinition
     {
         /// <summary>

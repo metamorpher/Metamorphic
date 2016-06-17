@@ -112,7 +112,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("endswith", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("endswith", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -139,7 +139,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("equals", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("equals", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -166,7 +166,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual(10, definition.Condition[0].Pattern);
-            Assert.AreEqual("greaterthan", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("greaterthan", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -193,7 +193,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual(10, definition.Condition[0].Pattern);
-            Assert.AreEqual("lessthan", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("lessthan", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -220,7 +220,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("(.*)", definition.Condition[0].Pattern);
-            Assert.AreEqual("matchregex", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("matchregex", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -247,7 +247,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("notequals", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("notequals", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -274,7 +274,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("(.*)", definition.Condition[0].Pattern);
-            Assert.AreEqual("notmatchregex", definition.Condition[0].ComparisonMethod);
+            Assert.AreEqual("notmatchregex", definition.Condition[0].Type);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -358,7 +358,7 @@ namespace Metamorphic.Server.Rules
                 {
                     Name = "b",
                     Pattern = "d",
-                    ComparisonMethod = "equals"
+                    Type = "equals"
                 });
             Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
@@ -386,7 +386,7 @@ namespace Metamorphic.Server.Rules
                 {
                     Name = "c",
                     Pattern = "d",
-                    ComparisonMethod = "operator"
+                    Type = "operator"
                 });
             Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
