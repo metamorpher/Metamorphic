@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
@@ -19,6 +20,37 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public sealed class ActionParameterValue
     {
+        /// <summary>
+        /// The regex that is used to extract the parameter names from a string so that we can
+        /// upper case them.
+        /// </summary>
+        private static readonly Regex StringParameterTransform = new Regex(
+            @"(?:{{signal.)(.*?)(?:}})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// If the parameter value is a string and it contains a section like {{signal.PARAMETER_NAME}} then we
+        /// replace the 'PARAMETER_NAME' section with the upper case variant so that we can do a parameter match
+        /// later on.
+        /// </summary>
+        /// <param name="value">The parameter value.</param>
+        /// <returns>The processed parameter value.</returns>
+        private static object TransformParameterValueIfRequired(object value)
+        {
+            if (!(value is string))
+            {
+                return value;
+            }
+
+            var stringValue = value as string;
+            return StringParameterTransform.Replace(
+                stringValue,
+                m => string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{{{{signal.{0}}}}}",
+                    m.Groups[1].ToString().ToUpper(CultureInfo.InvariantCulture)));
+        }
+
         /// <summary>
         /// The collection containing the ordered list of signal parameter names that should be used for
         /// the action parameter value. Note that all parameter names are
@@ -48,7 +80,7 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => parameterValue);
             }
 
-            _value = parameterValue;
+            _value = TransformParameterValueIfRequired(parameterValue);
         }
 
         /// <summary>
@@ -74,7 +106,7 @@ namespace Metamorphic.Core.Rules
                 Lokad.Enforce.Argument(() => signalParameters);
             }
 
-            _value = parameterFormat;
+            _value = TransformParameterValueIfRequired(parameterFormat);
             foreach (var parameter in signalParameters)
             {
                 _signalParameters.Add(parameter.ToUpper(CultureInfo.InvariantCulture));
