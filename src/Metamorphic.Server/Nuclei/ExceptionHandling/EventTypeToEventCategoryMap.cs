@@ -14,6 +14,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 
 namespace Metamorphic.Server.Nuclei.ExceptionHandling
@@ -22,6 +23,7 @@ namespace Metamorphic.Server.Nuclei.ExceptionHandling
     /// Defines methods that map an <see cref="EventType"/> to an ID number for error reporting
     /// purposes.
     /// </summary>
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     internal static class EventTypeToEventCategoryMap
     {
         /// <summary>

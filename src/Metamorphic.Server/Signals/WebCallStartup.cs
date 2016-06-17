@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
@@ -20,13 +21,7 @@ namespace Metamorphic.Server.Signals
             set;
         }
 
-        public void Configuration(IAppBuilder appBuilder)
-        {
-            RunWebApiConfiguration(appBuilder);
-            appBuilder.UseWelcomePage();
-        }
-
-        private void RunWebApiConfiguration(IAppBuilder appBuilder)
+        private static void RunWebApiConfiguration(IAppBuilder appBuilder)
         {
             var httpConfiguration = new HttpConfiguration();
             httpConfiguration.Routes.MapHttpRoute(
@@ -40,6 +35,16 @@ namespace Metamorphic.Server.Signals
             appBuilder.UseAutofacMiddleware(Container);
             appBuilder.UseAutofacWebApi(httpConfiguration);
             appBuilder.UseWebApi(httpConfiguration);
+        }
+
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This method is called by the ASP MVC framework.")]
+        public void Configuration(IAppBuilder appBuilder)
+        {
+            RunWebApiConfiguration(appBuilder);
+            appBuilder.UseWelcomePage();
         }
     }
 }

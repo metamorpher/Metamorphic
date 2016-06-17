@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Metamorphic.Core.Actions
@@ -14,6 +15,11 @@ namespace Metamorphic.Core.Actions
     public sealed class ActionDefinitionTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
         public void CreateWithNullAction()
         {
             var id = new ActionId("a");
@@ -22,6 +28,11 @@ namespace Metamorphic.Core.Actions
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
         public void CreateWithNullId()
         {
             var parameters = new ActionParameterDefinition[0];
@@ -30,6 +41,11 @@ namespace Metamorphic.Core.Actions
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
         public void CreateWithNullParameters()
         {
             var id = new ActionId("a");

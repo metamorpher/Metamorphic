@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Signals;
@@ -19,11 +20,6 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public sealed class Rule
     {
-        /// <summary>
-        /// The predicate that will be used if a parameter does not have any conditions on it.
-        /// </summary>
-        private static readonly Predicate<object> PassThrough = o => true;
-
         /// <summary>
         /// The ID of the action that should be executed in response to signals that match the current rule.
         /// </summary>
@@ -103,7 +99,7 @@ namespace Metamorphic.Core.Rules
             {
                 foreach (var pair in signalParameterConditions)
                 {
-                    _conditions.Add(pair.Key.ToLower(), pair.Value);
+                    _conditions.Add(pair.Key.ToUpper(CultureInfo.InvariantCulture), pair.Value);
                 }
             }
 

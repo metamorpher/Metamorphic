@@ -26,39 +26,8 @@ namespace Metamorphic.Server.Rules
     {
         private static readonly Regex TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
 
-        /// <summary>
-        /// The object that provides the diagnostics methods for the application.
-        /// </summary>
-        private readonly SystemDiagnostics _diagnostics;
-
-        /// <summary>
-        /// The predicate that is used to determine if a given <see cref="ActionId"/> exists.
-        /// </summary>
-        private readonly Predicate<string> _doesActionIdExist;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RuleLoader"/> class.
-        /// </summary>
-        /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
-        /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
-        /// </exception>
-        public RuleLoader(Predicate<string> doesActionIdExist, SystemDiagnostics diagnostics)
-        {
-            {
-                Lokad.Enforce.Argument(() => doesActionIdExist);
-                Lokad.Enforce.Argument(() => diagnostics);
-            }
-
-            _doesActionIdExist = doesActionIdExist;
-            _diagnostics = diagnostics;
-        }
-
-        internal RuleDefinition CreateDefinitionFromFile(string filePath)
+        // This method is internal only because we want to run unit tests against it.
+        internal static RuleDefinition CreateDefinitionFromFile(string filePath)
         {
             using (var input = new StreamReader(filePath))
             {
@@ -82,7 +51,7 @@ namespace Metamorphic.Server.Rules
             "Microsoft.StyleCop.CSharp.DocumentationRules",
             "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        internal bool IsValid(
+        internal static bool IsValid(
             RuleDefinition definition,
             Predicate<string> doesActionIdExist)
         {
@@ -174,7 +143,7 @@ namespace Metamorphic.Server.Rules
             return true;
         }
 
-        private bool IsValidConditionType(string conditionType)
+        private static bool IsValidConditionType(string conditionType)
         {
             switch (conditionType)
             {
@@ -188,6 +157,96 @@ namespace Metamorphic.Server.Rules
                 case "endswith": return true;
                 default: return false;
             }
+        }
+
+        [SuppressMessage(
+            "Microsoft.Maintainability",
+            "CA1502:AvoidExcessiveComplexity",
+            Justification = "It's just a big case statement. Nothing horribly complex about it.")]
+        private static Predicate<object> ToCondition(ConditionRuleDefinition condition)
+        {
+            object comparisonValue = condition.Pattern;
+            switch (condition.Type)
+            {
+                case "equals":
+                    return o => o.Equals(comparisonValue);
+                case "notequals":
+                    return o => !o.Equals(comparisonValue);
+                case "lessthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) < 0;
+                    };
+                case "greaterthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) > 0;
+                    };
+                case "matchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "notmatchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "startswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                case "endswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.EndsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                default:
+                    throw new InvalidConditionTypeException();
+            }
+        }
+
+        /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics _diagnostics;
+
+        /// <summary>
+        /// The predicate that is used to determine if a given <see cref="ActionId"/> exists.
+        /// </summary>
+        private readonly Predicate<string> _doesActionIdExist;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RuleLoader"/> class.
+        /// </summary>
+        /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
+        /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public RuleLoader(Predicate<string> doesActionIdExist, SystemDiagnostics diagnostics)
+        {
+            {
+                Lokad.Enforce.Argument(() => doesActionIdExist);
+                Lokad.Enforce.Argument(() => diagnostics);
+            }
+
+            _doesActionIdExist = doesActionIdExist;
+            _diagnostics = diagnostics;
         }
 
         /// <summary>
@@ -254,13 +313,13 @@ namespace Metamorphic.Server.Rules
                                 signalParameters.Add(signalParameterName);
                             }
 
-                            reference = new ActionParameterValue(pair.Key, parameterText, signalParameters);
+                            reference = new ActionParameterValue(parameterText, signalParameters);
                         }
                     }
 
                     if (reference == null)
                     {
-                        reference = new ActionParameterValue(pair.Key, pair.Value);
+                        reference = new ActionParameterValue(pair.Value);
                     }
 
                     parameters.Add(pair.Key, reference);
@@ -276,60 +335,6 @@ namespace Metamorphic.Server.Rules
             }
 
             return null;
-        }
-
-        private Predicate<object> ToCondition(ConditionRuleDefinition condition)
-        {
-            object comparisonValue = condition.Pattern;
-            switch (condition.Type)
-            {
-                case "equals":
-                    return o => o.Equals(comparisonValue);
-                case "notequals":
-                    return o => !o.Equals(comparisonValue);
-                case "lessthan":
-                    return o =>
-                    {
-                        var comparable = o as IComparable;
-                        return comparable.CompareTo(comparisonValue) < 0;
-                    };
-                case "greaterthan":
-                    return o =>
-                    {
-                        var comparable = o as IComparable;
-                        return comparable.CompareTo(comparisonValue) > 0;
-                    };
-                case "matchregex":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
-                    };
-                case "notmatchregex":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
-                    };
-                case "startswith":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && text.StartsWith(pattern);
-                    };
-                case "endswith":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && text.EndsWith(pattern);
-                    };
-                default:
-                    throw new InvalidConditionTypeException();
-            }
         }
     }
 }

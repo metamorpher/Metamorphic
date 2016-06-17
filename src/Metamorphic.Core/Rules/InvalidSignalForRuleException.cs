@@ -17,7 +17,7 @@ namespace Metamorphic.Core.Rules
     /// the signal signature.
     /// </summary>
     [Serializable]
-    public class InvalidSignalForRuleException : Exception
+    public sealed class InvalidSignalForRuleException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidSignalForRuleException"/> class.

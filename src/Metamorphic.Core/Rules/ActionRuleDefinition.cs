@@ -6,12 +6,16 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
     /// Stores the information about an action reference and the parameter necessary for the given action.
     /// </summary>
+    /// <remarks>
+    /// The naming of the members of this class is linked to the contents of the rule files.
+    /// </remarks>
     public class ActionRuleDefinition
     {
         /// <summary>
@@ -34,6 +38,10 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the parameters for the action.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "This class is instantiated when we load the rules from the rule files through third-party code.")]
         public Dictionary<string, object> Parameters
         {
             get;

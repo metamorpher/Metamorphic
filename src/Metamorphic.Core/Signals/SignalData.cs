@@ -124,6 +124,10 @@ namespace Metamorphic.Core.Signals
         /// <summary>
         /// Gets or sets the parameters for the signal.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "This is a data object that should be readable and writeable.")]
         public Dictionary<string, object> Parameters
         {
             get;

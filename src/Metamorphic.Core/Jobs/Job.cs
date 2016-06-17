@@ -53,7 +53,7 @@ namespace Metamorphic.Core.Jobs
             Action = action;
             foreach (var pair in parameters)
             {
-                _parameters.Add(pair.Key.ToLower(), pair.Value);
+                _parameters.Add(pair.Key.ToUpper(CultureInfo.InvariantCulture), pair.Value);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Metamorphic.Core.Jobs
                 return false;
             }
 
-            return _parameters.ContainsKey(name.ToLower());
+            return _parameters.ContainsKey(name.ToUpper(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -100,6 +100,11 @@ namespace Metamorphic.Core.Jobs
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <returns>The value for the given parameter with the provided name.</returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "The 'name' parameter is validated through the ContainsParameter method.")]
         public object ParameterValue(string name)
         {
             if (!ContainsParameter(name))
@@ -111,7 +116,7 @@ namespace Metamorphic.Core.Jobs
                         name));
             }
 
-            return _parameters[name.ToLower()];
+            return _parameters[name.ToUpper(CultureInfo.InvariantCulture)];
         }
     }
 }

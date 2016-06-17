@@ -15,7 +15,7 @@ namespace Metamorphic.Core.Rules
     /// An exception thrown when an invalid <see cref="RuleDefinition"/> is used to create a <see cref="Rule"/>.
     /// </summary>
     [Serializable]
-    public class InvalidRuleDefinitionException : Exception
+    public sealed class InvalidRuleDefinitionException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidRuleDefinitionException"/> class.

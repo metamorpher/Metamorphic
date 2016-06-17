@@ -5,11 +5,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
     /// Stores information about a condition under which a given signal applies to a rule.
     /// </summary>
+    /// <remarks>
+    /// The naming of the members of this class is linked to the contents of the rule files.
+    /// </remarks>
     public class ConditionRuleDefinition
     {
         /// <summary>
@@ -33,6 +38,10 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the comparison method.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Naming",
+            "CA1721:PropertyNamesShouldNotMatchGetMethods",
+            Justification = "The name is a reference to the type of the condition.")]
         public string Type
         {
             get;

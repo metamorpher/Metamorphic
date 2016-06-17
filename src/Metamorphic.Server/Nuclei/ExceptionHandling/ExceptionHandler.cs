@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Server.Nuclei.ExceptionHandling
@@ -26,6 +27,7 @@ namespace Metamorphic.Server.Nuclei.ExceptionHandling
     /// This class must be public because we use it in the AppDomainBuilder.
     /// </design>
     [Serializable]
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     public sealed class ExceptionHandler
     {
         /// <summary>

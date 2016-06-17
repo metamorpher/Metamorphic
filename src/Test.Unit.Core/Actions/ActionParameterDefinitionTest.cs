@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Metamorphic.Core.Actions
@@ -23,12 +24,22 @@ namespace Metamorphic.Core.Actions
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionParameterDefinition",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithEmptyName()
         {
             Assert.Throws<ArgumentException>(() => new ActionParameterDefinition(string.Empty));
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionParameterDefinition",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullName()
         {
             Assert.Throws<ArgumentNullException>(() => new ActionParameterDefinition(null));

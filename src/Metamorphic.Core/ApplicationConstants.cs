@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Metamorphic.Core
@@ -59,6 +60,10 @@ namespace Metamorphic.Core
         /// Gets the name of the company.
         /// </summary>
         /// <value>The name of the company.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This property is referenced through an instance of the current class.")]
         public string CompanyName
         {
             get
@@ -72,6 +77,10 @@ namespace Metamorphic.Core
         /// Gets the name of the application.
         /// </summary>
         /// <value>The name of the application.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This property is referenced through an instance of the current class.")]
         public string ApplicationName
         {
             get
@@ -85,6 +94,10 @@ namespace Metamorphic.Core
         /// Gets the application version.
         /// </summary>
         /// <value>The application version.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This property is referenced through an instance of the current class.")]
         public Version ApplicationVersion
         {
             get
@@ -102,6 +115,10 @@ namespace Metamorphic.Core
         /// A compatible application version indicates that the current version reads the
         /// configuration files of the compatible application.
         /// </remarks>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This property is referenced through an instance of the current class.")]
         public Version ApplicationCompatibilityVersion
         {
             get

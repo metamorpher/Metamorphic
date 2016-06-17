@@ -41,8 +41,16 @@ namespace Metamorphic.Core.Queueing.Signals
         /// </summary>
         /// <param name="item">The data item.</param>
         /// <returns>An item object.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="item"/> is <see langword="null" />.
+        /// </exception>
         internal override Signal FromDataItem(SignalData item)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
             return new Signal(new SignalTypeId(item.SensorId), new Dictionary<string, object>(item.Parameters));
         }
     }

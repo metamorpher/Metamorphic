@@ -253,7 +253,6 @@
             </Groups>
         </BuildStepsToExecute>
         -->
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsAnalyzeBinariesFxCop)">
             <Properties>
                 Configuration=$(TestConfiguration);
@@ -263,7 +262,6 @@
                 Analyze;
             </Groups>
         </BuildStepsToExecute>
-        -->
 
         <!--
         <BuildStepsToExecute Include="$(BuildStepsBuildApiDocumentationWithSandcastle)">
@@ -409,21 +407,23 @@
         The solution path allows build templates, e.g. '$(DirSrc)\${CompanyName}\${ProductName}\MySolution.sln'
     -->
     <ItemGroup>
-        <!--
         <SolutionsToBuild Include="$(DirSrc)\*.sln"
                           Condition=" '$(TestConfiguration)' != '$(ProductionConfiguration)' " >
             <Configuration>$(TestConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
-            <Properties></Properties>
+            <Properties>
+                ShouldPerformCodeAnalysis=false;
+            </Properties>
         </SolutionsToBuild>
         <SolutionsToBuild Include="$(DirSrc)\*.sln">
             <Configuration>$(ProductionConfiguration)</Configuration>
             <Platform>$(Platform)</Platform>
             <Targets>Rebuild</Targets>
-            <Properties></Properties>
+            <Properties>
+                ShouldPerformCodeAnalysis=false;
+            </Properties>
         </SolutionsToBuild>
-        -->
     </ItemGroup>
 
     <PropertyGroup>
@@ -576,7 +576,7 @@
         <!--
             The full path to the rules file that indicates which rules FxCop should use to analyse the binaries.
         -->
-        <!--<FileFxCopRuleSet Condition=" '$(FileFxCopRuleSet)' == '' ">$(DirSrc)\codeanalysis.base.ruleset</FileFxCopRuleSet>-->
+        <FileFxCopRuleSet Condition=" '$(FileFxCopRuleSet)' == '' ">$(DirSrc)\default.ruleset</FileFxCopRuleSet>
 
         <!--
             The full path to the XML file that contains the custom dictionary for FxCop.
@@ -592,13 +592,13 @@
             A flag that indicates whether any fxcop analysis errors should be marked as errors or as warnings. If FxCop analysis
             errors are marked as errors then any analysis error will stop the build.
         -->
-        <!--<FxCopWarningsAsErrors Condition=" '$(FxCopWarningsAsErrors)' == '' ">false</FxCopWarningsAsErrors>-->
+        <FxCopWarningsAsErrors Condition=" '$(FxCopWarningsAsErrors)' == '' ">true</FxCopWarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
         <!--
             The locations of the files that should be analyzed by FxCop.
         -->
-        <FxCopFiles Include="$(DirSrc)\**\bin\**\$(ProductNamespace).*.dll;$(DirSrc)\**\bin\**\$(ProductNamespace).*.exe"
+        <FxCopFiles Include="$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.dll;$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.exe"
                     Exclude="$(DirSrc)\**\bin\**\Test.*.dll">
             <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>

@@ -9,17 +9,11 @@ using System;
 using System.Collections.Generic;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
-using Nuclei.Diagnostics;
 
 namespace Metamorphic.Server.Rules
 {
     internal sealed class RuleCollection : IStoreRules
     {
-        /// <summary>
-        /// The object that provides the diagnostics methods for the application.
-        /// </summary>
-        private readonly SystemDiagnostics _diagnostics;
-
         /// <summary>
         /// The collection that maps file paths to rules.
         /// </summary>
@@ -34,22 +28,6 @@ namespace Metamorphic.Server.Rules
         /// The collection that maps signal types to rules.
         /// </summary>
         private readonly Dictionary<SignalTypeId, List<Rule>> _signalTypeToRuleMap = new Dictionary<SignalTypeId, List<Rule>>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RuleCollection"/> class.
-        /// </summary>
-        /// <param name="diagnostics">The object providing the diagnostics methods for the application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
-        /// </exception>
-        internal RuleCollection(SystemDiagnostics diagnostics)
-        {
-            {
-                Lokad.Enforce.Argument(() => diagnostics);
-            }
-
-            _diagnostics = diagnostics;
-        }
 
         /// <summary>
         /// Adds a new <see cref="Rule"/> that was created from the given file.

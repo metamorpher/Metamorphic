@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -39,6 +40,10 @@ namespace Metamorphic.Server.Signals
         /// </summary>
         /// <returns>A http response message indicating whether the call was successful.</returns>
         [HttpGet]
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "Controller methods cannot be static.")]
         public HttpResponseMessage Ping()
         {
             return new HttpResponseMessage
@@ -55,6 +60,14 @@ namespace Metamorphic.Server.Signals
         [HttpPost]
         public HttpResponseMessage Trigger([FromBody]JToken jsonData)
         {
+            if (jsonData == null)
+            {
+                return new HttpResponseMessage
+                {
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                };
+            }
+
             var signalType = jsonData.Children()
                 .Where(t => t is JProperty)
                 .Cast<JProperty>()

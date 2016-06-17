@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Signals;
@@ -18,6 +19,11 @@ namespace Metamorphic.Core.Rules
     public sealed class RuleTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullActionId()
         {
             var sensorId = new SignalTypeId("a");
@@ -27,6 +33,11 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullConditionCollection()
         {
             var name = "a";
@@ -38,6 +49,11 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullDescription()
         {
             var name = "a";
@@ -49,6 +65,11 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullName()
         {
             var description = "b";
@@ -60,6 +81,11 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullReferenceCollection()
         {
             var name = "a";
@@ -71,6 +97,11 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.Rule",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullSensorId()
         {
             var name = "a";
@@ -94,7 +125,7 @@ namespace Metamorphic.Core.Rules
             };
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 2),
+                ["a"] = new ActionParameterValue(2),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -117,8 +148,8 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", "{{signal.a}}", new List<string> { "a" }),
-                ["b"] = new ActionParameterValue("b", "{{signal.b}}", new List<string> { "b" }),
+                ["a"] = new ActionParameterValue("{{signal.a}}", new List<string> { "a" }),
+                ["b"] = new ActionParameterValue("{{signal.b}}", new List<string> { "b" }),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -132,7 +163,7 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void ShouldProcessWithNonMatchingParameters()
+        public void ShouldProcessWithNonmatchingParameters()
         {
             var name = "a";
             var description = "b";
@@ -142,7 +173,6 @@ namespace Metamorphic.Core.Rules
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue(
-                    "a",
                     "{{signal.b}}",
                     new List<string> { "b" }),
             };
@@ -158,7 +188,7 @@ namespace Metamorphic.Core.Rules
         }
 
         [Test]
-        public void ShouldProcessWithNonMatchingSensorId()
+        public void ShouldProcessWithNonmatchingSensorId()
         {
             var name = "a";
             var description = "b";
@@ -167,7 +197,7 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 2),
+                ["a"] = new ActionParameterValue(2),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -190,7 +220,7 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 2),
+                ["a"] = new ActionParameterValue(2),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -213,8 +243,8 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 1),
-                ["b"] = new ActionParameterValue("b", 2),
+                ["a"] = new ActionParameterValue(1),
+                ["b"] = new ActionParameterValue(2),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -233,7 +263,7 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", parameterValue),
+                ["a"] = new ActionParameterValue(parameterValue),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -261,7 +291,6 @@ namespace Metamorphic.Core.Rules
             var parameters = new Dictionary<string, ActionParameterValue>
             {
                 ["a"] = new ActionParameterValue(
-                    "a",
                     "{{signal.b}}",
                     new List<string> { "b" }),
             };
@@ -286,8 +315,8 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 1),
-                ["b"] = new ActionParameterValue("b", 2),
+                ["a"] = new ActionParameterValue(1),
+                ["b"] = new ActionParameterValue(2),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 
@@ -305,7 +334,7 @@ namespace Metamorphic.Core.Rules
             var conditions = new Dictionary<string, Predicate<object>>();
             var parameters = new Dictionary<string, ActionParameterValue>
             {
-                ["a"] = new ActionParameterValue("a", 1),
+                ["a"] = new ActionParameterValue(1),
             };
             var rule = new Rule(name, description, sensorId, actionId, conditions, parameters);
 

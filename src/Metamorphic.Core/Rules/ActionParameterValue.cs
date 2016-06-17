@@ -8,6 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
@@ -19,10 +21,35 @@ namespace Metamorphic.Core.Rules
     public sealed class ActionParameterValue
     {
         /// <summary>
-        /// The name of the parameter. Note the parameter name is stored in lower case so as to provide
-        /// case-insensitive comparisons between the signal and rule parameter names.
+        /// The regex that is used to extract the parameter names from a string so that we can
+        /// upper case them.
         /// </summary>
-        private readonly string _name;
+        private static readonly Regex StringParameterTransform = new Regex(
+            @"(?:{{signal.)(.*?)(?:}})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// If the parameter value is a string and it contains a section like {{signal.PARAMETER_NAME}} then we
+        /// replace the 'PARAMETER_NAME' section with the upper case variant so that we can do a parameter match
+        /// later on.
+        /// </summary>
+        /// <param name="value">The parameter value.</param>
+        /// <returns>The processed parameter value.</returns>
+        private static object TransformParameterValueIfRequired(object value)
+        {
+            if (!(value is string))
+            {
+                return value;
+            }
+
+            var stringValue = value as string;
+            return StringParameterTransform.Replace(
+                stringValue,
+                m => string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{{{{signal.{0}}}}}",
+                    m.Groups[1].ToString().ToUpper(CultureInfo.InvariantCulture)));
+        }
 
         /// <summary>
         /// The collection containing the ordered list of signal parameter names that should be used for
@@ -41,44 +68,26 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterValue">
         ///     The value of the parameter. Should be <see langword="null" /> if the value should be taken from the signal.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="parameterName"/> is an empty string.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterValue"/> is <see langword="null" />.
         /// </exception>
-        public ActionParameterValue(string parameterName, object parameterValue)
+        public ActionParameterValue(object parameterValue)
         {
             {
-                Lokad.Enforce.Argument(() => parameterName);
-                Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
-
                 Lokad.Enforce.Argument(() => parameterValue);
             }
 
-            _name = parameterName.ToLower();
-            _value = parameterValue;
+            _value = TransformParameterValueIfRequired(parameterValue);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterFormat">The format string for the parameter value.</param>
         /// <param name="signalParameters">The name of the signal parameter that should be used as the value.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="parameterName"/> is an empty string.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterFormat"/> is <see langword="null" />.
         /// </exception>
@@ -88,23 +97,19 @@ namespace Metamorphic.Core.Rules
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="signalParameters"/> is <see langword="null" />.
         /// </exception>
-        public ActionParameterValue(string parameterName, string parameterFormat, List<string> signalParameters)
+        public ActionParameterValue(string parameterFormat, IEnumerable<string> signalParameters)
         {
             {
-                Lokad.Enforce.Argument(() => parameterName);
-                Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
-
                 Lokad.Enforce.Argument(() => parameterFormat);
                 Lokad.Enforce.Argument(() => parameterFormat, Lokad.Rules.StringIs.NotEmpty);
 
                 Lokad.Enforce.Argument(() => signalParameters);
             }
 
-            _name = parameterName.ToLower();
-            _value = parameterFormat;
+            _value = TransformParameterValueIfRequired(parameterFormat);
             foreach (var parameter in signalParameters)
             {
-                _signalParameters.Add(parameter.ToLower());
+                _signalParameters.Add(parameter.ToUpper(CultureInfo.InvariantCulture));
             }
         }
 
@@ -150,6 +155,11 @@ namespace Metamorphic.Core.Rules
         /// <returns>
         ///     The value for the signal parameter.
         /// </returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "The signal is validated through the IsValid method.")]
         public object ValueForParameter(Signal signal)
         {
             if (!IsValidFor(signal))

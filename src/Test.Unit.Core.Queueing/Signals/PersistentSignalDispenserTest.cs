@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using EasyNetQ;
@@ -25,6 +26,11 @@ namespace Test.Unit.Core.Queueing.Signals
     public sealed class PersistentSignalDispenserTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Queueing.Signals.PersistentSignalDispenser",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithMissingBus()
         {
             var diag = new SystemDiagnostics((l, m) => { }, null);
@@ -32,6 +38,11 @@ namespace Test.Unit.Core.Queueing.Signals
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Queueing.Signals.PersistentSignalDispenser",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithMissingDiagnostics()
         {
             var bus = new Mock<IBus>();
@@ -58,6 +69,7 @@ namespace Test.Unit.Core.Queueing.Signals
 
             var publisher = new PersistentSignalDispenser(bus.Object, diag, new CurrentThreadTaskScheduler());
 
+            Assert.IsNotNull(publisher);
             Assert.IsNotNull(processAction);
             Assert.DoesNotThrow(() => processAction(null).Wait());
         }
@@ -99,10 +111,9 @@ namespace Test.Unit.Core.Queueing.Signals
             publisher.OnItemAvailable += handler;
 
             var typeId = "a";
-            var type = new SignalTypeId(typeId);
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signalData = new SignalData
             {
@@ -118,7 +129,7 @@ namespace Test.Unit.Core.Queueing.Signals
             Assert.That(obj.Parameters, Is.EquivalentTo(parameters));
 
             Assert.AreEqual(LevelToLog.Debug, lastLevel);
-            Assert.IsTrue(lastMessage.StartsWith("Processed"));
+            Assert.IsTrue(lastMessage.StartsWith("Processed", StringComparison.OrdinalIgnoreCase));
         }
 
         [Test]
@@ -152,17 +163,16 @@ namespace Test.Unit.Core.Queueing.Signals
                 (o, e) =>
                 {
                     createdSignal = e.Item;
-                    throw new Exception();
+                    throw new NotImplementedException();
                 };
 
             var publisher = new PersistentSignalDispenser(bus.Object, diag, new CurrentThreadTaskScheduler());
             publisher.OnItemAvailable += handler;
 
             var typeId = "a";
-            var type = new SignalTypeId(typeId);
             var parameters = new Dictionary<string, object>
                 {
-                    { "a", "b" }
+                    { "A", "b" }
                 };
             var signalData = new SignalData
             {
@@ -178,7 +188,7 @@ namespace Test.Unit.Core.Queueing.Signals
             Assert.That(obj.Parameters, Is.EquivalentTo(parameters));
 
             Assert.AreEqual(LevelToLog.Warn, lastLevel);
-            Assert.IsTrue(lastMessage.StartsWith("Failed"));
+            Assert.IsTrue(lastMessage.StartsWith("Failed", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
