@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
@@ -22,8 +23,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void Add()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule = new Rule(
@@ -43,8 +43,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void AddWithEmptyFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var rule = new Rule(
                 "a",
@@ -59,8 +58,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void AddWithExistingFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var sensor = new SignalTypeId("b");
             var path = "a";
@@ -91,8 +89,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void AddWithExistingSensorId()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var sensor = new SignalTypeId("b");
             var path1 = "a";
@@ -126,8 +123,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void AddWithNullFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var rule = new Rule(
                 "a",
@@ -142,23 +138,15 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void AddWithNullRule()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             Assert.Throws<ArgumentNullException>(() => collection.Add("a", null));
         }
 
         [Test]
-        public void CreateWithNullDiagnostics()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RuleCollection(null));
-        }
-
-        [Test]
         public void Remove()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule = new Rule(
@@ -182,8 +170,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void RemoveWithEmptyFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule = new Rule(
@@ -208,8 +195,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void RemoveWithMultipleRulesPresent()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var sensor = new SignalTypeId("b");
             var path1 = "a";
@@ -249,8 +235,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void RemoveWithNonExistingFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule = new Rule(
@@ -275,8 +260,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void RemoveWithNullFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule = new Rule(
@@ -301,8 +285,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void Update()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule1 = new Rule(
@@ -335,8 +318,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void UpdateWithEmptyFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule1 = new Rule(
@@ -365,8 +347,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void UpdateWithNonExistingFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule1 = new Rule(
@@ -399,8 +380,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void UpdateWithNullFilePath()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule1 = new Rule(
@@ -429,8 +409,7 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void UpdateWithNullRule()
         {
-            var diagnostics = new SystemDiagnostics((l, m) => { }, null);
-            var collection = new RuleCollection(diagnostics);
+            var collection = new RuleCollection();
 
             var path = "a";
             var rule1 = new Rule(
@@ -446,13 +425,6 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, matchingRules.Count());
             Assert.AreSame(rule1, matchingRules.First());
 
-            var rule2 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
             Assert.Throws<ArgumentNullException>(() => collection.Update(path, null));
         }
     }

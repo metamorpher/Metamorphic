@@ -23,7 +23,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqHeartbeatInSeconds
+        public static readonly ConfigurationKey RabbitMQHeartbeatInSeconds
             = new ConfigurationKey("RabbitMqHeartbeatInSeconds", typeof(ushort));
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqHosts
+        public static readonly ConfigurationKey RabbitMQHosts
             = new ConfigurationKey("RabbitMqHosts", typeof(string[]));
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqDefaultPort
+        public static readonly ConfigurationKey RabbitMQDefaultPort
             = new ConfigurationKey("RabbitMqDefaultPort", typeof(ushort));
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqUserName
+        public static readonly ConfigurationKey RabbitMQUserName
             = new ConfigurationKey("RabbitMqUserName", typeof(string));
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqUserPassword
+        public static readonly ConfigurationKey RabbitMQUserPassword
             = new ConfigurationKey("RabbitMqUserPassword", typeof(string));
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Metamorphic.Core.Queueing
             "Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey RabbitMqVirtualHostName
+        public static readonly ConfigurationKey RabbitMQVirtualHostName
             = new ConfigurationKey("RabbitMqVirtualHostName", typeof(string));
 
         /// <summary>
@@ -84,12 +84,12 @@ namespace Metamorphic.Core.Queueing
         {
             return new List<ConfigurationKey>
                 {
-                    RabbitMqHeartbeatInSeconds,
-                    RabbitMqHosts,
-                    RabbitMqDefaultPort,
-                    RabbitMqUserName,
-                    RabbitMqUserPassword,
-                    RabbitMqVirtualHostName,
+                    RabbitMQHeartbeatInSeconds,
+                    RabbitMQHosts,
+                    RabbitMQDefaultPort,
+                    RabbitMQUserName,
+                    RabbitMQUserPassword,
+                    RabbitMQVirtualHostName,
                 };
         }
     }

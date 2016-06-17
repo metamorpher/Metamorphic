@@ -173,7 +173,7 @@ namespace Metamorphic.Server
 
         private static void RegisterRules(ContainerBuilder builder)
         {
-            builder.Register(c => new RuleCollection(c.Resolve<SystemDiagnostics>()))
+            builder.Register(c => new RuleCollection())
                 .As<IStoreRules>()
                 .SingleInstance();
 

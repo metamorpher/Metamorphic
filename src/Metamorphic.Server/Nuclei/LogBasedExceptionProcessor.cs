@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Globalization;
 using Metamorphic.Server.Nuclei.ExceptionHandling;
@@ -25,6 +26,7 @@ namespace Metamorphic.Server.Nuclei
     /// <summary>
     /// An exception processor that writes the exception out to an <see cref="ILogger"/> object.
     /// </summary>
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     internal sealed class LogBasedExceptionProcessor : IDisposable
     {
         /// <summary>

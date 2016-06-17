@@ -41,7 +41,7 @@ namespace Metamorphic.Server
         private const int UnhandledExceptionApplicationExitCode = 1;
 
         [STAThread]
-        static int Main(string[] args)
+        static int Main()
         {
             int functionReturnResult = -1;
 

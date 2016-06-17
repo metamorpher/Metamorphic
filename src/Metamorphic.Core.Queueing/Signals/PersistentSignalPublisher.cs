@@ -38,8 +38,16 @@ namespace Metamorphic.Core.Queueing.Signals
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>A data object that can easily be serialized.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="item"/> is <see langword="null" />.
+        /// </exception>
         internal override SignalData ToDataObject(Signal item)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
             return ((ITranslateToDataObject<SignalData>)item).ToDataObject();
         }
     }

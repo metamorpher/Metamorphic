@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Metamorphic.Core
@@ -38,6 +39,10 @@ namespace Metamorphic.Core
         /// Gets the extension for an assembly file.
         /// </summary>
         /// <value>The extension for an assembly file.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string AssemblyExtension
         {
             get
@@ -50,6 +55,10 @@ namespace Metamorphic.Core
         /// Gets the extension for a log file.
         /// </summary>
         /// <value>The extension for a log file.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string LogExtension
         {
             get
@@ -61,6 +70,10 @@ namespace Metamorphic.Core
         /// <summary>
         /// Gets the extension for a feedback file.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string FeedbackReportExtension
         {
             get

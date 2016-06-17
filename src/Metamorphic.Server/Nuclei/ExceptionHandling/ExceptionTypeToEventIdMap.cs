@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
@@ -24,6 +25,7 @@ namespace Metamorphic.Server.Nuclei.ExceptionHandling
     /// Defines methods that map an <see cref="Exception"/> to an ID number for error reporting
     /// purposes.
     /// </summary>
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     internal static class ExceptionTypeToEventIdMap
     {
         /// <summary>

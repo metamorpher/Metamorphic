@@ -50,7 +50,7 @@ namespace Metamorphic.Server.Actions
                 id,
                 new ActionParameterDefinition[0],
                 action);
-            Assert.Throws<DuplicateActionDefinitionException>(() => storage.Add(definition));
+            Assert.Throws<DuplicateActionDefinitionException>(() => storage.Add(otherDefinition));
         }
 
         [Test]

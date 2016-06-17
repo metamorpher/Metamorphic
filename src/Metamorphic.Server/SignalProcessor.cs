@@ -31,11 +31,6 @@ namespace Metamorphic.Server
         private readonly IQueueJobs _jobQueue;
 
         /// <summary>
-        /// The object used to lock on.
-        /// </summary>
-        private readonly object _lock = new object();
-
-        /// <summary>
         /// The collection containing all the rules.
         /// </summary>
         private readonly IStoreRules _ruleCollection;

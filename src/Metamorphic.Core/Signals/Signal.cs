@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Metamorphic.Core.Properties;
 using Nuclei;
@@ -48,7 +49,7 @@ namespace Metamorphic.Core.Signals
             Sensor = sensorId;
             foreach (var pair in parameters)
             {
-                _parameters.Add(pair.Key.ToLower(), pair.Value);
+                _parameters.Add(pair.Key.ToUpper(CultureInfo.InvariantCulture), pair.Value);
             }
         }
 
@@ -67,7 +68,7 @@ namespace Metamorphic.Core.Signals
                 return false;
             }
 
-            return _parameters.ContainsKey(name.ToLower());
+            return _parameters.ContainsKey(name.ToUpper(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -101,6 +102,11 @@ namespace Metamorphic.Core.Signals
         /// <exception cref="ParameterNotFoundException">
         ///     Thrown if <paramref name="name" /> does not exist.
         /// </exception>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "The 'name' parameter is validated through the ContainsParameter method.")]
         public object ParameterValue(string name)
         {
             if (!ContainsParameter(name))
@@ -112,7 +118,7 @@ namespace Metamorphic.Core.Signals
                         name));
             }
 
-            return _parameters[name.ToLower()];
+            return _parameters[name.ToUpper(CultureInfo.InvariantCulture)];
         }
 
         /// <summary>
@@ -140,10 +146,10 @@ namespace Metamorphic.Core.Signals
         SignalData ITranslateToDataObject<SignalData>.ToDataObject()
         {
             return new SignalData
-                {
-                    SensorId = Sensor.ToString(),
-                    Parameters = new Dictionary<string, object>(_parameters),
-                };
+            {
+                SensorId = Sensor.ToString(),
+                Parameters = new Dictionary<string, object>(_parameters),
+            };
         }
     }
 }

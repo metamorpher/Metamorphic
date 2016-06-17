@@ -33,7 +33,7 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the comparison method.
         /// </summary>
-        public string Type
+        public string ComparisonMethod
         {
             get;
             set;

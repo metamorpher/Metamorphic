@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,22 @@ namespace Metamorphic.Server.Jobs
 {
     internal sealed class JobProcessor : IProcessJobs, IDisposable
     {
+        private static ActionParameterValueMap[] ToParameterData(Job job)
+        {
+            var namedParameters = new List<ActionParameterValueMap>();
+            foreach (var name in job.ParameterNames())
+            {
+                var value = job.ParameterValue(name);
+
+                namedParameters.Add(
+                    new ActionParameterValueMap(
+                        new ActionParameterDefinition(name),
+                        value));
+            }
+
+            return namedParameters.ToArray();
+        }
+
         /// <summary>
         /// The collection that contains all the actions for the application.
         /// </summary>
@@ -104,6 +121,11 @@ namespace Metamorphic.Server.Jobs
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA2213:DisposableFieldsShouldBeDisposed",
+            MessageId = "_cancellationSource",
+            Justification = "The _cancellationSource is disposed in the Stop method.")]
         public void Dispose()
         {
             var task = Stop(false);
@@ -145,6 +167,10 @@ namespace Metamorphic.Server.Jobs
             }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching to prevent a failure from killing the processor. Would catch more specific exceptions if we knew what they would be.")]
         private void ProcessJobs(CancellationToken token)
         {
             try
@@ -288,22 +314,6 @@ namespace Metamorphic.Server.Jobs
                 });
 
             return result;
-        }
-
-        private ActionParameterValueMap[] ToParameterData(Job job)
-        {
-            var namedParameters = new List<ActionParameterValueMap>();
-            foreach (var name in job.ParameterNames())
-            {
-                var value = job.ParameterValue(name);
-
-                namedParameters.Add(
-                    new ActionParameterValueMap(
-                        new ActionParameterDefinition(name),
-                        value));
-            }
-
-            return namedParameters.ToArray();
         }
     }
 }

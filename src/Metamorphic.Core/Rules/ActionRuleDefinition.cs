@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
@@ -34,6 +35,10 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the parameters for the action.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "This class is instantiated when we load the rules from the rule files through third-party code.")]
         public Dictionary<string, object> Parameters
         {
             get;

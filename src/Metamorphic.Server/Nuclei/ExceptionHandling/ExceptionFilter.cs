@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -50,6 +51,7 @@ namespace Metamorphic.Server.Nuclei.ExceptionHandling
     /// <source>
     /// http://blogs.msdn.com/b/rmbyers/archive/2010/01/30/sample-reflection-emit-code-for-using-exception-filters-from-c.aspx
     /// </source>
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     internal static class ExceptionFilter
     {
         private static Action<Action, Func<Exception, bool>, Action<Exception>> s_Filter = GenerateFilter();

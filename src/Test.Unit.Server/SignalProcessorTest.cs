@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Queueing;
@@ -25,6 +26,11 @@ namespace Metamorphic.Server
     public class SignalProcessorTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullJobQueue()
         {
             var rules = new Mock<IStoreRules>();
@@ -35,6 +41,11 @@ namespace Metamorphic.Server
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullRuleCollection()
         {
             var jobs = new Mock<IQueueJobs>();
@@ -45,6 +56,11 @@ namespace Metamorphic.Server
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullSignalDispenser()
         {
             var jobs = new Mock<IQueueJobs>();
@@ -55,6 +71,11 @@ namespace Metamorphic.Server
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullDiagnostics()
         {
             var jobs = new Mock<IQueueJobs>();
@@ -84,6 +105,7 @@ namespace Metamorphic.Server
 
             var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
 
+            Assert.IsNotNull(processor);
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(null));
             jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Never());
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Never());
@@ -109,6 +131,7 @@ namespace Metamorphic.Server
             var diag = new SystemDiagnostics((l, m) => { }, null);
 
             var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
+            Assert.IsNotNull(processor);
 
             var type = new SignalTypeId("a");
             var parameters = new Dictionary<string, object>
@@ -153,6 +176,7 @@ namespace Metamorphic.Server
 
             var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
 
+            Assert.IsNotNull(processor);
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(signal));
             jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Exactly(1));
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Once());
@@ -190,6 +214,7 @@ namespace Metamorphic.Server
 
             var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
 
+            Assert.IsNotNull(processor);
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(signal));
             jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Exactly(2));
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Once());

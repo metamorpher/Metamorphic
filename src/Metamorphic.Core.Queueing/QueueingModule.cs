@@ -38,18 +38,18 @@ namespace Metamorphic.Core.Queueing
 
         private static ConnectionConfiguration RabbitMQConnectionFromConfiguration(IConfiguration configuration)
         {
-            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserName))
+            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQUserName))
             {
-                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserName);
+                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMQUserName);
             }
 
-            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqUserPassword))
+            if (!configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQUserPassword))
             {
-                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMqUserPassword);
+                throw new MissingConfigurationException(QueueingConfigurationKeys.RabbitMQUserPassword);
             }
 
-            var hosts = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHosts)
-                ? configuration.Value<string[]>(QueueingConfigurationKeys.RabbitMqHosts)
+            var hosts = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQHosts)
+                ? configuration.Value<string[]>(QueueingConfigurationKeys.RabbitMQHosts)
                     .Select(
                         s =>
                         {
@@ -72,20 +72,20 @@ namespace Metamorphic.Core.Queueing
 
             return new ConnectionConfiguration
             {
-                VirtualHost = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqVirtualHostName)
-                        ? configuration.Value<string>(QueueingConfigurationKeys.RabbitMqVirtualHostName)
+                VirtualHost = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQVirtualHostName)
+                        ? configuration.Value<string>(QueueingConfigurationKeys.RabbitMQVirtualHostName)
                         : DefaultVirtualHostName,
-                Port = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqDefaultPort)
-                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqDefaultPort)
+                Port = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQDefaultPort)
+                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMQDefaultPort)
                         : DefaultPort,
 
                 Hosts = hosts,
 
-                UserName = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserName),
-                Password = configuration.Value<string>(QueueingConfigurationKeys.RabbitMqUserPassword),
+                UserName = configuration.Value<string>(QueueingConfigurationKeys.RabbitMQUserName),
+                Password = configuration.Value<string>(QueueingConfigurationKeys.RabbitMQUserPassword),
 
-                RequestedHeartbeat = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds)
-                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMqHeartbeatInSeconds)
+                RequestedHeartbeat = configuration.HasValueFor(QueueingConfigurationKeys.RabbitMQHeartbeatInSeconds)
+                        ? configuration.Value<ushort>(QueueingConfigurationKeys.RabbitMQHeartbeatInSeconds)
                         : DefaultRequestedHeartbeatTimeInSeconds,
 
                 // Persist the messages so that we have them even if the queue goes down

@@ -15,7 +15,7 @@ namespace Metamorphic.Core
     /// An exception thrown when the user tries to get a value for a parameter that does not exist.
     /// </summary>
     [Serializable]
-    public class ParameterNotFoundException : Exception
+    public sealed class ParameterNotFoundException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterNotFoundException"/> class.

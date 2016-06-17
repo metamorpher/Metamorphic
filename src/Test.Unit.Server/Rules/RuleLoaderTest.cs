@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -32,10 +33,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "ActionWithParameters.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -55,10 +53,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "ActionWithParametersReferencingMultipleSignalParameters.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -84,10 +79,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "ActionWithParametersReferencingSignal.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -111,10 +103,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "EndsWithCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -123,7 +112,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("endswith", definition.Condition[0].Type);
+            Assert.AreEqual("endswith", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -141,10 +130,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "EqualsCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -153,7 +139,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("equals", definition.Condition[0].Type);
+            Assert.AreEqual("equals", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -171,10 +157,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "GreaterThanCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -183,7 +166,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual(10, definition.Condition[0].Pattern);
-            Assert.AreEqual("greaterthan", definition.Condition[0].Type);
+            Assert.AreEqual("greaterthan", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -201,10 +184,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "LessThanCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -213,7 +193,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual(10, definition.Condition[0].Pattern);
-            Assert.AreEqual("lessthan", definition.Condition[0].Type);
+            Assert.AreEqual("lessthan", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -231,10 +211,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "MatchRegexCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -243,7 +220,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("(.*)", definition.Condition[0].Pattern);
-            Assert.AreEqual("matchregex", definition.Condition[0].Type);
+            Assert.AreEqual("matchregex", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -261,10 +238,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "NotEqualsCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -273,7 +247,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("a", definition.Condition[0].Pattern);
-            Assert.AreEqual("notequals", definition.Condition[0].Type);
+            Assert.AreEqual("notequals", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -291,10 +265,7 @@ namespace Metamorphic.Server.Rules
         {
             var fileName = "NotMatchRegexCondition.mmrule";
 
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-            var definition = loader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
+            var definition = RuleLoader.CreateDefinitionFromFile(Path.Combine(RulePath(), fileName));
 
             Assert.AreEqual("Name", definition.Name);
             Assert.AreEqual("Description", definition.Description);
@@ -303,7 +274,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(1, definition.Condition.Count);
             Assert.AreEqual("bar", definition.Condition[0].Name);
             Assert.AreEqual("(.*)", definition.Condition[0].Pattern);
-            Assert.AreEqual("notmatchregex", definition.Condition[0].Type);
+            Assert.AreEqual("notmatchregex", definition.Condition[0].ComparisonMethod);
 
             Assert.AreEqual("Signal", definition.Signal.Id);
             Assert.AreEqual(1, definition.Signal.Parameters.Count);
@@ -319,10 +290,6 @@ namespace Metamorphic.Server.Rules
         [Test]
         public void IsValidWithActionWithInvalidId()
         {
-            var loader = new RuleLoader(
-                s => false,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
                 {
                     Name = "a",
@@ -331,7 +298,6 @@ namespace Metamorphic.Server.Rules
                             Id = "b",
                             Parameters = new Dictionary<string, object>(),
                         },
-                    Condition = new List<ConditionRuleDefinition>(),
                     Enabled = true,
                     Signal = new SignalRuleDefinition
                         {
@@ -339,16 +305,12 @@ namespace Metamorphic.Server.Rules
                             Parameters = new Dictionary<string, object>(),
                         }
                 };
-            Assert.IsFalse(loader.IsValid(definition, s => false));
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => false));
         }
 
         [Test]
         public void IsValidWithActionWithInvalidSignalParameterReference()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = "a",
@@ -360,7 +322,6 @@ namespace Metamorphic.Server.Rules
                         ["c"] = "{{signal.d}}"
                     },
                 },
-                Condition = new List<ConditionRuleDefinition>(),
                 Enabled = true,
                 Signal = new SignalRuleDefinition
                 {
@@ -371,16 +332,12 @@ namespace Metamorphic.Server.Rules
                     },
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithConditionWithIncorrectName()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = "a",
@@ -389,15 +346,6 @@ namespace Metamorphic.Server.Rules
                     Id = "b",
                     Parameters = new Dictionary<string, object>(),
                 },
-                Condition = new List<ConditionRuleDefinition>
-                {
-                    new ConditionRuleDefinition
-                    {
-                        Name = "b",
-                        Pattern = "d",
-                        Type = "equals"
-                    },
-                },
                 Enabled = true,
                 Signal = new SignalRuleDefinition
                 {
@@ -405,16 +353,19 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            definition.Condition.Add(
+                new ConditionRuleDefinition
+                {
+                    Name = "b",
+                    Pattern = "d",
+                    ComparisonMethod = "equals"
+                });
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithConditionWithInvalidType()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = "a",
@@ -423,15 +374,6 @@ namespace Metamorphic.Server.Rules
                     Id = "b",
                     Parameters = new Dictionary<string, object>(),
                 },
-                Condition = new List<ConditionRuleDefinition>
-                {
-                    new ConditionRuleDefinition
-                    {
-                        Name = "c",
-                        Pattern = "d",
-                        Type = "operator"
-                    },
-                },
                 Enabled = true,
                 Signal = new SignalRuleDefinition
                 {
@@ -439,21 +381,23 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            definition.Condition.Add(
+                new ConditionRuleDefinition
+                {
+                    Name = "c",
+                    Pattern = "d",
+                    ComparisonMethod = "operator"
+                });
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingAction()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = "a",
                 Action = null,
-                Condition = new List<ConditionRuleDefinition>(),
                 Enabled = true,
                 Signal = new SignalRuleDefinition
                 {
@@ -461,16 +405,12 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingName()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = string.Empty,
@@ -479,7 +419,6 @@ namespace Metamorphic.Server.Rules
                     Id = "b",
                     Parameters = new Dictionary<string, object>(),
                 },
-                Condition = new List<ConditionRuleDefinition>(),
                 Enabled = true,
                 Signal = new SignalRuleDefinition
                 {
@@ -487,16 +426,12 @@ namespace Metamorphic.Server.Rules
                     Parameters = new Dictionary<string, object>(),
                 }
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
         public void IsValidWithMissingSignal()
         {
-            var loader = new RuleLoader(
-                s => true,
-                new SystemDiagnostics((l, m) => { }, null));
-
             var definition = new RuleDefinition
             {
                 Name = "a",
@@ -505,11 +440,10 @@ namespace Metamorphic.Server.Rules
                     Id = "b",
                     Parameters = new Dictionary<string, object>(),
                 },
-                Condition = new List<ConditionRuleDefinition>(),
                 Enabled = true,
                 Signal = null
             };
-            Assert.IsFalse(loader.IsValid(definition, s => true));
+            Assert.IsFalse(RuleLoader.IsValid(definition, s => true));
         }
 
         [Test]
@@ -838,7 +772,7 @@ namespace Metamorphic.Server.Rules
             Assert.AreEqual(new ActionId("Action"), job.Action);
             Assert.AreEqual(1, job.ParameterNames().Count());
             Assert.IsTrue(job.ContainsParameter("foo"));
-            Assert.AreEqual(string.Format("{0} {1}", parameterValue1, parameterValue2), job.ParameterValue("foo"));
+            Assert.AreEqual(string.Format(CultureInfo.InvariantCulture, "{0} {1}", parameterValue1, parameterValue2), job.ParameterValue("foo"));
         }
 
         [Test]

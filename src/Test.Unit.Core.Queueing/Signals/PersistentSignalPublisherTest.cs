@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
@@ -25,6 +26,11 @@ namespace Test.Unit.Core.Queueing
     public class PersistentSignalPublisherTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Queueing.Signals.PersistentSignalPublisher",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithMissingBus()
         {
             var diag = new SystemDiagnostics((l, m) => { }, null);
@@ -32,6 +38,11 @@ namespace Test.Unit.Core.Queueing
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Queueing.Signals.PersistentSignalPublisher",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithMissingDiagnostics()
         {
             var bus = new Mock<IBus>();
@@ -39,6 +50,11 @@ namespace Test.Unit.Core.Queueing
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Queueuing.Signals.PersistentSignalPublisher",
+            Justification = "Testing that the constructor throws an exception.")]
         public void PublishWithNullSignal()
         {
             var bus = new Mock<IBus>();
@@ -98,7 +114,7 @@ namespace Test.Unit.Core.Queueing
             Assert.That(publishedSignalData.Parameters, Is.EquivalentTo(parameters));
 
             Assert.AreEqual(LevelToLog.Debug, lastLevel);
-            Assert.IsTrue(lastMessage.StartsWith("Published"));
+            Assert.IsTrue(lastMessage.StartsWith("Published", StringComparison.OrdinalIgnoreCase));
         }
 
         [Test]
@@ -116,7 +132,7 @@ namespace Test.Unit.Core.Queueing
                             publishedSignalData = s;
                         })
                     .Returns(Task.Factory.StartNew(
-                        () => { throw new Exception(); },
+                        () => { throw new NotImplementedException(); },
                         new CancellationTokenSource().Token,
                         TaskCreationOptions.None,
                         new CurrentThreadTaskScheduler()))
@@ -151,7 +167,7 @@ namespace Test.Unit.Core.Queueing
             Assert.That(publishedSignalData.Parameters, Is.EquivalentTo(parameters));
 
             Assert.AreEqual(LevelToLog.Warn, lastLevel);
-            Assert.IsTrue(lastMessage.StartsWith("Failed"));
+            Assert.IsTrue(lastMessage.StartsWith("Failed", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

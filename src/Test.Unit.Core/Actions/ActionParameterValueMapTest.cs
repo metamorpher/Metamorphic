@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Metamorphic.Core.Actions
@@ -23,6 +24,12 @@ namespace Metamorphic.Core.Actions
             Assert.AreSame(value, map.Value);
         }
 
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionParameterValueMap",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullParameter()
         {
             Assert.Throws<ArgumentNullException>(() => new ActionParameterValueMap(null, "a"));

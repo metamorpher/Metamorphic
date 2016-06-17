@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -64,6 +66,10 @@ namespace Metamorphic.Core.Actions
             }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching and logging and ignoring because we don't know exactly what the script will throw at us.")]
         private void InvokePowershell(string scriptFile, string arguments)
         {
             var scriptFullPath = scriptFile;
@@ -77,7 +83,11 @@ namespace Metamorphic.Core.Actions
                 startInfo.FileName = @"c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
 
                 // Build the command line arguments
-                startInfo.Arguments = string.Format("-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}", scriptFullPath, arguments);
+                startInfo.Arguments = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}",
+                    scriptFullPath,
+                    arguments);
 
                 // do not display an error dialog if the process
                 // can't be started

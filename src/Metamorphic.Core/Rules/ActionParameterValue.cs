@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Metamorphic.Core.Signals;
 
 namespace Metamorphic.Core.Rules
@@ -18,12 +19,6 @@ namespace Metamorphic.Core.Rules
     /// </summary>
     public sealed class ActionParameterValue
     {
-        /// <summary>
-        /// The name of the parameter. Note the parameter name is stored in lower case so as to provide
-        /// case-insensitive comparisons between the signal and rule parameter names.
-        /// </summary>
-        private readonly string _name;
-
         /// <summary>
         /// The collection containing the ordered list of signal parameter names that should be used for
         /// the action parameter value. Note that all parameter names are
@@ -41,44 +36,26 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterValue">
         ///     The value of the parameter. Should be <see langword="null" /> if the value should be taken from the signal.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="parameterName"/> is an empty string.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterValue"/> is <see langword="null" />.
         /// </exception>
-        public ActionParameterValue(string parameterName, object parameterValue)
+        public ActionParameterValue(object parameterValue)
         {
             {
-                Lokad.Enforce.Argument(() => parameterName);
-                Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
-
                 Lokad.Enforce.Argument(() => parameterValue);
             }
 
-            _name = parameterName.ToLower();
             _value = parameterValue;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameterValue"/> class.
         /// </summary>
-        /// <param name="parameterName">The name of the parameter to which the current reference applies.</param>
         /// <param name="parameterFormat">The format string for the parameter value.</param>
         /// <param name="signalParameters">The name of the signal parameter that should be used as the value.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameterName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="parameterName"/> is an empty string.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameterFormat"/> is <see langword="null" />.
         /// </exception>
@@ -88,23 +65,19 @@ namespace Metamorphic.Core.Rules
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="signalParameters"/> is <see langword="null" />.
         /// </exception>
-        public ActionParameterValue(string parameterName, string parameterFormat, List<string> signalParameters)
+        public ActionParameterValue(string parameterFormat, IEnumerable<string> signalParameters)
         {
             {
-                Lokad.Enforce.Argument(() => parameterName);
-                Lokad.Enforce.Argument(() => parameterName, Lokad.Rules.StringIs.NotEmpty);
-
                 Lokad.Enforce.Argument(() => parameterFormat);
                 Lokad.Enforce.Argument(() => parameterFormat, Lokad.Rules.StringIs.NotEmpty);
 
                 Lokad.Enforce.Argument(() => signalParameters);
             }
 
-            _name = parameterName.ToLower();
             _value = parameterFormat;
             foreach (var parameter in signalParameters)
             {
-                _signalParameters.Add(parameter.ToLower());
+                _signalParameters.Add(parameter.ToUpper(CultureInfo.InvariantCulture));
             }
         }
 
@@ -150,6 +123,11 @@ namespace Metamorphic.Core.Rules
         /// <returns>
         ///     The value for the signal parameter.
         /// </returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "The signal is validated through the IsValid method.")]
         public object ValueForParameter(Signal signal)
         {
             if (!IsValidFor(signal))

@@ -52,6 +52,11 @@ namespace Metamorphic.Core.Queueing
 
         public void ErrorWrite(Exception exception)
         {
+            if (exception == null)
+            {
+                return;
+            }
+
             _diagnostics.Log(
                 LevelToLog.Error,
                 exception.ToString());

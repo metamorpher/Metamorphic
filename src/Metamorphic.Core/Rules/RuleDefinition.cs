@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
@@ -34,6 +35,14 @@ namespace Metamorphic.Core.Rules
         /// <summary>
         /// Gets or sets the criteria that should applied to the trigger.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "This class is instantiated when we create the rules from the rule files through third-party code.")]
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1002:DoNotExposeGenericLists",
+            Justification = "Users of the object have to be able to add and remove items.")]
         public List<ConditionRuleDefinition> Condition
         {
             get;

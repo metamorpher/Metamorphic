@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Metamorphic.Core.Signals;
 using NUnit.Framework;
 
@@ -16,58 +18,53 @@ namespace Metamorphic.Core.Rules
     public sealed class ActionParameterValueTest
     {
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithEmptyParameterFormat()
         {
-            Assert.Throws<ArgumentException>(() => new ActionParameterValue("a", string.Empty, new List<string>()));
+            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty, new List<string>()));
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullParameterFormat()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", (string)null, new List<string>()));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null, new List<string>()));
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullParameterList()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", "b", null));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("b", null));
         }
 
         [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullValue()
         {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue("a", null));
-        }
-
-        [Test]
-        public void CreateWithParameterFormatAndEmptyName()
-        {
-            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty, "a", new List<string>()));
-        }
-
-        [Test]
-        public void CreateWithParameterFormatAndNullName()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null, "a", new List<string>()));
-        }
-
-        [Test]
-        public void CreateWithValueAndEmptyName()
-        {
-            Assert.Throws<ArgumentException>(() => new ActionParameterValue(string.Empty, 10));
-        }
-
-        [Test]
-        public void CreateWithValueAndNullName()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null, 10));
+            Assert.Throws<ArgumentNullException>(() => new ActionParameterValue(null));
         }
 
         [Test]
         public void IsValidForNullSignal()
         {
-            var parameterName = "a";
-            var reference = new ActionParameterValue(parameterName, 10);
+            var reference = new ActionParameterValue(10);
             Assert.IsFalse(reference.IsValidFor(null));
         }
 
@@ -77,7 +74,6 @@ namespace Metamorphic.Core.Rules
             var parameter1 = "a";
             var parameter2 = "b";
             var reference = new ActionParameterValue(
-                "c",
                 "{{signal." + parameter1 + "}} {{signal." + parameter2 + "}}",
                 new List<string>
                 {
@@ -99,7 +95,7 @@ namespace Metamorphic.Core.Rules
         public void IsValidForSignalWithMissingParameter()
         {
             var parameterName = "a";
-            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
+            var reference = new ActionParameterValue("{{signal." + parameterName + "}}", new List<string> { parameterName });
 
             var signal = new Signal(
                 new SignalTypeId("b"),
@@ -111,7 +107,7 @@ namespace Metamorphic.Core.Rules
         public void IsValidForSignalWithSingleMatchingParameterValueWithoutCondition()
         {
             var parameterName = "a";
-            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
+            var reference = new ActionParameterValue("{{signal." + parameterName + "}}", new List<string> { parameterName });
 
             var signal = new Signal(
                 new SignalTypeId("b"),
@@ -130,7 +126,6 @@ namespace Metamorphic.Core.Rules
             var parameter2 = "b";
             var parameterValue2 = "11";
             var reference = new ActionParameterValue(
-                "c",
                 "{{signal." + parameter1 + "}}-{{signal." + parameter2 + "}}",
                 new List<string>
                 {
@@ -145,7 +140,7 @@ namespace Metamorphic.Core.Rules
                     [parameter1] = parameterValue1,
                     [parameter2] = parameterValue2
                 });
-            Assert.AreEqual(string.Format("{0}-{1}", parameterValue1, parameterValue2), reference.ValueForParameter(signal));
+            Assert.AreEqual(string.Format(CultureInfo.InvariantCulture, "{0}-{1}", parameterValue1, parameterValue2), reference.ValueForParameter(signal));
         }
 
         [Test]
@@ -153,7 +148,7 @@ namespace Metamorphic.Core.Rules
         {
             var parameterName = "a";
             var parameterValue = 10;
-            var reference = new ActionParameterValue(parameterName, parameterValue);
+            var reference = new ActionParameterValue(parameterValue);
 
             var signal = new Signal(
                 new SignalTypeId("b"),
@@ -169,7 +164,7 @@ namespace Metamorphic.Core.Rules
         {
             var parameterName = "a";
             var parameterValue = 10;
-            var reference = new ActionParameterValue("b", "{{signal." + parameterName + "}}", new List<string> { parameterName });
+            var reference = new ActionParameterValue("{{signal." + parameterName + "}}", new List<string> { parameterName });
 
             var signal = new Signal(
                 new SignalTypeId("b"),

@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
@@ -24,6 +25,7 @@ namespace Metamorphic.Server.Nuclei.ExceptionHandling
     /// Defines a top level exception handler which stops all exceptions from propagating out of the application, thus
     /// providing a chance for logging and semi-graceful termination of the application.
     /// </summary>
+    [GeneratedCode("Nuclei.ExceptionHandling", "0.8.0")]
     internal static class TopLevelExceptionGuard
     {
         /// <summary>
