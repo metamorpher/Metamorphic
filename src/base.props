@@ -56,25 +56,6 @@
         <CodeAnalysisCulture>en-US</CodeAnalysisCulture>
     </PropertyGroup>
 
-    <!-- Generate the XML documentation file -->
-    <PropertyGroup>
-        <!--
-            A flag indicating whether or not the XML documentation file should be generated during the compilation process.
-            Note that if 'WarningsAsErrors' is enabled then missing documentation will generate errors that stop the
-            build process.
-
-            If documentation should only be generated for non-test assemblies then add the '!$(IsTest)' condition
-            to the property.
-        -->
-        <GenerateDocumentation>false</GenerateDocumentation>
-        <GenerateDocumentation Condition=" '$(IsTest)' == 'false' ">true</GenerateDocumentation>
-
-        <!--
-            The full file path where the XML documentation file should be created.
-        -->
-        <DocumentationFile Condition=" '$(GenerateDocumentation)' == 'true' AND '$(IsTest)' == 'false'">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
-    </PropertyGroup>
-
     <!-- Strong name the binaries -->
     <PropertyGroup>
         <!--
@@ -106,12 +87,15 @@
         Debug configuration
     -->
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <DefineDebug>true</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>false</Optimize>
-        <RunCodeAnalysis>$(ShouldPerformCodeAnalysis)</RunCodeAnalysis>
+        <OutputPath>bin\Debug\</OutputPath>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
     </PropertyGroup>
 
     <!--
@@ -123,7 +107,9 @@
         <DefineDebug>false</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>true</Optimize>
-        <RunCodeAnalysis>$(ShouldPerformCodeAnalysis)</RunCodeAnalysis>
+        <OutputPath>bin\Release\</OutputPath>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
     </PropertyGroup>
 
     <!--
@@ -135,7 +121,28 @@
         <DefineDebug>false</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>true</Optimize>
-        <RunCodeAnalysis>$(ShouldPerformCodeAnalysis)</RunCodeAnalysis>
+        <OutputPath>bin\Deploy\</OutputPath>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
+        <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
+    </PropertyGroup>
+
+    <!-- Generate the XML documentation file -->
+    <PropertyGroup>
+        <!--
+            A flag indicating whether or not the XML documentation file should be generated during the compilation process.
+            Note that if 'WarningsAsErrors' is enabled then missing documentation will generate errors that stop the
+            build process.
+
+            If documentation should only be generated for non-test assemblies then add the '!$(IsTest)' condition
+            to the property.
+        -->
+        <GenerateDocumentation>false</GenerateDocumentation>
+        <GenerateDocumentation Condition=" '$(IsTest)' == 'false' ">true</GenerateDocumentation>
+
+        <!--
+            The full file path where the XML documentation file should be created.
+        -->
+        <DocumentationFile Condition=" '$(GenerateDocumentation)' == 'true' AND '$(IsTest)' == 'false'">$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
     </PropertyGroup>
 
     <!-- Default includes -->
