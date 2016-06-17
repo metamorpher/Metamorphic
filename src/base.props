@@ -87,7 +87,7 @@
         Debug configuration
     -->
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+        <DefineConstants>DEBUG;CODE_ANALYSIS;$(DefineConstants)</DefineConstants>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <DefineDebug>true</DefineDebug>
@@ -102,6 +102,7 @@
         Release configuration
     -->
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DefineConstants>CODE_ANALYSIS;$(DefineConstants)</DefineConstants>
         <DebugSymbols>false</DebugSymbols>
         <DebugType>pdbonly</DebugType>
         <DefineDebug>false</DefineDebug>
