@@ -10,7 +10,6 @@ using Autofac;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Properties;
 using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -57,11 +56,6 @@ namespace Metamorphic.Server
         private IWatchRules _ruleWatcher;
 
         /// <summary>
-        /// The object that generates the signals.
-        /// </summary>
-        private IGenerateSignals _signalGenerator;
-
-        /// <summary>
         /// The object that processes signals.
         /// </summary>
         private SignalProcessor _signalProcessor;
@@ -88,17 +82,14 @@ namespace Metamorphic.Server
         public void OnStart()
         {
             _container = DependencyInjection.CreateContainer();
-            WebCallStartup.Container = _container;
 
             _jobProcessor = _container.Resolve<IProcessJobs>();
             _ruleWatcher = _container.Resolve<IWatchRules>();
-            _signalGenerator = _container.Resolve<IGenerateSignals>();
             _signalProcessor = _container.Resolve<SignalProcessor>();
             _diagnostics = _container.Resolve<SystemDiagnostics>();
 
             _jobProcessor.Start();
             _ruleWatcher.Enable();
-            _signalGenerator.Start();
 
             _diagnostics.Log(
                 LevelToLog.Info,
@@ -130,12 +121,6 @@ namespace Metamorphic.Server
                 {
                     _ruleWatcher.Disable();
                     _ruleWatcher = null;
-                }
-
-                if (_signalGenerator != null)
-                {
-                    _signalGenerator.Stop();
-                    _signalGenerator = null;
                 }
 
                 if (_signalProcessor != null)

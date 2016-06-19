@@ -18,7 +18,6 @@ using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Server.Actions;
 using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -61,12 +60,10 @@ namespace Metamorphic.Server
                     .As<FileConstants>();
 
                 RegisterActions(builder);
-                RegisterControllers(builder);
                 RegisterDiagnostics(builder);
                 RegisterJobs(builder);
                 RegisterLoggers(builder);
                 RegisterRules(builder);
-                RegisterSignals(builder);
 
                 builder.RegisterModule(new QueueingModule());
 
@@ -103,12 +100,6 @@ namespace Metamorphic.Server
                         }
                     })
                 .SingleInstance();
-        }
-
-        private static void RegisterControllers(ContainerBuilder builder)
-        {
-            builder.Register(c => new SignalController(c.Resolve<IPublishSignals>()))
-                .InstancePerRequest();
         }
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
@@ -194,13 +185,6 @@ namespace Metamorphic.Server
                     c.Resolve<IStoreRules>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<IWatchRules>()
-                .SingleInstance();
-        }
-
-        private static void RegisterSignals(ContainerBuilder builder)
-        {
-            builder.Register(c => new WebCallSignalGenerator())
-                .As<IGenerateSignals>()
                 .SingleInstance();
         }
     }
