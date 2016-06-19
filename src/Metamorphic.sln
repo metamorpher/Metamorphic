@@ -61,6 +61,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analysis", "analysis", "{F9
 		test.ruleset = test.ruleset
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Sensor.Http", "Metamorphic.Sensor.Http\Metamorphic.Sensor.Http.csproj", "{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,12 @@ Global
 		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
 		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A388CFC-0200-43FE-8118-B16E8179E12B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12D8E44-057A-4696-B4B8-0236F7FBE0BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

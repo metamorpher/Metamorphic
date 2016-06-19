@@ -1,0 +1,21 @@
+﻿<div class="jumbotron">
+    <h1>Metamorphic Trigger</h1>
+</div>
+<div class="row">
+    <h2>Triggering</h2>
+    <p>
+        To indicate that an event has taken place send an HTTP post request to <code>@Url.Content("~/")/api/signal</code> with
+        the following content.
+    </p>
+    <pre><code>
+        {
+            "Type" : "[SIGNAL_TYPE]",
+            "Parameter1" : ParameterValue1,
+            "Parameter2" : ParameterValue2,
+            "Parameter3" : ParameterValue3,
+        }
+    </code></pre>
+    <p>
+        The known signal types are defined in the rule files as the signal ID.
+    </p>
+</div>
