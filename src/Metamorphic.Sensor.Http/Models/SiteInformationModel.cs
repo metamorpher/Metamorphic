@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using Nuclei.Build;
 
@@ -24,12 +25,12 @@ namespace Metamorphic.Sensor.Http.Models
             var assembly = Assembly.GetExecutingAssembly();
 
             var assemblyName = assembly.GetName();
-            AssemblyVersion = assemblyName.Version;
+            AssemblyVersion = assemblyName.Version.ToString(4);
 
             var fileVersionAttribute = (AssemblyFileVersionAttribute)assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute));
             FileVersion = fileVersionAttribute != null
-                ? new Version(fileVersionAttribute.Version)
-                : assemblyName.Version;
+                ? fileVersionAttribute.Version
+                : assemblyName.Version.ToString(4);
 
             var productVersionAttribute = (AssemblyInformationalVersionAttribute)assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute));
             ProductVersion = productVersionAttribute != null
@@ -43,22 +44,22 @@ namespace Metamorphic.Sensor.Http.Models
 
             var versionInfoAttribute = (AssemblyBuildInformationAttribute)assembly.GetCustomAttribute(typeof(AssemblyBuildInformationAttribute));
             BuildNumber = versionInfoAttribute != null
-                ? versionInfoAttribute.BuildNumber
-                : 0;
+                ? versionInfoAttribute.BuildNumber.ToString(CultureInfo.CurrentCulture)
+                : "0";
             Commit = versionInfoAttribute != null
                 ? versionInfoAttribute.VersionControlInformation
                 : string.Empty;
 
             var buildTimeAttribute = (AssemblyBuildTimeAttribute)assembly.GetCustomAttribute(typeof(AssemblyBuildTimeAttribute));
             BuildTime = buildTimeAttribute != null
-                ? buildTimeAttribute.BuildTime
-                : DateTimeOffset.Now;
+                ? buildTimeAttribute.BuildTime.ToString(CultureInfo.CurrentCulture)
+                : DateTimeOffset.Now.ToString(CultureInfo.CurrentCulture);
         }
 
         /// <summary>
         /// Gets the version of the site.
         /// </summary>
-        public Version AssemblyVersion
+        public string AssemblyVersion
         {
             get;
         }
@@ -66,7 +67,7 @@ namespace Metamorphic.Sensor.Http.Models
         /// <summary>
         /// Gets the number of the build that generated the site.
         /// </summary>
-        public int BuildNumber
+        public string BuildNumber
         {
             get;
         }
@@ -74,7 +75,7 @@ namespace Metamorphic.Sensor.Http.Models
         /// <summary>
         /// Gets the date and time the build that generated the site was executed.
         /// </summary>
-        public DateTimeOffset BuildTime
+        public string BuildTime
         {
             get;
         }
@@ -98,7 +99,7 @@ namespace Metamorphic.Sensor.Http.Models
         /// <summary>
         /// Gets the file version of the site.
         /// </summary>
-        public Version FileVersion
+        public string FileVersion
         {
             get;
         }

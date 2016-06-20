@@ -37,6 +37,7 @@ namespace Metamorphic.Sensor.Http.Controllers
         /// The action that renders the footer.
         /// </summary>
         /// <returns>The footer view.</returns>
+        [ChildActionOnly]
         public PartialViewResult Footer()
         {
             return PartialView(SiteInformation);
