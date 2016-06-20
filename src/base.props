@@ -10,7 +10,26 @@
             This value is defined here just so that there is a value when no other value is specified. Do not comment this
             value out unless you know what you are doing!
         -->
-        <IsTest Condition=" '$(IsTest)' == '' ">$(ProjectTypeGuids.Contains('{3AC096D0-A1C2-E12C-1390-A8335801FDAB}'))</IsTest>
+        <IsTest Condition=" '$(IsTest)' == '' ">$(ProjectTypeGuids.ToUpper().Contains('{3AC096D0-A1C2-E12C-1390-A8335801FDAB}').ToString().ToLower())</IsTest>
+
+        <!--
+            A flag that indicates whether the current project is a Web project. The value will be set in the Visual
+            Studio project files based on whether the project is a web project (as determined by the ProjectType GUID).
+
+            This value is defined here just so that there is a value when no other value is specified. Do not comment this
+            value out unless you know what you are doing!
+        -->
+        <IsWebProject Condition=" '$(IsWebProject)' == '' ">false</IsWebProject>
+        <!-- ASP.NET MVC 1 -->
+        <IsWebProject Condition=" '$(IsWebProject)' == 'false' ">$(ProjectTypeGuids.ToUpper().Contains('{603C0E0B-DB56-11DC-BE95-000D561079B0}').ToString().ToLower())</IsWebProject>
+        <!-- ASP.NET MVC 2 -->
+        <IsWebProject Condition=" '$(IsWebProject)' == 'false' ">$(ProjectTypeGuids.ToUpper().Contains('{F85E285D-A4E0-4152-9332-AB1D724D3325}').ToString().ToLower())</IsWebProject>
+        <!-- ASP.NET MVC 3 -->
+        <IsWebProject Condition=" '$(IsWebProject)' == 'false' ">$(ProjectTypeGuids.ToUpper().Contains('{E53F8FEA-EAE0-44A6-8774-FFD645390401}').ToString().ToLower())</IsWebProject>
+        <!-- ASP.NET MVC 4 -->
+        <IsWebProject Condition=" '$(IsWebProject)' == 'false' ">$(ProjectTypeGuids.ToUpper().Contains('{E3E379DF-F4C6-4180-9B81-6769533ABE47}').ToString().ToLower())</IsWebProject>
+        <!-- ASP.NET MVC 5 -->
+        <IsWebProject Condition=" '$(IsWebProject)' == 'false' ">$(ProjectTypeGuids.ToUpper().Contains('{349C5851-65DF-11DA-9384-00065B846F21}').ToString().ToLower())</IsWebProject>
     </PropertyGroup>
 
     <!-- Build configuration -->
@@ -93,7 +112,7 @@
         <DefineDebug>true</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
+        <OutputPath Condition=" '$(IsWebProject)' == 'false' ">bin\Debug\</OutputPath>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
     </PropertyGroup>
@@ -108,7 +127,7 @@
         <DefineDebug>false</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
+        <OutputPath Condition=" '$(IsWebProject)' == 'false' ">bin\Release\</OutputPath>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
     </PropertyGroup>
@@ -122,7 +141,7 @@
         <DefineDebug>false</DefineDebug>
         <DefineTrace>true</DefineTrace>
         <Optimize>true</Optimize>
-        <OutputPath>bin\Deploy\</OutputPath>
+        <OutputPath Condition=" '$(IsWebProject)' == 'false' ">bin\Deploy\</OutputPath>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">true</RunCodeAnalysis>
     </PropertyGroup>
