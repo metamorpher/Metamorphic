@@ -88,6 +88,15 @@ namespace Metamorphic.Core.Queueing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to publish[{0}] to the persistent store. The error was {1}..
+        /// </summary>
+        internal static string Log_Messages_PersistentDispenser_FailedToProcess_WithIdAndException {
+            get {
+                return ResourceManager.GetString("Log_Messages_PersistentDispenser_FailedToProcess_WithIdAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processed [{0}]..
         /// </summary>
         internal static string Log_Messages_PersistentDispenser_Processed_WithId {

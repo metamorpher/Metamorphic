@@ -159,7 +159,6 @@
     <Compile Include="Rules\RuleLoaderTest.cs" />
     <Compile Include="SignalProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Signals\DuplicateGeneratorDefinitionExceptionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

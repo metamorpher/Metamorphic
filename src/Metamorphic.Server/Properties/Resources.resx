@@ -204,9 +204,6 @@
   <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
     <value>An action with the given ID is already registered.</value>
   </data>
-  <data name="Exceptions_Messages_DuplicateSignalGenerator" xml:space="preserve">
-    <value>A signal generator with the given ID is already registered.</value>
-  </data>
   <data name="Log_Messages_JobProcessor_CleaningUpWorker" xml:space="preserve">
     <value>Cleaning up worker thread.</value>
   </data>

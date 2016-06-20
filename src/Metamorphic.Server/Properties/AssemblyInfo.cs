@@ -46,7 +46,7 @@ using Nuclei.Build;
 [assembly: AssemblyFileVersion("0.1.0.0")]
 [assembly: AssemblyInformationalVersion("0.1.0")]
 
-[assembly: AssemblyBuildTime(buildTime: "1900-01-01T00:00:00.0000+12:00")]
+[assembly: AssemblyBuildTime(buildTime: "1900-01-01T00:00:00.0000000+12:00")]
 
 [assembly: SuppressMessage(
     "Microsoft.Usage",

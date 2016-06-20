@@ -1,0 +1,15 @@
+﻿@model Metamorphic.Sensor.Http.Models.SiteInformationModel
+
+<footer class="text-muted">
+    <div>
+        <p>
+            @Html.DisplayFor(model => model.Copyright)
+        </p>
+    </div>
+    <div>
+        <p>
+            Version [@Html.DisplayFor(model => model.ProductVersion)] (@Html.DisplayFor(model => model.FileVersion) )<br />
+            Build from commit [@Html.DisplayFor(model => model.Commit)] in build number @Html.DisplayFor(model => model.BuildNumber) executed at @Html.DisplayFor(model => model.BuildTime)
+        </p>
+    </div>
+</footer>
