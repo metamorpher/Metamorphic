@@ -18,7 +18,6 @@ using Metamorphic.Core.Commands;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Server.Nuclei.AppDomains;
-using Metamorphic.Server.Rules;
 using Nuclei;
 using Nuclei.Communication;
 using Nuclei.Communication.Interaction;
@@ -98,7 +97,14 @@ namespace Metamorphic.Server
                 RegisterLoggers(builder);
                 RegisterProcessor(builder);
                 RegisterProxies(builder);
-                RegisterRules(builder);
+
+                builder.RegisterModule(new QueueingModule());
+
+                builder.Register(c => new SignalProcessor(
+                        c.Resolve<IQueueJobs>(),
+                        c.Resolve<IDispenseSignals>(),
+                        c.Resolve<SystemDiagnostics>()))
+                    .SingleInstance();
             }
 
             return builder.Build();
@@ -203,31 +209,6 @@ namespace Metamorphic.Server
                 .As<IActionStorageProxy>()
                 .SingleInstance();
         }
-
-        private static void RegisterRules(ContainerBuilder builder)
-        {
-            builder.Register(c => new RuleCollection())
-                .As<IStoreRules>()
-                .SingleInstance();
-
-            builder.Register(
-                    c =>
-                    {
-                        var ctx = c.Resolve<IComponentContext>();
-                        return new RuleLoader(
-                            (string id) => ctx.Resolve<IActionStorageProxy>().HasActionFor(new ActionId(id)),
-                            c.Resolve<SystemDiagnostics>());
-                    })
-                .As<ILoadRules>()
-                .SingleInstance();
-
-            builder.Register(c => new RuleWatcher(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<ILoadRules>(),
-                    c.Resolve<IStoreRules>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IWatchRules>()
-                .SingleInstance();
-        }
+                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
     }
 }

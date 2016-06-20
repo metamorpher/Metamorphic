@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Metamorphic.Server.Properties;
+using Metamorphic.Storage.Properties;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     /// <summary>
     /// An exception thrown when the a rule definition contains an invalid condition type.

@@ -16,22 +16,12 @@ namespace Metamorphic.Server
     internal static class ServerConfigurationKeys
     {
         /// <summary>
-        /// The configuration key that is used to retrieve path for the directory in
-        /// which the rule files will be placed.
-        /// </summary>
-        internal static readonly ConfigurationKey RuleDirectory
-            = new ConfigurationKey("RulePath", typeof(string));
-
-        /// <summary>
         /// Returns a collection containing all the configuration keys for the application.
         /// </summary>
         /// <returns>A collection containing all the configuration keys for the application.</returns>
         public static IEnumerable<ConfigurationKey> ToCollection()
         {
-            return new List<ConfigurationKey>
-                {
-                    RuleDirectory
-                };
+            return new List<ConfigurationKey>();
         }
     }
 }

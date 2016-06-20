@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     internal sealed class RuleCollection : IStoreRules
     {

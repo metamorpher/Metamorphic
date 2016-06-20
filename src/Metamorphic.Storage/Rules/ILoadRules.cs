@@ -7,7 +7,7 @@
 
 using Metamorphic.Core.Rules;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     /// <summary>
     /// Defines the interface for objects that load rule files.

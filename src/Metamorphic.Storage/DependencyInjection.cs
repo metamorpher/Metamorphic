@@ -15,6 +15,7 @@ using Autofac;
 using Metamorphic.Core;
 using Metamorphic.Storage.Actions;
 using Metamorphic.Storage.Nuclei.AppDomains;
+using Metamorphic.Storage.Rules;
 using Nuclei;
 using Nuclei.Communication;
 using Nuclei.Configuration;
@@ -90,6 +91,7 @@ namespace Metamorphic.Storage
                 RegisterCommunication(builder);
                 RegisterDiagnostics(builder);
                 RegisterLoggers(builder);
+                RegisterRules(builder);
             }
 
             return builder.Build();
@@ -207,6 +209,32 @@ namespace Metamorphic.Storage
                     assemblyInfo.Name,
                     assemblyInfo.Version))
                 .As<ILogger>()
+                .SingleInstance();
+        }
+
+        private static void RegisterRules(ContainerBuilder builder)
+        {
+            builder.Register(c => new RuleCollection())
+                .As<IStoreRules>()
+                .SingleInstance();
+
+            builder.Register(
+                    c =>
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new RuleLoader(
+                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
+                            c.Resolve<SystemDiagnostics>());
+                    })
+                .As<ILoadRules>()
+                .SingleInstance();
+
+            builder.Register(c => new RuleWatcher(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<ILoadRules>(),
+                    c.Resolve<IStoreRules>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IWatchRules>()
                 .SingleInstance();
         }
     }

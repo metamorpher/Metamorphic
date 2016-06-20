@@ -120,9 +120,6 @@
   <data name="ActionScanDomainName" xml:space="preserve">
     <value>Metamorphic.Storage action scan AppDomain</value>
   </data>
-  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
-    <value>An action with the given ID is already registered.</value>
-  </data>
   <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
     <value>The specified Rule already exists in the collection.</value>
   </data>

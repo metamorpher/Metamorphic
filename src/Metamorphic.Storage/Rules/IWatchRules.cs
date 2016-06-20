@@ -5,7 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     /// <summary>
     /// Defines the interface for objects that watch rule files.

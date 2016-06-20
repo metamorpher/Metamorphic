@@ -9,13 +9,13 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Metamorphic.Core.Rules;
-using Metamorphic.Server.Properties;
+using Metamorphic.Storage.Properties;
 using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     internal sealed class RuleWatcher : IWatchRules
     {
@@ -64,9 +64,9 @@ namespace Metamorphic.Server.Rules
             _ruleLoader = ruleLoader;
 
             var uploadPath = string.Empty;
-            uploadPath = configuration.HasValueFor(ServerConfigurationKeys.RuleDirectory)
-                ? configuration.Value<string>(ServerConfigurationKeys.RuleDirectory)
-                : ServerConstants.DefaultRuleDirectory;
+            uploadPath = configuration.HasValueFor(StorageConfigurationKeys.RuleDirectory)
+                ? configuration.Value<string>(StorageConfigurationKeys.RuleDirectory)
+                : StorageConstants.DefaultRuleDirectory;
             if (!Path.IsPathRooted(uploadPath))
             {
                 var exeDirectoryPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();

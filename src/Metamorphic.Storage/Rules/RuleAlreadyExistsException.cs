@@ -7,9 +7,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Metamorphic.Server.Properties;
+using Metamorphic.Storage.Properties;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     /// <summary>
     /// An exception thrown when the user tries to add a rule file to the <see cref="RuleCollection"/> more than once.

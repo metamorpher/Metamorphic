@@ -69,14 +69,7 @@ namespace Metamorphic.Storage.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to An action with the given ID is already registered..
-        /// </summary>
-        internal static string Exceptions_Messages_DuplicateActionDefinition {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_DuplicateActionDefinition", resourceCulture);
-            }
-        }
+
         
         /// <summary>
         ///   Looks up a localized string similar to The specified Rule already exists in the collection..

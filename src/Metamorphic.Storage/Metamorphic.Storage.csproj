@@ -214,6 +214,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rules\ILoadRules.cs" />
+    <Compile Include="Rules\InvalidConditionTypeException.cs" />
+    <Compile Include="Rules\IStoreRules.cs" />
+    <Compile Include="Rules\IWatchRules.cs" />
+    <Compile Include="Rules\RuleAlreadyExistsException.cs" />
+    <Compile Include="Rules\RuleCollection.cs" />
+    <Compile Include="Rules\RuleLoader.cs" />
+    <Compile Include="Rules\RuleWatcher.cs" />
+    <Compile Include="Rules\ScalarYamlNodeTypeResolver.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
     <Compile Include="StorageConfigurationKeys.cs" />
     <Compile Include="StorageConstants.cs" />

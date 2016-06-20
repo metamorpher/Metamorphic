@@ -14,13 +14,13 @@ using System.Text.RegularExpressions;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
-using Metamorphic.Server.Properties;
+using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     internal sealed class RuleLoader : ILoadRules
     {

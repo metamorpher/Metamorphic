@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     /// <summary>
     /// Defines the interface for objects that store rules.
