@@ -167,14 +167,15 @@ namespace Metamorphic.Core.Queueing
                                 Resources.Log_Messages_PersistentDispenser_Processed_WithId,
                                 itemIdentity));
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         _diagnostics.Log(
                             LevelToLog.Warn,
                             string.Format(
                                 CultureInfo.InvariantCulture,
-                                Resources.Log_Messages_PersistentDispenser_FailedToProcess_WithId,
-                                itemIdentity));
+                                Resources.Log_Messages_PersistentDispenser_FailedToProcess_WithIdAndException,
+                                itemIdentity,
+                                e));
                         throw;
                     }
                 },
