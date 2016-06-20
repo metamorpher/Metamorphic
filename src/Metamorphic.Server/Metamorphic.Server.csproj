@@ -229,30 +229,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Rules\tfs-approveissue-fromtest.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-setreleasetoinitiate-fromchildworkitemstatechange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-setissuetodone-fromissuecomment.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-notifyreleasemanager-fromreleaseitemstatechange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-notifytester-onbuildcomplete.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-runtests-onbuildcomplete.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-releaseproduct-fromworkitemchange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-startbuild-fromissuecomment.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Scripts\Invoke-Tests.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
