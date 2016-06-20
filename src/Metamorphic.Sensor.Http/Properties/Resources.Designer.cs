@@ -70,11 +70,29 @@ namespace Metamorphic.Sensor.Http.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/signal by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_SignalController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalController_PostMethodInputDataInvalid_WithOriginAndBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A HTTP POST was triggered for /api/signal by {0}.
         /// </summary>
         internal static string Log_Messages_SignalController_PostMethodInvoked_WithOrigin {
             get {
                 return ResourceManager.GetString("Log_Messages_SignalController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing signal {0} with parameters ({1}).
+        /// </summary>
+        internal static string Log_Messages_SignalController_PostMethodPublishingSignal_WithSignalInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_SignalController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
             }
         }
     }

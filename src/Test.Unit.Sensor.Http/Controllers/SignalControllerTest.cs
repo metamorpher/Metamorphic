@@ -84,19 +84,21 @@ namespace Test.Unit.Sensor.Http.Controllers
     ""Type"" : ""SignalId"",
     ""Parameter_1"" : ""Parameter_1_Value"",
     ""Parameter_2"" : true,
-    ""Parameter_3"" : 10
+    ""Parameter_3"" : 10,
+    ""Parameter_4"" : 2.34
 }";
-            var token = JToken.Parse(jsonText);
+            var token = JObject.Parse(jsonText);
             controller.Post(token);
 
             publisher.Verify(p => p.Publish(It.IsAny<Signal>()), Times.Once());
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("SignalId", data.SensorId);
-            Assert.AreEqual(3, data.Parameters.Count);
-            Assert.AreEqual("Parameter_1_Value", data.Parameters["Parameter_1"]);
-            Assert.AreEqual(true, data.Parameters["Parameter_2"]);
-            Assert.AreEqual(10, data.Parameters["Parameter_3"]);
+            Assert.AreEqual(4, data.Parameters.Count);
+            Assert.AreEqual("Parameter_1_Value", data.Parameters["PARAMETER_1"]);
+            Assert.AreEqual(true, data.Parameters["PARAMETER_2"]);
+            Assert.AreEqual(10, data.Parameters["PARAMETER_3"]);
+            Assert.AreEqual(2.34, data.Parameters["PARAMETER_4"]);
         }
     }
 }

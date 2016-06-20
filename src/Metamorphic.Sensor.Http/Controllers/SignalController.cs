@@ -6,8 +6,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -29,6 +31,54 @@ namespace Metamorphic.Sensor.Http.Controllers
     [VersionedApiRoute(template: "api/signal", allowedVersion: 1)]
     public sealed class SignalController : ApiController
     {
+        private static object ConvertJsonValueToObject(JProperty t)
+        {
+            switch (t.Value.Type)
+            {
+                case JTokenType.None:
+                    return null;
+                case JTokenType.Object:
+                    return null;
+                case JTokenType.Array:
+                    return t.Value.Children()
+                        .Where(c => c is JProperty)
+                        .Cast<JProperty>()
+                        .Select(c => ConvertJsonValueToObject(c)).ToArray();
+                case JTokenType.Constructor:
+                    return null;
+                case JTokenType.Property:
+                    return ConvertJsonValueToObject((JProperty)t.Value);
+                case JTokenType.Comment:
+                    return null;
+                case JTokenType.Integer:
+                    return t.Value.Value<int>();
+                case JTokenType.Float:
+                    return t.Value.Value<double>();
+                case JTokenType.String:
+                    return t.Value.Value<string>();
+                case JTokenType.Boolean:
+                    return t.Value.Value<bool>();
+                case JTokenType.Null:
+                    return null;
+                case JTokenType.Undefined:
+                    return null;
+                case JTokenType.Date:
+                    return t.Value.Value<DateTime>();
+                case JTokenType.Raw:
+                    return t.Value.Value<string>();
+                case JTokenType.Bytes:
+                    return null;
+                case JTokenType.Guid:
+                    return t.Value.Value<Guid>();
+                case JTokenType.Uri:
+                    return t.Value.Value<Uri>();
+                case JTokenType.TimeSpan:
+                    return t.Value.Value<TimeSpan>();
+                default:
+                    return null;
+            }
+        }
+
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
@@ -76,12 +126,15 @@ namespace Metamorphic.Sensor.Http.Controllers
             Justification = "Controller methods cannot be static.")]
         public HttpResponseMessage Get()
         {
-            _diagnostics.Log(
-                LevelToLog.Info,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_SignalController_GetMethodInvoked_WithOrigin,
-                    HttpContext.Current.Request.UserHostAddress));
+            if (HttpContext.Current != null)
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_SignalController_GetMethodInvoked_WithOrigin,
+                        HttpContext.Current.Request.UserHostAddress));
+            }
 
             return new HttpResponseMessage
             {
@@ -94,17 +147,32 @@ namespace Metamorphic.Sensor.Http.Controllers
         /// </summary>
         /// <param name="jsonData">The JSON data.</param>
         /// <returns>A http response message indicating whether the call was successful.</returns>
-        public HttpResponseMessage Post([FromBody]JToken jsonData)
+        public HttpResponseMessage Post([FromBody]JObject jsonData)
         {
-            _diagnostics.Log(
-                LevelToLog.Info,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_SignalController_PostMethodInvoked_WithOrigin,
-                    HttpContext.Current.Request.UserHostAddress));
+            if (HttpContext.Current != null)
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_SignalController_PostMethodInvoked_WithOrigin,
+                        HttpContext.Current.Request.UserHostAddress));
+            }
 
             if (jsonData == null)
             {
+                if (HttpContext.Current != null)
+                {
+                    var body = new StreamReader(HttpContext.Current.Request.InputStream).ReadToEnd();
+                    _diagnostics.Log(
+                        LevelToLog.Warn,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_SignalController_PostMethodInputDataInvalid_WithOriginAndBody,
+                            HttpContext.Current.Request.UserHostAddress,
+                            body));
+                }
+
                 return new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.BadRequest,
@@ -115,21 +183,30 @@ namespace Metamorphic.Sensor.Http.Controllers
                 .Where(t => t is JProperty)
                 .Cast<JProperty>()
                 .Where(t => t.Name.Equals("Type"))
-                .Select(t => string.Join(" ", t.Children()))
+                .Select(t => t.ToObject<string>())
                 .FirstOrDefault();
 
             var arguments = jsonData.Children()
                 .Where(t => t is JProperty)
                 .Cast<JProperty>()
                 .Where(t => !t.Name.Equals("Type"))
+                .Select(t => new { Key = t.Name, Value = ConvertJsonValueToObject(t) })
+                .Where(m => m.Value != null)
                 .ToDictionary(
-                    t => t.Name,
-                    t => (object)string.Join(" ", t.Children()));
+                    m => m.Key,
+                    m => m.Value);
 
             var signal = new Signal(
                 new SignalTypeId(signalType),
                 arguments);
 
+            _diagnostics.Log(
+                LevelToLog.Warn,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Log_Messages_SignalController_PostMethodPublishingSignal_WithSignalInformation,
+                    signalType,
+                    string.Join(",", arguments.Select(x => x.Key + "=" + x.Value.ToString()))));
             _publisher.Publish(signal);
 
             return new HttpResponseMessage
