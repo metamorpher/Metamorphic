@@ -182,7 +182,7 @@ namespace Metamorphic.Core.Rules
             {
                 text = text.Replace(
                     "{{signal." + parameter + "}}",
-                    (string)signal.ParameterValue(parameter));
+                    signal.ParameterValue(parameter).ToString());
             }
 
             return text;
