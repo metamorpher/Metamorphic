@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
@@ -19,12 +20,34 @@ namespace Metamorphic.Core.Signals
     public class SignalTest
     {
         [Test]
-        public void Construct()
+        public void Create()
         {
             var type = new SignalTypeId("a");
             var signal = new Signal(type, new Dictionary<string, object>());
 
             Assert.AreSame(type, signal.Sensor);
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Signals.Signal",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullParameters()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Signal(new SignalTypeId("a"), null));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Signals.Signal",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullSensorId()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Signal(null, new Dictionary<string, object>()));
         }
 
         [Test]

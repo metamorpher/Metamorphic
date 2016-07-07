@@ -7,6 +7,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using NuGet;
 using NUnit.Framework;
 
 namespace Metamorphic.Core.Actions
@@ -20,11 +21,76 @@ namespace Metamorphic.Core.Actions
             "CA1806:DoNotIgnoreMethodResults",
             MessageId = "Metamorphic.Core.Actions.ActionDefinition",
             Justification = "Testing to see that the constructor throws.")]
-        public void CreateWithNullAction()
+        public void CreateWithEmptyPackageName()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    string.Empty,
+                    "1.0.0",
+                    "a",
+                    "b",
+                    new ActionParameterDefinition[0]));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
+        public void CreateWithEmptyPackageVersion()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    "a",
+                    string.Empty,
+                    "a",
+                    "b",
+                    new ActionParameterDefinition[0]));
+        }
+
+        [Test]
+        public void Create()
         {
             var id = new ActionId("a");
+            var packageName = "a";
+            var packageVersion = "1.0.0";
+            var typeName = "a";
+            var methodName = "b";
             var parameters = new ActionParameterDefinition[0];
-            Assert.Throws<ArgumentNullException>(() => new ActionDefinition(id, parameters, null));
+            var definition = new ActionDefinition(
+                id,
+                packageName,
+                packageVersion,
+                typeName,
+                methodName,
+                parameters);
+
+            Assert.AreEqual(id, definition.Id);
+            Assert.AreEqual(new PackageName(packageName, new SemanticVersion(packageVersion)), definition.Package);
+            Assert.AreEqual(typeName, definition.ActionType);
+            Assert.AreEqual(methodName, definition.ActionMethod);
+            Assert.That(definition.Parameters, Is.EquivalentTo(parameters));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
+        public void CreateWithNullAssemblyName()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    "a",
+                    "1.0.0",
+                    null,
+                    "a",
+                    new ActionParameterDefinition[0]));
         }
 
         [Test]
@@ -35,9 +101,68 @@ namespace Metamorphic.Core.Actions
             Justification = "Testing to see that the constructor throws.")]
         public void CreateWithNullId()
         {
-            var parameters = new ActionParameterDefinition[0];
-            Action action = () => { };
-            Assert.Throws<ArgumentNullException>(() => new ActionDefinition(null, parameters, action));
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    null,
+                    "a",
+                    "1.0.0",
+                    "a",
+                    "b",
+                    new ActionParameterDefinition[0]));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
+        public void CreateWithNullMethod()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    "a",
+                    "1.0.0",
+                    "a",
+                    null,
+                    new ActionParameterDefinition[0]));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
+        public void CreateWithNullPackageName()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    null,
+                    "1.0.0",
+                    "a",
+                    "b",
+                    new ActionParameterDefinition[0]));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Actions.ActionDefinition",
+            Justification = "Testing to see that the constructor throws.")]
+        public void CreateWithNullPackageVersion()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    "a",
+                    null,
+                    "a",
+                    "b",
+                    new ActionParameterDefinition[0]));
         }
 
         [Test]
@@ -48,69 +173,14 @@ namespace Metamorphic.Core.Actions
             Justification = "Testing to see that the constructor throws.")]
         public void CreateWithNullParameters()
         {
-            var id = new ActionId("a");
-            Action action = () => { };
-            Assert.Throws<ArgumentNullException>(() => new ActionDefinition(id, null, action));
-        }
-
-        [Test]
-        public void Invoke()
-        {
-            var id = new ActionId("a");
-            var parameters = new[]
-                {
-                    new ActionParameterDefinition("s"),
-                };
-
-            var wasInvoked = false;
-            var value = string.Empty;
-            Action<string> action = s =>
-                {
-                    value = s;
-                    wasInvoked = true;
-                };
-            var definition = new ActionDefinition(id, parameters, action);
-
-            var input = "input";
-            var values = new[]
-                {
-                    new ActionParameterValueMap(parameters[0], input),
-                };
-            definition.Invoke(values);
-            Assert.IsTrue(wasInvoked);
-            Assert.AreSame(input, value);
-        }
-
-        [Test]
-        public void InvokeWithMissingParameter()
-        {
-            var id = new ActionId("a");
-            var parameters = new[]
-                {
-                    new ActionParameterDefinition("s"),
-                };
-
-            var value = string.Empty;
-            Action<string> action = s =>
-                {
-                    value = s;
-                };
-            var definition = new ActionDefinition(id, parameters, action);
-
-            var values = new ActionParameterValueMap[0];
-            Assert.Throws<MissingActionParameterException>(() => definition.Invoke(values));
-        }
-
-        [Test]
-        public void InvokeWithNullParameters()
-        {
-            var id = new ActionId("a");
-            var parameters = new ActionParameterDefinition[0];
-
-            Action action = () => { };
-            var definition = new ActionDefinition(id, parameters, action);
-
-            Assert.Throws<ArgumentNullException>(() => definition.Invoke(null));
+            Assert.Throws<ArgumentNullException>(() =>
+                new ActionDefinition(
+                    new ActionId("a"),
+                    "a",
+                    "1.0.0",
+                    "a",
+                    "b",
+                    null));
         }
     }
 }

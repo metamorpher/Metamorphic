@@ -8,10 +8,10 @@
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Core
 {
     [TestFixture]
-    public sealed class InvalidSignalForRuleExceptionTest : ExceptionContractVerifier<InvalidSignalForRuleException>
+    public sealed class MissingConfigurationExceptionTest : ExceptionContractVerifier<MissingConfigurationException>
     {
     }
 }

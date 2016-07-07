@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace Metamorphic.Core.Signals
 {
     [TestFixture]
-    public sealed class SensorIdTest : EqualityContractVerifierTest
+    public sealed class SignalTypeIdTest : EqualityContractVerifierTest
     {
         private sealed class SensorIdEqualityContractVerifier : EqualityContractVerifier<SignalTypeId>
         {
