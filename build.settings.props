@@ -597,7 +597,7 @@
             The locations of the files that should be analyzed by FxCop.
         -->
         <FxCopFiles Include="$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.dll;$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.exe"
-                    Exclude="$(DirSrc)\**\bin\**\Test.*.dll">
+                    Exclude="$(DirSrc)\**\bin\**\Test.*.dll;$(DirSrc)\**\bin\**\*.vshost.exe">
             <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
     </ItemGroup>
