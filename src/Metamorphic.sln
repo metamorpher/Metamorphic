@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Storage", "Meta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Storage", "Test.Unit.Storage\Test.Unit.Storage.csproj", "{DB427EE7-F60E-44F8-BF1F-4E2E89F64ABE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Actions.Powershell", "Metamorphic.Actions.Powershell\Metamorphic.Actions.Powershell.csproj", "{60C56A7C-86AC-45EF-80D2-47F7F33F6331}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +134,12 @@ Global
 		{DB427EE7-F60E-44F8-BF1F-4E2E89F64ABE}.Deploy|Any CPU.Build.0 = Debug|Any CPU
 		{DB427EE7-F60E-44F8-BF1F-4E2E89F64ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB427EE7-F60E-44F8-BF1F-4E2E89F64ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60C56A7C-86AC-45EF-80D2-47F7F33F6331}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

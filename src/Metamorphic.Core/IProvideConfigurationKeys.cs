@@ -5,17 +5,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Metamorphic.Core.Actions
+using System.Collections.Generic;
+using Nuclei.Configuration;
+
+namespace Metamorphic.Core
 {
     /// <summary>
-    /// Defines the interface for elements that build <see cref="ActionDefinition"/> instances.
+    /// Defines the interface for objects that provide a collection of configuration keys.
     /// </summary>
-    public interface IActionBuilder
+    public interface IProvideConfigurationKeys
     {
         /// <summary>
-        /// Returns a new <see cref="ActionDefinition"/>.
+        /// Returns a collection containing all the configuration keys for the application.
         /// </summary>
-        /// <returns>A new action definition.</returns>
-        ActionDefinition ToDefinition();
+        /// <returns>A collection containing all the configuration keys for the application.</returns>
+        IEnumerable<ConfigurationKey> ToCollection();
     }
 }

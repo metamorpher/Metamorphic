@@ -6,25 +6,25 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Metamorphic.Core.Properties;
+using Metamorphic.Actions.Powershell.Properties;
+using Metamorphic.Core.Actions;
 using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Metamorphic.Core.Actions
+namespace Metamorphic.Actions.Powershell
 {
     /// <summary>
     /// Defines methods for building an action that executes a Powershell script.
     /// </summary>
-    public sealed class PowershellActionBuilder : IActionBuilder
+    [ActionProvider]
+    public sealed class PowershellActions
     {
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -37,7 +37,7 @@ namespace Metamorphic.Core.Actions
         private readonly string _scriptPath;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PowershellActionBuilder"/> class.
+        /// Initializes a new instance of the <see cref="PowershellActions"/> class.
         /// </summary>
         /// <param name="configuration">The object that provides the configuration for the application.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
@@ -47,7 +47,7 @@ namespace Metamorphic.Core.Actions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public PowershellActionBuilder(IConfiguration configuration, SystemDiagnostics diagnostics)
+        public PowershellActions(IConfiguration configuration, SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => configuration);
@@ -56,9 +56,9 @@ namespace Metamorphic.Core.Actions
 
             _diagnostics = diagnostics;
 
-            _scriptPath = configuration.HasValueFor(CoreConfigurationKeys.ScriptDirectory)
-                ? configuration.Value<string>(CoreConfigurationKeys.ScriptDirectory)
-                : CoreConstants.DefaultScriptDirectory;
+            _scriptPath = configuration.HasValueFor(PowershellConfigurationKeys.ScriptDirectory)
+                ? configuration.Value<string>(PowershellConfigurationKeys.ScriptDirectory)
+                : PowershellConstants.DefaultScriptDirectory;
             if (!Path.IsPathRooted(_scriptPath))
             {
                 var exeDirectoryPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
@@ -66,11 +66,17 @@ namespace Metamorphic.Core.Actions
             }
         }
 
+        /// <summary>
+        /// Invokes a powershell script with the specified arguments.
+        /// </summary>
+        /// <param name="scriptFile">The full path to the powershell script file.</param>
+        /// <param name="arguments">The arguments that should be provided to the powershell file.</param>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Catching and logging and ignoring because we don't know exactly what the script will throw at us.")]
-        private void InvokePowershell(string scriptFile, string arguments)
+        [Action("powershell")]
+        public void InvokePowershell(string scriptFile, string arguments)
         {
             var scriptFullPath = scriptFile;
             if (!Path.IsPathRooted(scriptFullPath))
@@ -173,28 +179,6 @@ namespace Metamorphic.Core.Actions
                     LevelToLog.Error,
                     log);
             }
-        }
-
-        /// <summary>
-        /// Returns a new <see cref="ActionDefinition"/>.
-        /// </summary>
-        /// <returns>A new action definition.</returns>
-        public ActionDefinition ToDefinition()
-        {
-            var id = new ActionId("powershell");
-
-            var parameters = new List<ActionParameterDefinition>
-            {
-                new ActionParameterDefinition("scriptFile"),
-                new ActionParameterDefinition("arguments"),
-            };
-
-            Delegate method = new Action<string, string>(InvokePowershell);
-
-            return new ActionDefinition(
-                id,
-                parameters.ToArray(),
-                method);
         }
     }
 }
