@@ -275,7 +275,6 @@
         </BuildStepsToExecute>
         -->
 
-        <!--
         <BuildStepsToExecute Include="$(BuildStepsPackNuGet)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -285,7 +284,6 @@
                 Package;
             </Groups>
         </BuildStepsToExecute>
-        -->
         <BuildStepsToExecute Include="$(BuildStepsPackZip)">
             <Properties>
                 Configuration=$(ProductionConfiguration);
@@ -599,7 +597,7 @@
             The locations of the files that should be analyzed by FxCop.
         -->
         <FxCopFiles Include="$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.dll;$(DirSrc)\**\bin\$(Configuration)\**\$(ProductNamespace).*.exe"
-                    Exclude="$(DirSrc)\**\bin\**\Test.*.dll">
+                    Exclude="$(DirSrc)\**\bin\**\Test.*.dll;$(DirSrc)\**\bin\**\*.vshost.exe">
             <TargetFramework>4.5</TargetFramework>
         </FxCopFiles>
     </ItemGroup>
@@ -666,14 +664,13 @@
         All file paths allow build templates, e.g. $(DirSrc)\${ProductName}\myproject.nuspec.
     -->
     <ItemGroup>
-        <!--<NuGetPackageSpecs Include="$(DirSrc)\myproject\myproject.nuspec">
+        <NuGetPackageSpecs Include="$(DirSrc)\**\*.nuspec">
             <ShouldBuildSymbols>true</ShouldBuildSymbols>
             <IncludedDependencies>
-                $(DirSrc)\MyOtherProject\packages.config
             </IncludedDependencies>
             <ExcludedDependencies>
             </ExcludedDependencies>
-        </NuGetPackageSpecs>-->
+        </NuGetPackageSpecs>
     </ItemGroup>
 
     <!--
@@ -684,8 +681,9 @@
         By default nBuildkit and nUnit are ignored.
     -->
     <ItemGroup>
-        <!--<DesignTimeDependencies Include="nBuildKit" />-->
-        <!--<DesignTimeDependencies Include="nUnit" />-->
+        <DesignTimeDependencies Include="nBuildKit" />
+        <DesignTimeDependencies Include="nUnit" />
+        <DesignTimeDependencies Include="StyleCop.Analyzers" />
     </ItemGroup>
 
 

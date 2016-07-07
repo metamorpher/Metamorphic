@@ -45,9 +45,14 @@ namespace Metamorphic.Core.Jobs
         /// </exception>
         public Job(ActionId action, IDictionary<string, object> parameters)
         {
+            if (action == null)
             {
-                Lokad.Enforce.Argument(() => action);
-                Lokad.Enforce.Argument(() => parameters);
+                throw new ArgumentNullException("action");
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters");
             }
 
             Action = action;

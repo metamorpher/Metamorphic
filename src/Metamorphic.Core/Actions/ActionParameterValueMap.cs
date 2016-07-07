@@ -25,8 +25,9 @@ namespace Metamorphic.Core.Actions
         /// </exception>
         public ActionParameterValueMap(ActionParameterDefinition parameter, object value)
         {
+            if (parameter == null)
             {
-                Lokad.Enforce.Argument(() => parameter);
+                throw new ArgumentNullException("parameter");
             }
 
             Parameter = parameter;

@@ -75,6 +75,10 @@
       <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
       <Private>True</Private>
@@ -91,8 +95,8 @@
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.5.9.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.9\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -119,6 +123,10 @@
       <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.8.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NuGet.Core, Version=2.11.1.812, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NuGet.Core.2.11.1\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -140,6 +148,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO.Abstractions, Version=2.0.0.124, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.Abstractions.2.0.0.124\lib\net40\System.IO.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Abstractions.TestingHelpers, Version=2.0.0.124, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.Abstractions.TestingHelpers.2.0.0.124\lib\net40\System.IO.Abstractions.TestingHelpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -150,22 +166,36 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\Test.SourceOnly\MockDirectory.cs">
+      <Link>Mocks\MockDirectory.cs</Link>
+    </Compile>
+    <Compile Include="..\Test.SourceOnly\MockFile.cs">
+      <Link>Mocks\MockFile.cs</Link>
+    </Compile>
+    <Compile Include="..\Test.SourceOnly\MockPackage.cs">
+      <Link>Mocks\MockPackage.cs</Link>
+    </Compile>
+    <Compile Include="..\Test.SourceOnly\MockPath.cs">
+      <Link>Mocks\MockPath.cs</Link>
+    </Compile>
     <Compile Include="Actions\ActionDefinitionTest.cs" />
     <Compile Include="Actions\ActionIdTest.cs" />
     <Compile Include="Actions\ActionParameterDefinitionTest.cs" />
     <Compile Include="Actions\ActionParameterValueMapTest.cs" />
     <Compile Include="Actions\MissingActionParameterExceptionTest.cs" />
-    <Compile Include="Actions\PowershellActionBuilderTest.cs" />
     <Compile Include="Jobs\JobTest.cs" />
+    <Compile Include="MissingConfigurationExceptionTest.cs" />
+    <Compile Include="PackageInstallerTest.cs" />
+    <Compile Include="PackageUtilitiesTest.cs" />
     <Compile Include="Rules\InvalidRuleDefinitionExceptionTest.cs" />
     <Compile Include="Rules\InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="Rules\RuleTest.cs" />
     <Compile Include="Rules\ActionParameterValueTest.cs" />
-    <Compile Include="Sensors\SensorIdTest.cs" />
     <Compile Include="ParameterNotFoundExceptionTest.cs" />
     <Compile Include="Signals\SignalDataTest.cs" />
     <Compile Include="Signals\SignalTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Signals\SignalTypeIdTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

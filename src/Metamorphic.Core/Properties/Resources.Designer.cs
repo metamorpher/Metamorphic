@@ -88,15 +88,6 @@ namespace Metamorphic.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The parameter &apos;{0}&apos; required for the action invocation was missing..
-        /// </summary>
-        internal static string Exceptions_Messages_MissingActionParameter_WithParameterName {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_MissingActionParameter_WithParameterName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A required configuration value was not provided..
         /// </summary>
         internal static string Exceptions_Messages_MissingConfiguration {
@@ -133,38 +124,40 @@ namespace Metamorphic.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to run powershell.exe. Error: {0}.
+        ///   Looks up a localized string similar to The parameter should not be an empty string..
         /// </summary>
-        internal static string PowershellActionbuilder_Error_FailedToRunExe_WithError {
+        internal static string Exceptions_Messages_ParameterShouldNotBeAnEmptyString {
             get {
-                return ResourceManager.GetString("PowershellActionbuilder_Error_FailedToRunExe_WithError", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_ParameterShouldNotBeAnEmptyString", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error: {0}.
+        ///   Looks up a localized string similar to Installing package {0} [{1}] from feed at {2}.
         /// </summary>
-        internal static string PowershellActionBuilder_ErrorWhileRunningPowershell_WithError {
+        internal static string Log_Messages_PackageInstaller_InstallingPackage_WithIdVersionAndRepository {
             get {
-                return ResourceManager.GetString("PowershellActionBuilder_ErrorWhileRunningPowershell_WithError", resourceCulture);
+                return ResourceManager.GetString("Log_Messages_PackageInstaller_InstallingPackage_WithIdVersionAndRepository", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Powershell script finished.
+        ///   Looks up a localized string similar to File in package {0} [{1}] at {2} already exists in destination at {3}..
         /// </summary>
-        internal static string PowershellActionBuilder_Output_ProcessCompleted {
+        internal static string Log_Messages_PackageUtilities_AssemblyFileAlreadyExistsAtDestination_WithPackageIdAndVersionAndOriginAndDestination {
             get {
-                return ResourceManager.GetString("PowershellActionBuilder_Output_ProcessCompleted", resourceCulture);
+                return ResourceManager.GetString("Log_Messages_PackageUtilities_AssemblyFileAlreadyExistsAtDestination_WithPackageI" +
+                        "dAndVersionAndOriginAndDestination", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Output: {0}.
+        ///   Looks up a localized string similar to Copying file in package {0} [{1}] from {2} to {3}..
         /// </summary>
-        internal static string PowershellActionBuilder_OutputWhileRunning_WithOutput {
+        internal static string Log_Messages_PackageUtilities_CopyingAssemblyFile_WithPackageIdAndVersionAndOriginAndDestination {
             get {
-                return ResourceManager.GetString("PowershellActionBuilder_OutputWhileRunning_WithOutput", resourceCulture);
+                return ResourceManager.GetString("Log_Messages_PackageUtilities_CopyingAssemblyFile_WithPackageIdAndVersionAndOrigi" +
+                        "nAndDestination", resourceCulture);
             }
         }
     }

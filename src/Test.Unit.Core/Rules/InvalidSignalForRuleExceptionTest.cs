@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace Metamorphic.Core.Rules
 {
     [TestFixture]
-    public sealed class InvalidSignalForRuleExceptionTest : ExceptionContractVerifier<ParameterNotFoundException>
+    public sealed class InvalidSignalForRuleExceptionTest : ExceptionContractVerifier<InvalidSignalForRuleException>
     {
     }
 }

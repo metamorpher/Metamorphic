@@ -8,16 +8,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using Autofac;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
+using Metamorphic.Core.Commands;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
-using Metamorphic.Server.Actions;
-using Metamorphic.Server.Jobs;
+using Metamorphic.Server.Nuclei.AppDomains;
 using Metamorphic.Server.Rules;
+using Nuclei;
+using Nuclei.Communication;
+using Nuclei.Communication.Interaction;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -34,6 +38,22 @@ namespace Metamorphic.Server
         /// The default name for the error log.
         /// </summary>
         private const string DefaultInfoFileName = "server.info.log";
+
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(string[] additionalPaths)
+        {
+            var directoryPaths = new List<string>();
+            directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
+
+            if (additionalPaths != null)
+            {
+                directoryPaths.AddRange(additionalPaths);
+            }
+
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                new string[0],
+                directoryPaths);
+        }
 
         /// <summary>
         /// Creates the dependency injection container for the application.
@@ -59,46 +79,52 @@ namespace Metamorphic.Server
                 builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
                     .As<FileConstants>();
 
-                RegisterActions(builder);
-                RegisterDiagnostics(builder);
-                RegisterJobs(builder);
-                RegisterLoggers(builder);
-                RegisterRules(builder);
+                builder.RegisterModule(
+                    new CommunicationModule(
+                        new[]
+                            {
+                                // For now only allowing the different applications to be on the same machine
+                                // because there is no way to do a limited discovery (i.e. only a fixed set of machines)
+                                ChannelTemplate.NamedPipe
+                            },
+                        true));
 
+                builder.RegisterModule(new CoreModule());
                 builder.RegisterModule(new QueueingModule());
 
-                builder.Register(c => new SignalProcessor(
-                        c.Resolve<IQueueJobs>(),
-                        c.Resolve<IStoreRules>(),
-                        c.Resolve<IDispenseSignals>(),
-                        c.Resolve<SystemDiagnostics>()))
-                    .SingleInstance();
+                RegisterAppDomainBuilder(builder);
+                RegisterCommunication(builder);
+                RegisterDiagnostics(builder);
+                RegisterLoggers(builder);
+                RegisterProcessor(builder);
+                RegisterProxies(builder);
+                RegisterRules(builder);
             }
 
             return builder.Build();
         }
 
-        private static void RegisterActions(ContainerBuilder builder)
+        private static void RegisterAppDomainBuilder(ContainerBuilder builder)
         {
-            builder.Register(c => new PowershellActionBuilder(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IActionBuilder>()
-                .SingleInstance();
+            builder.Register(
+                c =>
+                {
+                    Func<string, string[], AppDomain> result =
+                        (name, paths) => AppDomainBuilder.Assemble(
+                            name,
+                            AppDomainResolutionPathsFor(paths));
 
-            builder.Register(c => new ActionStorage())
-                .As<IStoreActions>()
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Instance;
-                        var builders = a.Context.Resolve<IEnumerable<IActionBuilder>>();
-                        foreach (var b in builders)
-                        {
-                            var definition = b.ToDefinition();
-                            collection.Add(definition);
-                        }
-                    })
+                    return result;
+                })
+                .As<Func<string, string[], AppDomain>>()
+                .SingleInstance();
+        }
+
+        private static void RegisterCommunication(ContainerBuilder builder)
+        {
+            builder.Register(c => new CommunicationInitializer(
+                    c.Resolve<IComponentContext>()))
+                .As<IInitializeCommunicationInstances>()
                 .SingleInstance();
         }
 
@@ -136,20 +162,6 @@ namespace Metamorphic.Server
                 .SingleInstance();
         }
 
-        private static void RegisterJobs(ContainerBuilder builder)
-        {
-            builder.Register(c => new JobProcessor(
-                    c.Resolve<IStoreActions>(),
-                    c.Resolve<IQueueJobs>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IProcessJobs>()
-                .SingleInstance();
-
-            builder.Register(c => new JobQueue())
-                .As<IQueueJobs>()
-                .SingleInstance();
-        }
-
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             var assemblyInfo = Assembly.GetExecutingAssembly().GetName();
@@ -159,6 +171,36 @@ namespace Metamorphic.Server
                     assemblyInfo.Name,
                     assemblyInfo.Version))
                 .As<ILogger>()
+                .SingleInstance();
+        }
+
+        private static void RegisterProcessor(ContainerBuilder builder)
+        {
+            Func<AppDomain, ILoadActionExecutorsInRemoteAppDomains> executorBuilder =
+                a =>
+                {
+                    var loader = a.CreateInstanceAndUnwrap(
+                        typeof(AppDomainActionClassLoader).Assembly.FullName,
+                        typeof(AppDomainActionClassLoader).FullName) as AppDomainActionClassLoader;
+                    return loader;
+                };
+            builder.Register(c => new SignalProcessor(
+                    c.Resolve<IActionStorageProxy>(),
+                    c.Resolve<IInstallPackages>(),
+                    c.Resolve<Func<string, string[], AppDomain>>(),
+                    executorBuilder,
+                    c.Resolve<IStoreRules>(),
+                    c.Resolve<IDispenseSignals>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .SingleInstance();
+        }
+
+        private static void RegisterProxies(ContainerBuilder builder)
+        {
+            builder.Register(c => new ActionStorageProxy(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                .As<IActionStorageProxy>()
                 .SingleInstance();
         }
 
@@ -173,7 +215,7 @@ namespace Metamorphic.Server
                     {
                         var ctx = c.Resolve<IComponentContext>();
                         return new RuleLoader(
-                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
+                            (string id) => ctx.Resolve<IActionStorageProxy>().HasActionFor(new ActionId(id)),
                             c.Resolve<SystemDiagnostics>());
                     })
                 .As<ILoadRules>()

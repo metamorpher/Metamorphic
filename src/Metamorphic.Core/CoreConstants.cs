@@ -13,8 +13,13 @@ namespace Metamorphic.Core
     public static class CoreConstants
     {
         /// <summary>
-        /// The default value for the directory path that contains the rule files.
+        /// The default relative path to the directory that contains the NuGet packages for the application.
         /// </summary>
-        public const string DefaultScriptDirectory = "scripts";
+        public const string DefaultFeedDirectory = "packages";
+
+        /// <summary>
+        /// The prefix used for each log message.
+        /// </summary>
+        public const string LogPrefix = "Metamorphic.Core";
     }
 }

@@ -5,7 +5,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Actions;
 using NUnit.Framework;
 
@@ -15,12 +17,34 @@ namespace Metamorphic.Core.Jobs
     public sealed class JobTest
     {
         [Test]
-        public void Construct()
+        public void Create()
         {
             var type = new ActionId("a");
             var job = new Job(type, new Dictionary<string, object>());
 
             Assert.AreSame(type, job.Action);
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Jobs.Job",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullAction()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Job(null, new Dictionary<string, object>()));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Jobs.Job",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullParameters()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Job(new ActionId("a"), null));
         }
 
         [Test]
