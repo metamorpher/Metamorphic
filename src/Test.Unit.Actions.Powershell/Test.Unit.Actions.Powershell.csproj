@@ -6,11 +6,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6DC017A8-C1B9-48FD-BDB4-968F33008639}</ProjectGuid>
+    <ProjectGuid>{178CF420-5FE8-4037-897F-9F687C72ED2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Metamorphic.Core</RootNamespace>
-    <AssemblyName>Test.Unit.Core</AssemblyName>
+    <RootNamespace>Test.Unit.Actions.Powershell</RootNamespace>
+    <AssemblyName>Test.Unit.Actions.Powershell</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -91,8 +91,8 @@
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.5.9.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.9\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -113,10 +113,6 @@
     </Reference>
     <Reference Include="Nuclei.Diagnostics, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Nuclei.Diagnostics.0.8.0\lib\net45\Nuclei.Diagnostics.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nuclei.Nunit.Extensions, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.8.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
@@ -147,34 +143,29 @@
         <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
-    <Otherwise />
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Actions\ActionDefinitionTest.cs" />
-    <Compile Include="Actions\ActionIdTest.cs" />
-    <Compile Include="Actions\ActionParameterDefinitionTest.cs" />
-    <Compile Include="Actions\ActionParameterValueMapTest.cs" />
-    <Compile Include="Actions\MissingActionParameterExceptionTest.cs" />
-    <Compile Include="Jobs\JobTest.cs" />
-    <Compile Include="Rules\InvalidRuleDefinitionExceptionTest.cs" />
-    <Compile Include="Rules\InvalidSignalForRuleExceptionTest.cs" />
-    <Compile Include="Rules\RuleTest.cs" />
-    <Compile Include="Rules\ActionParameterValueTest.cs" />
-    <Compile Include="Sensors\SensorIdTest.cs" />
-    <Compile Include="ParameterNotFoundExceptionTest.cs" />
-    <Compile Include="Signals\SignalDataTest.cs" />
-    <Compile Include="Signals\SignalTest.cs" />
+    <Compile Include="PowershellActionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Metamorphic.Actions.Powershell\Metamorphic.Actions.Powershell.csproj">
+      <Project>{60c56a7c-86ac-45ef-80d2-47f7f33f6331}</Project>
+      <Name>Metamorphic.Actions.Powershell</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>
       <Name>Metamorphic.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />

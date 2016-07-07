@@ -15,13 +15,13 @@ using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Actions
+namespace Metamorphic.Actions.Powershell
 {
     [TestFixture]
-    public sealed class PowershellActionBuilderTest
+    public sealed class PowershellActionsTest
     {
         [Test]
-        public void ToDefinition()
+        public void InvokePowershell()
         {
             var configuration = new Mock<IConfiguration>();
             {
@@ -35,26 +35,14 @@ namespace Metamorphic.Core.Actions
                     output.Add(m);
                 };
             var diagnostics = new SystemDiagnostics(logger, null);
-            var builder = new PowershellActionBuilder(configuration.Object, diagnostics);
-
-            var definition = builder.ToDefinition();
-            Assert.AreEqual(new ActionId("powershell"), definition.Id);
+            var builder = new PowershellActions(configuration.Object, diagnostics);
 
             var currentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var powershellScriptPath = Path.Combine(currentDirectory, "hello.ps1");
             var powershellScriptContent = @"param( [string]$text ) Write-Output ('hello ' + $text)";
             File.WriteAllText(powershellScriptPath, powershellScriptContent);
 
-            var parameters = new[]
-                {
-                    new ActionParameterValueMap(
-                        new ActionParameterDefinition("scriptFile"),
-                        powershellScriptPath),
-                    new ActionParameterValueMap(
-                        new ActionParameterDefinition("arguments"),
-                        "-text 'world'"),
-                };
-            definition.Invoke(parameters);
+            builder.InvokePowershell(powershellScriptPath, "-text 'world'");
             Assert.AreEqual(2, output.Count);
             Assert.AreEqual("Powershell script finished", output[1]);
         }
