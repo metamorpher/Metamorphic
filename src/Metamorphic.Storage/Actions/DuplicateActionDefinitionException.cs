@@ -8,9 +8,9 @@
 using System;
 using System.Runtime.Serialization;
 using Metamorphic.Core.Actions;
-using Metamorphic.Server.Properties;
+using Metamorphic.Storage.Properties;
 
-namespace Metamorphic.Server.Actions
+namespace Metamorphic.Storage.Actions
 {
     /// <summary>
     /// An exception thrown when the user tries to add an <see cref="ActionDefinition"/> to a collection

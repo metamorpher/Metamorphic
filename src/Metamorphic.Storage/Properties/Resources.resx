@@ -117,8 +117,50 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActionScanDomainName" xml:space="preserve">
+    <value>Metamorphic.Storage action scan AppDomain</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
+    <value>An action with the given ID is already registered.</value>
+  </data>
   <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
     <value>The specified Rule already exists in the collection.</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException" xml:space="preserve">
+    <value>Locating all the files in {0} failed due to an exception. Exception information is: {1}</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_NewPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>The following new packages have been found: {0}</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_RemovedPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>The following packages have been removed: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled" xml:space="preserve">
+    <value>Package discovery has been disabled.</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled" xml:space="preserve">
+    <value>Package discovery has been enabled.</value>
+  </data>
+  <data name="Log_Messages_PackageScanner_CreatingBinDirectory_WithPath" xml:space="preserve">
+    <value>PackageScanner: Creating bin directory to store assemblies for packages at {0}.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyLoadFailed_WithNameAndException" xml:space="preserve">
+    <value>The loading of the plugin assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyScanWithoutFiles_WithPackageInfo" xml:space="preserve">
+    <value>RemotePackageScanner: No files were scanned because no files were provided. Package information was: {0} [{1}].</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyScanWithoutPackageName_WithFiles" xml:space="preserve">
+    <value>RemotePackageScanner: No files were scanned because no package information was provided. Files to scan were: {0}.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_RegisteringAction_WithActionInformation" xml:space="preserve">
+    <value>RemotePackageScanner: Registering action {0} from package {1} [{2}]</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_ScanningAssembly_WithName" xml:space="preserve">
+    <value>Scanning assembly [{0}] for plugins.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
+    <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
   </data>
   <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
     <value>The rule definition at {0} is not valid.</value>

@@ -61,11 +61,137 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Metamorphic.Storage action scan AppDomain.
+        /// </summary>
+        internal static string ActionScanDomainName {
+            get {
+                return ResourceManager.GetString("ActionScanDomainName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An action with the given ID is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateActionDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateActionDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified Rule already exists in the collection..
         /// </summary>
         internal static string Exceptions_Messages_RuleAlreadyExists {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_RuleAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating all the files in {0} failed due to an exception. Exception information is: {1}.
+        /// </summary>
+        internal static string Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException {
+            get {
+                return ResourceManager.GetString("Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following new packages have been found: {0}.
+        /// </summary>
+        internal static string Log_Messages_ActionPackageDetector_NewPackagesDetected_WithPackageList {
+            get {
+                return ResourceManager.GetString("Log_Messages_ActionPackageDetector_NewPackagesDetected_WithPackageList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following packages have been removed: {0}.
+        /// </summary>
+        internal static string Log_Messages_ActionPackageDetector_RemovedPackagesDetected_WithPackageList {
+            get {
+                return ResourceManager.GetString("Log_Messages_ActionPackageDetector_RemovedPackagesDetected_WithPackageList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package discovery has been disabled..
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package discovery has been enabled..
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PackageScanner: Creating bin directory to store assemblies for packages at {0}..
+        /// </summary>
+        internal static string Log_Messages_PackageScanner_CreatingBinDirectory_WithPath {
+            get {
+                return ResourceManager.GetString("Log_Messages_PackageScanner_CreatingBinDirectory_WithPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the plugin assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_AssemblyLoadFailed_WithNameAndException {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_AssemblyLoadFailed_WithNameAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RemotePackageScanner: No files were scanned because no files were provided. Package information was: {0} [{1}]..
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_AssemblyScanWithoutFiles_WithPackageInfo {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_AssemblyScanWithoutFiles_WithPackageInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RemotePackageScanner: No files were scanned because no package information was provided. Files to scan were: {0}..
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_AssemblyScanWithoutPackageName_WithFiles {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_AssemblyScanWithoutPackageName_WithFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RemotePackageScanner: Registering action {0} from package {1} [{2}].
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_RegisteringAction_WithActionInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_RegisteringAction_WithActionInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning assembly [{0}] for plugins..
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_ScanningAssembly_WithName {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_ScanningAssembly_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting information from Assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Log_Messages_RemotePackageScanner_TypeScanFailed_WithAssemblyAndException {
+            get {
+                return ResourceManager.GetString("Log_Messages_RemotePackageScanner_TypeScanFailed_WithAssemblyAndException", resourceCulture);
             }
         }
         

@@ -7,6 +7,7 @@
 
 using System;
 using Autofac;
+using Metamorphic.Storage.Actions;
 using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -44,9 +45,9 @@ namespace Metamorphic.Storage
         private volatile bool _isDisposed;
 
         /// <summary>
-        /// The object that is used to keep track of the available rules.
+        /// The object that that watches the NuGet feed directories for new packages.
         /// </summary>
-        private IWatchRules _ruleWatcher;
+        private IWatchPackages _packageWatcher;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -71,10 +72,10 @@ namespace Metamorphic.Storage
         {
             _container = DependencyInjection.CreateContainer();
 
-            _ruleWatcher = _container.Resolve<IWatchRules>();
+            _packageWatcher = _container.Resolve<IWatchPackages>();
             _diagnostics = _container.Resolve<SystemDiagnostics>();
 
-            _ruleWatcher.Enable();
+            _packageWatcher.Enable();
 
             _diagnostics.Log(
                 LevelToLog.Info,
@@ -102,17 +103,16 @@ namespace Metamorphic.Storage
 
             try
             {
-                if (_ruleWatcher != null)
-                {
-                    _ruleWatcher.Disable();
-                    _ruleWatcher = null;
-                }
-
-                // Do what ever we need to do to stop the service here
                 _diagnostics.Log(
                     LevelToLog.Info,
                     StorageConstants.LogPrefix,
                     Resources.Log_Messages_ServiceStopped);
+
+                if (_packageWatcher != null)
+                {
+                    _packageWatcher.Disable();
+                    _packageWatcher = null;
+                }
 
                 if (_container != null)
                 {

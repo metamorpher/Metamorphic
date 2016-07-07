@@ -8,12 +8,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using Metamorphic.Core;
+using Metamorphic.Storage.Actions;
+using Metamorphic.Storage.Nuclei.AppDomains;
+using Nuclei;
+using Nuclei.Communication;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -30,6 +33,22 @@ namespace Metamorphic.Storage
         /// The default name for the error log.
         /// </summary>
         private const string DefaultInfoFileName = "server.info.log";
+
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(string[] additionalPaths)
+        {
+            var directoryPaths = new List<string>();
+            directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
+
+            if (additionalPaths != null)
+            {
+                directoryPaths.AddRange(additionalPaths);
+            }
+
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                new string[0],
+                directoryPaths);
+        }
 
         /// <summary>
         /// Creates the dependency injection container for the application.
@@ -54,12 +73,95 @@ namespace Metamorphic.Storage
                 builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
                     .As<FileConstants>();
 
+                builder.RegisterModule(
+                    new CommunicationModule(
+                        new[]
+                            {
+                                // For now only allowing the different applications to be on the same machine
+                                // because there is no way to do a limited discovery (i.e. only a fixed set of machines)
+                                ChannelTemplate.NamedPipe
+                            },
+                        true));
+
+                builder.RegisterModule(new CoreModule());
+
+                RegisterActions(builder);
+                RegisterAppDomainBuilder(builder);
+                RegisterCommunication(builder);
                 RegisterDiagnostics(builder);
                 RegisterLoggers(builder);
-                RegisterRules(builder);
             }
 
             return builder.Build();
+        }
+
+        private static void RegisterActions(ContainerBuilder builder)
+        {
+            Func<AppDomain, ILoadPackageScannersInRemoteAppDomains> scannerBuilder =
+                a =>
+                {
+                    var loader = a.CreateInstanceAndUnwrap(
+                           typeof(AppDomainPackageClassLoader).Assembly.FullName,
+                           typeof(AppDomainPackageClassLoader).FullName) as AppDomainPackageClassLoader;
+                    return loader;
+                };
+            builder.Register((c, p) => new AppDomainOwningActionPackageScanner(
+                    c.Resolve<IInstallPackages>(),
+                    c.Resolve<Func<string, string[], AppDomain>>(),
+                    scannerBuilder,
+                    p.TypedAs<IStoreActions>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .As<IScanActionPackages>();
+
+            builder.Register<Func<IStoreActions, IScanActionPackages>>(
+                    c =>
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return r => ctx.Resolve<IScanActionPackages>(new TypedParameter(typeof(IStoreActions), r));
+                    });
+
+            builder.Register(c => new DirectoryPackageListener(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<IDetectActionPackages>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .As<IWatchPackages>()
+                .SingleInstance();
+
+            builder.Register(c => new ActionPackageDetector(
+                    c.Resolve<IStoreActions>(),
+                    c.Resolve<Func<IStoreActions, IScanActionPackages>>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IDetectActionPackages>();
+
+            builder.Register(c => new ActionStorage())
+                .As<IStoreActions>()
+                .SingleInstance();
+        }
+
+        private static void RegisterAppDomainBuilder(ContainerBuilder builder)
+        {
+            builder.Register(
+                c =>
+                {
+                    Func<string, string[], AppDomain> result =
+                        (name, paths) => AppDomainBuilder.Assemble(
+                            name,
+                            AppDomainResolutionPathsFor(paths));
+
+                    return result;
+                })
+                .As<Func<string, string[], AppDomain>>()
+                .SingleInstance();
+        }
+
+        private static void RegisterCommunication(ContainerBuilder builder)
+        {
+            builder.Register(c => new CommunicationInitializer(
+                    c.Resolve<IComponentContext>()))
+                .As<IInitializeCommunicationInstances>()
+                .SingleInstance();
         }
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
@@ -105,32 +207,6 @@ namespace Metamorphic.Storage
                     assemblyInfo.Name,
                     assemblyInfo.Version))
                 .As<ILogger>()
-                .SingleInstance();
-        }
-
-        private static void RegisterRules(ContainerBuilder builder)
-        {
-            builder.Register(c => new RuleCollection())
-                .As<IStoreRules>()
-                .SingleInstance();
-
-            builder.Register(
-                    c =>
-                    {
-                        var ctx = c.Resolve<IComponentContext>();
-                        return new RuleLoader(
-                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
-                            c.Resolve<SystemDiagnostics>());
-                    })
-                .As<ILoadRules>()
-                .SingleInstance();
-
-            builder.Register(c => new RuleWatcher(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<ILoadRules>(),
-                    c.Resolve<IStoreRules>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IWatchRules>()
                 .SingleInstance();
         }
     }
