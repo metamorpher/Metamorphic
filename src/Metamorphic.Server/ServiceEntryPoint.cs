@@ -6,10 +6,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Threading;
 using Autofac;
-using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Properties;
 using Metamorphic.Server.Rules;
+using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -46,11 +48,6 @@ namespace Metamorphic.Server
         private volatile bool _isDisposed;
 
         /// <summary>
-        /// The object that is used to process queued jobs.
-        /// </summary>
-        private IProcessJobs _jobProcessor;
-
-        /// <summary>
         /// The object that is used to keep track of the available rules.
         /// </summary>
         private IWatchRules _ruleWatcher;
@@ -83,12 +80,28 @@ namespace Metamorphic.Server
         {
             _container = DependencyInjection.CreateContainer();
 
-            _jobProcessor = _container.Resolve<IProcessJobs>();
             _ruleWatcher = _container.Resolve<IWatchRules>();
             _signalProcessor = _container.Resolve<SignalProcessor>();
             _diagnostics = _container.Resolve<SystemDiagnostics>();
+            var facade = _container.Resolve<ICommunicationFacade>();
 
-            _jobProcessor.Start();
+            // Wait for the communication to be online
+            var killTime = DateTime.Now.AddSeconds(90);
+            while (DateTime.Now < killTime)
+            {
+                if (facade.KnownEndpoints().Any())
+                {
+                    break;
+                }
+
+                Thread.Sleep(500);
+            }
+
+            if (!facade.KnownEndpoints().Any())
+            {
+                throw new FailedToConnectToStorageException();
+            }
+
             _ruleWatcher.Enable();
 
             _diagnostics.Log(
@@ -126,14 +139,6 @@ namespace Metamorphic.Server
                 if (_signalProcessor != null)
                 {
                     _signalProcessor = null;
-                }
-
-                if (_jobProcessor != null)
-                {
-                    var clearingTask = _jobProcessor.Stop(true);
-                    clearingTask.Wait();
-
-                    _jobProcessor = null;
                 }
 
                 // Do what ever we need to do to stop the service here
