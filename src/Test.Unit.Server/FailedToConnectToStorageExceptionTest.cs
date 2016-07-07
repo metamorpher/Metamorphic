@@ -8,10 +8,10 @@
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Server.Actions
+namespace Metamorphic.Server
 {
     [TestFixture]
-    public sealed class DuplicateActionDefinitionExceptionTest : ExceptionContractVerifier<DuplicateActionDefinitionException>
+    public sealed class FailedToConnectToStorageExceptionTest : ExceptionContractVerifier<FailedToConnectToStorageException>
     {
     }
 }

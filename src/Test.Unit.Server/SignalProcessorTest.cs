@@ -8,22 +8,30 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
+using Metamorphic.Actions.Powershell;
+using Metamorphic.Core;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
-using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Rules;
 using Moq;
 using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
+using NuGet;
 using NUnit.Framework;
+using Test.SourceOnly;
+
+using IFileSystem = System.IO.Abstractions.IFileSystem;
 
 namespace Metamorphic.Server
 {
     [TestFixture]
-    public class SignalProcessorTest
+    public sealed class SignalProcessorTest
     {
         [Test]
         [SuppressMessage(
@@ -31,13 +39,18 @@ namespace Metamorphic.Server
             "CA1806:DoNotIgnoreMethodResults",
             MessageId = "Metamorphic.Server.SignalProcessor",
             Justification = "Testing that the constructor throws an exception.")]
-        public void CreateWithNullJobQueue()
+        public void CreateWithNullActionStorage()
         {
-            var rules = new Mock<IStoreRules>();
-            var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
-
-            Assert.Throws<ArgumentNullException>(() => new SignalProcessor(null, rules.Object, signals.Object, diag));
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    null,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
         }
 
         [Test]
@@ -46,28 +59,18 @@ namespace Metamorphic.Server
             "CA1806:DoNotIgnoreMethodResults",
             MessageId = "Metamorphic.Server.SignalProcessor",
             Justification = "Testing that the constructor throws an exception.")]
-        public void CreateWithNullRuleCollection()
+        public void CreateWithNullAppDomainBuilder()
         {
-            var jobs = new Mock<IQueueJobs>();
-            var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
-
-            Assert.Throws<ArgumentNullException>(() => new SignalProcessor(jobs.Object, null, signals.Object, diag));
-        }
-
-        [Test]
-        [SuppressMessage(
-            "Microsoft.Usage",
-            "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Server.SignalProcessor",
-            Justification = "Testing that the constructor throws an exception.")]
-        public void CreateWithNullSignalDispenser()
-        {
-            var jobs = new Mock<IQueueJobs>();
-            var rules = new Mock<IStoreRules>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
-
-            Assert.Throws<ArgumentNullException>(() => new SignalProcessor(jobs.Object, rules.Object, null, diag));
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
         }
 
         [Test]
@@ -78,19 +81,130 @@ namespace Metamorphic.Server
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullDiagnostics()
         {
-            var jobs = new Mock<IQueueJobs>();
-            var rules = new Mock<IStoreRules>();
-            var signals = new Mock<IDispenseSignals>();
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    null,
+                    new Mock<IFileSystem>().Object));
+        }
 
-            Assert.Throws<ArgumentNullException>(() => new SignalProcessor(jobs.Object, rules.Object, signals.Object, null));
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullExecutorBuilder()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullFileSystem()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    null));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullPackageInstaller()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    null,
+                    (name, paths) => null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullRuleCollection()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    a => null,
+                    null,
+                    new Mock<IDispenseSignals>().Object,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Server.SignalProcessor",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullSignalDispenser()
+        {
+            Assert.Throws<ArgumentNullException>(
+                () => new SignalProcessor(
+                    new Mock<IActionStorageProxy>().Object,
+                    new Mock<IInstallPackages>().Object,
+                    (name, paths) => null,
+                    a => null,
+                    new Mock<IStoreRules>().Object,
+                    null,
+                    new SystemDiagnostics((l, m) => { }, null),
+                    new Mock<IFileSystem>().Object));
         }
 
         [Test]
         public void DispenseWithNullSignal()
         {
-            var jobs = new Mock<IQueueJobs>();
+            var actionStorage = new Mock<IActionStorageProxy>();
             {
-                jobs.Setup(j => j.Enqueue(It.IsAny<Job>()))
+                actionStorage.Setup(a => a.Action(It.IsAny<ActionId>()))
+                    .Verifiable();
+            }
+
+            var packageInstaller = new Mock<IInstallPackages>();
+            {
+                packageInstaller.Setup(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()))
                     .Verifiable();
             }
 
@@ -101,22 +215,44 @@ namespace Metamorphic.Server
             }
 
             var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
 
-            var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
+            var fileSystem = new Mock<IFileSystem>();
+            {
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(new MockDirectory(new string[0]));
+                fileSystem.Setup(f => f.Path)
+                    .Returns(new MockPath());
+            }
+
+            var processor = new SignalProcessor(
+                actionStorage.Object,
+                packageInstaller.Object,
+                (name, paths) => null,
+                a => null,
+                rules.Object,
+                signals.Object,
+                new SystemDiagnostics((l, m) => { }, null),
+                fileSystem.Object);
 
             Assert.IsNotNull(processor);
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(null));
-            jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Never());
+            actionStorage.Verify(a => a.Action(It.IsAny<ActionId>()), Times.Never());
+            packageInstaller.Verify(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()), Times.Never());
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Never());
         }
 
         [Test]
         public void DispenseWithSignalWithNoMatchingRule()
         {
-            var jobs = new Mock<IQueueJobs>();
+            var actionStorage = new Mock<IActionStorageProxy>();
             {
-                jobs.Setup(j => j.Enqueue(It.IsAny<Job>()))
+                actionStorage.Setup(a => a.Action(It.IsAny<ActionId>()))
+                    .Verifiable();
+            }
+
+            var packageInstaller = new Mock<IInstallPackages>();
+            {
+                packageInstaller.Setup(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()))
                     .Verifiable();
             }
 
@@ -128,9 +264,25 @@ namespace Metamorphic.Server
             }
 
             var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
 
-            var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
+            var fileSystem = new Mock<IFileSystem>();
+            {
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(new MockDirectory(new string[0]));
+                fileSystem.Setup(f => f.Path)
+                    .Returns(new MockPath());
+            }
+
+            var processor = new SignalProcessor(
+                actionStorage.Object,
+                packageInstaller.Object,
+                (name, paths) => null,
+                a => null,
+                rules.Object,
+                signals.Object,
+                new SystemDiagnostics((l, m) => { }, null),
+                fileSystem.Object);
+
             Assert.IsNotNull(processor);
 
             var type = new SignalTypeId("a");
@@ -141,7 +293,9 @@ namespace Metamorphic.Server
             var signal = new Signal(type, parameters);
 
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(signal));
-            jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Never());
+
+            actionStorage.Verify(a => a.Action(It.IsAny<ActionId>()), Times.Never());
+            packageInstaller.Verify(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()), Times.Never());
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Once());
         }
 
@@ -149,75 +303,109 @@ namespace Metamorphic.Server
         public void DispenseWithSignalWithSingleMatchingRule()
         {
             var type = new SignalTypeId("a");
-            var parameters = new Dictionary<string, object>();
+
+            var actionId = new ActionId("powershell");
+            var parameters = new Dictionary<string, object>
+                {
+                    { "a", "b" },
+                    { "c", "d" },
+                };
             var signal = new Signal(type, parameters);
 
-            var jobs = new Mock<IQueueJobs>();
+            var actionStorage = new Mock<IActionStorageProxy>();
             {
-                jobs.Setup(j => j.Enqueue(It.IsAny<Job>()))
+                actionStorage.Setup(a => a.Action(It.IsAny<ActionId>()))
+                    .Returns(
+                         new ActionDefinition(
+                            actionId,
+                            "b",
+                            "1.0.0",
+                            "c",
+                            "d",
+                            new ActionParameterDefinition[]
+                            {
+                                new ActionParameterDefinition("a"),
+                                new ActionParameterDefinition("c"),
+                            }))
+                    .Verifiable();
+            }
+
+            var packageInstaller = new Mock<IInstallPackages>();
+            {
+                packageInstaller.Setup(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()))
                     .Verifiable();
             }
 
             var rules = new Mock<IStoreRules>();
             {
                 var conditions = new Dictionary<string, Predicate<object>>();
-                var ruleParameters = new Dictionary<string, ActionParameterValue>();
+                var ruleParameters = new Dictionary<string, ActionParameterValue>
+                {
+                    { "a", new ActionParameterValue("{{signal.a}}", new string[] { "a" }) },
+                    { "c", new ActionParameterValue("{{signal.c}}", new string[] { "c" }) },
+                };
                 rules.Setup(r => r.RulesForSignal(It.IsAny<SignalTypeId>()))
                     .Returns(
                         new Rule[]
                         {
-                            new Rule("b", "c", type, new ActionId("d"), conditions, ruleParameters),
+                            new Rule(
+                                "b",
+                                "c",
+                                type,
+                                actionId,
+                                conditions,
+                                ruleParameters),
                         })
                     .Verifiable();
             }
 
-            var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
-
-            var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
-
-            Assert.IsNotNull(processor);
-            signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(signal));
-            jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Exactly(1));
-            rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Once());
-        }
-
-        [Test]
-        public void DispenseWithSignalWithMultipleMatchingRules()
-        {
-            var type = new SignalTypeId("a");
-            var parameters = new Dictionary<string, object>();
-            var signal = new Signal(type, parameters);
-
-            var jobs = new Mock<IQueueJobs>();
+            var executor = new Mock<IExecuteActions>();
             {
-                jobs.Setup(j => j.Enqueue(It.IsAny<Job>()))
-                    .Verifiable();
-            }
-
-            var rules = new Mock<IStoreRules>();
-            {
-                var conditions = new Dictionary<string, Predicate<object>>();
-                var ruleParameters = new Dictionary<string, ActionParameterValue>();
-                rules.Setup(r => r.RulesForSignal(It.IsAny<SignalTypeId>()))
-                    .Returns(
-                        new Rule[]
+                executor.Setup(e => e.Execute(It.IsAny<Job>(), It.IsAny<ActionDefinition>()))
+                    .Callback<Job, ActionDefinition>(
+                        (j, a) =>
                         {
-                            new Rule("b", "c", type, new ActionId("d"), conditions, ruleParameters),
-                            new Rule("e", "f", type, new ActionId("g"), conditions, ruleParameters)
+                            Assert.AreEqual(actionId, j.Action);
+                            Assert.AreEqual(actionId, a.Id);
                         })
                     .Verifiable();
             }
 
-            var signals = new Mock<IDispenseSignals>();
-            var diag = new SystemDiagnostics((l, m) => { }, null);
+            var loader = new Mock<ILoadActionExecutorsInRemoteAppDomains>();
+            {
+                loader.Setup(l => l.Load(It.IsAny<ILogMessagesFromRemoteAppDomains>()))
+                    .Returns(executor.Object)
+                    .Verifiable();
+            }
 
-            var processor = new SignalProcessor(jobs.Object, rules.Object, signals.Object, diag);
+            var signals = new Mock<IDispenseSignals>();
+
+            var fileSystem = new Mock<IFileSystem>();
+            {
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(new MockDirectory(new string[0]));
+                fileSystem.Setup(f => f.Path)
+                    .Returns(new MockPath());
+            }
+
+            var processor = new SignalProcessor(
+                actionStorage.Object,
+                packageInstaller.Object,
+                (name, paths) => AppDomain.CurrentDomain,
+                a => loader.Object,
+                rules.Object,
+                signals.Object,
+                new SystemDiagnostics((l, m) => { }, null),
+                fileSystem.Object);
 
             Assert.IsNotNull(processor);
             signals.Raise(s => s.OnItemAvailable += null, new ItemEventArgs<Signal>(signal));
-            jobs.Verify(j => j.Enqueue(It.IsAny<Job>()), Times.Exactly(2));
+
+            actionStorage.Verify(a => a.Action(It.IsAny<ActionId>()), Times.Once());
+            packageInstaller.Verify(p => p.Install(It.IsAny<PackageName>(), It.IsAny<string>(), It.IsAny<Action<string, string, PackageName>>()), Times.Once());
             rules.Verify(r => r.RulesForSignal(It.IsAny<SignalTypeId>()), Times.Once());
+            loader.Verify(l => l.Load(It.IsAny<ILogMessagesFromRemoteAppDomains>()), Times.Once());
+            executor.Verify(e => e.Execute(It.IsAny<Job>(), It.IsAny<ActionDefinition>()), Times.Once());
         }
     }
 }
