@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Nuclei.Configuration;
 
 namespace Metamorphic.Core
@@ -16,11 +17,15 @@ namespace Metamorphic.Core
     public static class CoreConfigurationKeys
     {
         /// <summary>
-        /// The configuration key that is used to retrieve path for the directory in
-        /// which the rule files will be placed.
+        /// The configuration key that is used to retrieve the NuGet feeds which
+        /// are used to get packages for different parts of the system.
         /// </summary>
-        internal static readonly ConfigurationKey ScriptDirectory
-            = new ConfigurationKey("ScriptPath", typeof(string));
+        [SuppressMessage(
+            "Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "ConfigurationKey objects are immutable.")]
+        public static readonly ConfigurationKey NugetFeeds
+            = new ConfigurationKey("NugetFeeds", typeof(string[]));
 
         /// <summary>
         /// Returns a collection containing all the configuration keys for the application.
@@ -30,7 +35,7 @@ namespace Metamorphic.Core
         {
             return new List<ConfigurationKey>
                 {
-                    ScriptDirectory
+                    NugetFeeds,
                 };
         }
     }

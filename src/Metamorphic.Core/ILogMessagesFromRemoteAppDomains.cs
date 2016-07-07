@@ -5,21 +5,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Nuclei.Diagnostics.Logging;
+
 namespace Metamorphic.Core
 {
     /// <summary>
-    /// Constants used in the core part of the application.
+    /// Defines the interface for objects that remote logging calls.
     /// </summary>
-    public static class CoreConstants
+    public interface ILogMessagesFromRemoteAppDomains
     {
         /// <summary>
-        /// The default relative path to the directory that contains the NuGet packages for the application.
+        /// Logs the given message with the given severity.
         /// </summary>
-        public const string DefaultFeedDirectory = "packages";
-
-        /// <summary>
-        /// The prefix used for each log message.
-        /// </summary>
-        public const string LogPrefix = "Metamorphic.Core";
+        /// <param name="severity">The importance of the log message.</param>
+        /// <param name="message">The message.</param>
+        void Log(LevelToLog severity, string message);
     }
 }

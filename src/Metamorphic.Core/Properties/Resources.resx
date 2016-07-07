@@ -126,31 +126,28 @@
   <data name="Exceptions_Messages_MissingActionParameter" xml:space="preserve">
     <value>A parameter required for the action invocation was missing.</value>
   </data>
-  <data name="Exceptions_Messages_MissingActionParameter_WithParameterName" xml:space="preserve">
-    <value>The parameter '{0}' required for the action invocation was missing.</value>
-  </data>
   <data name="Exceptions_Messages_ParameterNotFound" xml:space="preserve">
     <value>No parameter with the specified name could be found.</value>
   </data>
   <data name="Exceptions_Messages_ParameterNotFound_WithName" xml:space="preserve">
     <value>No parameter with the name {0} could be found.</value>
   </data>
-  <data name="PowershellActionBuilder_ErrorWhileRunningPowershell_WithError" xml:space="preserve">
-    <value>Error: {0}</value>
-  </data>
-  <data name="PowershellActionbuilder_Error_FailedToRunExe_WithError" xml:space="preserve">
-    <value>Failed to run powershell.exe. Error: {0}</value>
-  </data>
-  <data name="PowershellActionBuilder_OutputWhileRunning_WithOutput" xml:space="preserve">
-    <value>Output: {0}</value>
-  </data>
-  <data name="PowershellActionBuilder_Output_ProcessCompleted" xml:space="preserve">
-    <value>Powershell script finished</value>
-  </data>
   <data name="Exceptions_Messages_MissingConfiguration" xml:space="preserve">
     <value>A required configuration value was not provided.</value>
   </data>
   <data name="Exceptions_Messages_MissingConfiguration_WithKey" xml:space="preserve">
     <value>The required configuration value with key [{0}] was not provided.</value>
+  </data>
+  <data name="Log_Messages_PackageUtilities_AssemblyFileAlreadyExistsAtDestination_WithPackageIdAndVersionAndOriginAndDestination" xml:space="preserve">
+    <value>File in package {0} [{1}] at {2} already exists in destination at {3}.</value>
+  </data>
+  <data name="Log_Messages_PackageUtilities_CopyingAssemblyFile_WithPackageIdAndVersionAndOriginAndDestination" xml:space="preserve">
+    <value>Copying file in package {0} [{1}] from {2} to {3}.</value>
+  </data>
+  <data name="Exceptions_Messages_ParameterShouldNotBeAnEmptyString" xml:space="preserve">
+    <value>The parameter should not be an empty string.</value>
+  </data>
+  <data name="Log_Messages_PackageInstaller_InstallingPackage_WithIdVersionAndRepository" xml:space="preserve">
+    <value>Installing package {0} [{1}] from feed at {2}</value>
   </data>
 </root>
