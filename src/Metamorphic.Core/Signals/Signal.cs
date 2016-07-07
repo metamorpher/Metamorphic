@@ -41,9 +41,14 @@ namespace Metamorphic.Core.Signals
         /// </exception>
         public Signal(SignalTypeId sensorId, IDictionary<string, object> parameters)
         {
+            if (sensorId == null)
             {
-                Lokad.Enforce.Argument(() => sensorId);
-                Lokad.Enforce.Argument(() => parameters);
+                throw new ArgumentNullException("sensorId");
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters");
             }
 
             Sensor = sensorId;
