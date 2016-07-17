@@ -21,10 +21,5 @@ namespace Metamorphic.Server
         /// The prefix used for each log message.
         /// </summary>
         public const string LogPrefix = "Metamorphic.Server";
-
-        /// <summary>
-        /// The default value for the directory path that contains the rule files.
-        /// </summary>
-        public const string DefaultRuleDirectory = "rules";
     }
 }

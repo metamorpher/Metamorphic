@@ -70,11 +70,20 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The condition type is not valid..
+        ///   Looks up a localized string similar to The given rule definition is not valid..
         /// </summary>
-        internal static string Exceptions_Messages_InvalidConditionType {
+        internal static string Exceptions_Messages_InvalidRuleDefinition {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_InvalidConditionType", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_InvalidRuleDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given signal does not match the current rule..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidSignalForRule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidSignalForRule", resourceCulture);
             }
         }
         
@@ -97,15 +106,6 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified Rule already exists in the collection..
-        /// </summary>
-        internal static string Exceptions_Messages_RuleAlreadyExists {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_RuleAlreadyExists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unable to load the action type..
         /// </summary>
         internal static string Exceptions_Messages_UnableToLoadActionType {
@@ -120,60 +120,6 @@ namespace Metamorphic.Server.Properties {
         internal static string Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException {
             get {
                 return ResourceManager.GetString("Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The rule definition at {0} is not valid..
-        /// </summary>
-        internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Discovered new rule file at: {0}.
-        /// </summary>
-        internal static string Log_Messages_RuleWatcher_CreatedFile_WithFilePath {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleWatcher_CreatedFile_WithFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Discovered removed rule file at: {0}.
-        /// </summary>
-        internal static string Log_Messages_RuleWatcher_RemovedFile_WithFilePath {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleWatcher_RemovedFile_WithFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Rule discovery - Disabled.
-        /// </summary>
-        internal static string Log_Messages_RuleWatcher_RuleDiscovery_Disabled {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleWatcher_RuleDiscovery_Disabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Rule discovery - Enabled.
-        /// </summary>
-        internal static string Log_Messages_RuleWatcher_RuleDiscovery_Enabled {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleWatcher_RuleDiscovery_Enabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Discovered updated rule file at: {0}.
-        /// </summary>
-        internal static string Log_Messages_RuleWatcher_UpdatedFile_WithFilePath {
-            get {
-                return ResourceManager.GetString("Log_Messages_RuleWatcher_UpdatedFile_WithFilePath", resourceCulture);
             }
         }
         

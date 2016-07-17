@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Metamorphic.Storage.Discovery;
 using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -16,8 +17,13 @@ using NuGet;
 
 namespace Metamorphic.Storage.Actions
 {
-    internal sealed class ActionPackageDetector : IDetectActionPackages
+    internal sealed class ActionPackageDetector : IProcessPackageChanges
     {
+        /// <summary>
+        /// The objects that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics _diagnostics;
+
         /// <summary>
         /// The object that stores information about all the parts and the part groups.
         /// </summary>
@@ -28,11 +34,6 @@ namespace Metamorphic.Storage.Actions
         /// created in the given AppDomain.
         /// </summary>
         private readonly Func<IStoreActions, IScanActionPackages> _scannerBuilder;
-
-        /// <summary>
-        /// The objects that provides the diagnostics methods for the application.
-        /// </summary>
-        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionPackageDetector"/> class.

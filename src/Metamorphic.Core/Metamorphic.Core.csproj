@@ -173,14 +173,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rules\ActionRuleDefinition.cs" />
-    <Compile Include="Rules\ConditionRuleDefinition.cs" />
-    <Compile Include="Rules\InvalidRuleDefinitionException.cs" />
-    <Compile Include="Rules\InvalidSignalForRuleException.cs" />
-    <Compile Include="Rules\Rule.cs" />
-    <Compile Include="Rules\RuleDefinition.cs" />
-    <Compile Include="Rules\ActionParameterValue.cs" />
-    <Compile Include="Rules\SignalRuleDefinition.cs" />
     <Compile Include="ParameterNotFoundException.cs" />
     <Compile Include="Signals\Signal.cs" />
     <Compile Include="Signals\SignalData.cs" />

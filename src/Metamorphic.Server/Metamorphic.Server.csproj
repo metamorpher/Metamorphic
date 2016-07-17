@@ -179,6 +179,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionParameterValue.cs" />
     <Compile Include="ActionStorageProxy.cs" />
     <Compile Include="AppDomainActionClassLoader.cs" />
     <Compile Include="CommunicationInitializer.cs" />
@@ -187,6 +188,9 @@
     <Compile Include="IExecuteActions.cs" />
     <Compile Include="IActionStorageProxy.cs" />
     <Compile Include="ILoadActionExecutorsInRemoteAppDomains.cs" />
+    <Compile Include="InvalidRuleDefinitionException.cs" />
+    <Compile Include="InvalidSignalForRuleException.cs" />
+    <Compile Include="IRuleStorageProxy.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.FileBasedResolver.cs" />
@@ -211,15 +215,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RemoteActionExecutor.cs" />
-    <Compile Include="Rules\ILoadRules.cs" />
-    <Compile Include="Rules\InvalidConditionTypeException.cs" />
-    <Compile Include="Rules\IStoreRules.cs" />
-    <Compile Include="Rules\IWatchRules.cs" />
-    <Compile Include="Rules\RuleAlreadyExistsException.cs" />
-    <Compile Include="Rules\RuleCollection.cs" />
-    <Compile Include="Rules\RuleLoader.cs" />
-    <Compile Include="Rules\RuleWatcher.cs" />
-    <Compile Include="Rules\ScalarYamlNodeTypeResolver.cs" />
+    <Compile Include="Rule.cs" />
+    <Compile Include="RuleStorageProxy.cs" />
     <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
@@ -229,54 +226,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Rules\tfs-approveissue-fromtest.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-setreleasetoinitiate-fromchildworkitemstatechange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-setissuetodone-fromissuecomment.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-notifyreleasemanager-fromreleaseitemstatechange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-notifytester-onbuildcomplete.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-runtests-onbuildcomplete.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-releaseproduct-fromworkitemchange.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Rules\tfs-startbuild-fromissuecomment.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Invoke-Tests.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Notify-ReleaseManager.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Notify-Tester.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Publish-Release.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\start-build.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Update-IssueComment.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Update-IssueStatus.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\Update-ReleaseStatus.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
@@ -297,6 +246,10 @@
     <ProjectReference Include="..\Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj">
       <Project>{113b00bc-537a-4ae7-b844-fbf18f1a4e20}</Project>
       <Name>Metamorphic.Core.Queueing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>

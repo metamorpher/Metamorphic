@@ -10,7 +10,9 @@ using Autofac;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Commands;
+using Metamorphic.Core.Signals;
 using Metamorphic.Storage.Actions;
+using Metamorphic.Storage.Rules;
 using Nuclei.Communication;
 using Nuclei.Communication.Interaction;
 
@@ -91,13 +93,34 @@ namespace Metamorphic.Storage
                 });
         }
 
+        private void RegisterRuleCommands()
+        {
+            var instance = _context.Resolve<IStoreRules>();
+
+            var map = CommandMapper<IRuleCommandSet>.Create();
+            map.From<SignalTypeId, int, int>((command, sensorId, retry, timeout) => command.RulesForSignal(sensorId, retry, timeout))
+                .To((SignalTypeId sensorId) => instance.RulesForSignal(sensorId));
+
+            var collection = _context.Resolve<RegisterCommand>();
+            collection(
+                map.ToMap(),
+                new[]
+                    {
+                        new SubjectGroupIdentifier(
+                            CommunicationSubjects.Rule,
+                            CommunicationSubjects.RuleVersion,
+                            CommunicationSubjects.RuleGroup),
+                    });
+        }
+
         /// <summary>
         /// Registers all the commands that are provided by the current application.
         /// </summary>
         public void RegisterProvidedCommands()
         {
-            RegisterInfoCommands();
             RegisterActionCommands();
+            RegisterInfoCommands();
+            RegisterRuleCommands();
         }
 
         /// <summary>

@@ -61,24 +61,6 @@ namespace Metamorphic.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given rule definition is not valid..
-        /// </summary>
-        internal static string Exceptions_Messages_InvalidRuleDefinition {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_InvalidRuleDefinition", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The given signal does not match the current rule..
-        /// </summary>
-        internal static string Exceptions_Messages_InvalidSignalForRule {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_InvalidSignalForRule", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A parameter required for the action invocation was missing..
         /// </summary>
         internal static string Exceptions_Messages_MissingActionParameter {

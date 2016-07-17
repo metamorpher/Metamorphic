@@ -18,7 +18,6 @@ using Metamorphic.Core.Commands;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Server.Nuclei.AppDomains;
-using Metamorphic.Server.Rules;
 using Nuclei;
 using Nuclei.Communication;
 using Nuclei.Communication.Interaction;
@@ -98,7 +97,6 @@ namespace Metamorphic.Server
                 RegisterLoggers(builder);
                 RegisterProcessor(builder);
                 RegisterProxies(builder);
-                RegisterRules(builder);
             }
 
             return builder.Build();
@@ -189,7 +187,7 @@ namespace Metamorphic.Server
                     c.Resolve<IInstallPackages>(),
                     c.Resolve<Func<string, string[], AppDomain>>(),
                     executorBuilder,
-                    c.Resolve<IStoreRules>(),
+                    c.Resolve<IRuleStorageProxy>(),
                     c.Resolve<IDispenseSignals>(),
                     c.Resolve<SystemDiagnostics>(),
                     c.Resolve<IFileSystem>()))
@@ -202,31 +200,10 @@ namespace Metamorphic.Server
                     c.Resolve<ISendCommandsToRemoteEndpoints>()))
                 .As<IActionStorageProxy>()
                 .SingleInstance();
-        }
 
-        private static void RegisterRules(ContainerBuilder builder)
-        {
-            builder.Register(c => new RuleCollection())
-                .As<IStoreRules>()
-                .SingleInstance();
-
-            builder.Register(
-                    c =>
-                    {
-                        var ctx = c.Resolve<IComponentContext>();
-                        return new RuleLoader(
-                            (string id) => ctx.Resolve<IActionStorageProxy>().HasActionFor(new ActionId(id)),
-                            c.Resolve<SystemDiagnostics>());
-                    })
-                .As<ILoadRules>()
-                .SingleInstance();
-
-            builder.Register(c => new RuleWatcher(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<ILoadRules>(),
-                    c.Resolve<IStoreRules>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IWatchRules>()
+            builder.Register(c => new RuleStorageProxy(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                .As<IRuleStorageProxy>()
                 .SingleInstance();
         }
     }

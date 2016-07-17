@@ -42,12 +42,24 @@ namespace Metamorphic.Core.Queueing
 
         public void DebugWrite(string format, params object[] args)
         {
-            _diagnostics.Log(
-                LevelToLog.Debug,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    format,
-                    args));
+            // Check if there are arguments, if there aren't we shouldn't format because
+            // we might be writing a JSON string with { and }. So because
+            // this: https://github.com/EasyNetQ/EasyNetQ/issues/228
+            if ((args == null) || (args.Length == 0))
+            {
+                _diagnostics.Log(
+                    LevelToLog.Debug,
+                    format);
+            }
+            else
+            {
+                _diagnostics.Log(
+                    LevelToLog.Debug,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        format,
+                        args));
+            }
         }
 
         public void ErrorWrite(Exception exception)
@@ -64,22 +76,46 @@ namespace Metamorphic.Core.Queueing
 
         public void ErrorWrite(string format, params object[] args)
         {
-            _diagnostics.Log(
-                LevelToLog.Error,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    format,
-                    args));
+            // Check if there are arguments, if there aren't we shouldn't format because
+            // we might be writing a JSON string with { and }. So because
+            // this: https://github.com/EasyNetQ/EasyNetQ/issues/228
+            if ((args == null) || (args.Length == 0))
+            {
+                _diagnostics.Log(
+                    LevelToLog.Error,
+                    format);
+            }
+            else
+            {
+                _diagnostics.Log(
+                    LevelToLog.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        format,
+                        args));
+            }
         }
 
         public void InfoWrite(string format, params object[] args)
         {
-            _diagnostics.Log(
-                LevelToLog.Info,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    format,
-                    args));
+            // Check if there are arguments, if there aren't we shouldn't format because
+            // we might be writing a JSON string with { and }. So because
+            // this: https://github.com/EasyNetQ/EasyNetQ/issues/228
+            if ((args == null) || (args.Length == 0))
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    format);
+            }
+            else
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        format,
+                        args));
+            }
         }
     }
 }

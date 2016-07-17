@@ -6,17 +6,18 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
+using System.Text.RegularExpressions;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Core.Queueing.Signals;
+using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
 using Metamorphic.Server.Properties;
-using Metamorphic.Server.Rules;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using NuGet;
@@ -27,6 +28,126 @@ namespace Metamorphic.Server
 {
     internal sealed class SignalProcessor
     {
+        private static readonly Regex TriggerParameterMatcher = new Regex(RuleConstants.TriggerParameterRegex, RegexOptions.IgnoreCase);
+
+        private static Rule CreateRule(RuleDefinition definition)
+        {
+            if (definition.Enabled)
+            {
+                var signalParameterConditions = new Dictionary<string, Predicate<object>>();
+                foreach (var condition in definition.Condition)
+                {
+                    var pred = ToCondition(condition);
+                    if (pred != null)
+                    {
+                        signalParameterConditions.Add(condition.Name, pred);
+                    }
+                }
+
+                var parameters = new Dictionary<string, ActionParameterValue>();
+                foreach (var pair in definition.Action.Parameters)
+                {
+                    ActionParameterValue reference = null;
+
+                    var parameterText = pair.Value as string;
+                    if (parameterText != null)
+                    {
+                        var matches = TriggerParameterMatcher.Matches(parameterText);
+                        if (matches.Count > 0)
+                        {
+                            var signalParameters = new List<string>();
+
+                            foreach (Match match in matches)
+                            {
+                                // The first item in the groups collection is the full string that matched
+                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                                // Given that we only expect one match group we'll just use the first item.
+                                var signalParameterName = match.Groups[1].Value;
+                                signalParameters.Add(signalParameterName);
+                            }
+
+                            reference = new ActionParameterValue(parameterText, signalParameters);
+                        }
+                    }
+
+                    if (reference == null)
+                    {
+                        reference = new ActionParameterValue(pair.Value);
+                    }
+
+                    parameters.Add(pair.Key, reference);
+                }
+
+                return new Rule(
+                    definition.Name,
+                    definition.Description,
+                    new SignalTypeId(definition.Signal.Id),
+                    new ActionId(definition.Action.Id),
+                    signalParameterConditions,
+                    parameters);
+            }
+
+            return null;
+        }
+
+        [SuppressMessage(
+            "Microsoft.Maintainability",
+            "CA1502:AvoidExcessiveComplexity",
+            Justification = "It's just a big case statement. Nothing horribly complex about it.")]
+        private static Predicate<object> ToCondition(ConditionRuleDefinition condition)
+        {
+            object comparisonValue = condition.Pattern;
+            switch (condition.Type)
+            {
+                case "equals":
+                    return o => o.Equals(comparisonValue);
+                case "notequals":
+                    return o => !o.Equals(comparisonValue);
+                case "lessthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) < 0;
+                    };
+                case "greaterthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) > 0;
+                    };
+                case "matchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "notmatchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "startswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                case "endswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.EndsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                default:
+                    throw new InvalidConditionTypeException();
+            }
+        }
+
         /// <summary>
         /// The function that builds an <c>AppDomain</c> when requested.
         /// </summary>
@@ -60,7 +181,7 @@ namespace Metamorphic.Server
         /// <summary>
         /// The collection containing all the rules.
         /// </summary>
-        private readonly IStoreRules _ruleCollection;
+        private readonly IRuleStorageProxy _ruleCollection;
 
         /// <summary>
         /// The object that dispenses signals that need to be processed.
@@ -107,7 +228,7 @@ namespace Metamorphic.Server
             IInstallPackages packageInstaller,
             Func<string, string[], AppDomain> appDomainBuilder,
             Func<AppDomain, ILoadActionExecutorsInRemoteAppDomains> executorBuilder,
-            IStoreRules ruleCollection,
+            IRuleStorageProxy ruleCollection,
             IDispenseSignals signalDispenser,
             SystemDiagnostics diagnostics,
             IFileSystem fileSystem)
@@ -190,8 +311,14 @@ namespace Metamorphic.Server
             }
 
             var rules = _ruleCollection.RulesForSignal(signal.Sensor);
-            foreach (var rule in rules)
+            foreach (var definition in rules)
             {
+                var rule = CreateRule(definition);
+                if (rule == null)
+                {
+                    continue;
+                }
+
                 if (rule.ShouldProcess(signal))
                 {
                     var job = rule.ToJob(signal);

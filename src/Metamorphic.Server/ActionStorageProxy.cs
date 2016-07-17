@@ -50,22 +50,6 @@ namespace Metamorphic.Server
             _commandSender.OnEndpointDisconnected += HandleEndpointDisconnected;
         }
 
-        private void HandleEndpointConnected(object sender, EndpointEventArgs e)
-        {
-            if (!_knownEndpoints.Contains(e.Endpoint))
-            {
-                _knownEndpoints.Add(e.Endpoint);
-            }
-        }
-
-        private void HandleEndpointDisconnected(object sender, EndpointEventArgs e)
-        {
-            if (_knownEndpoints.Contains(e.Endpoint))
-            {
-                _knownEndpoints.Remove(e.Endpoint);
-            }
-        }
-
         /// <summary>
         /// Returns the <see cref="ActionDefinition"/> which the given <see cref="ActionId"/>.
         /// </summary>
@@ -100,6 +84,22 @@ namespace Metamorphic.Server
             }
 
             return null;
+        }
+
+        private void HandleEndpointConnected(object sender, EndpointEventArgs e)
+        {
+            if (!_knownEndpoints.Contains(e.Endpoint))
+            {
+                _knownEndpoints.Add(e.Endpoint);
+            }
+        }
+
+        private void HandleEndpointDisconnected(object sender, EndpointEventArgs e)
+        {
+            if (_knownEndpoints.Contains(e.Endpoint))
+            {
+                _knownEndpoints.Remove(e.Endpoint);
+            }
         }
 
         /// <summary>

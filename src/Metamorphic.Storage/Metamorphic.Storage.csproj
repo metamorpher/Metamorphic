@@ -179,15 +179,15 @@
     <Compile Include="Actions\ActionStorage.cs" />
     <Compile Include="Actions\AppDomainOwningActionPackageScanner.cs" />
     <Compile Include="Actions\AppDomainPackageClassLoader.cs" />
-    <Compile Include="Actions\DirectoryPackageListener.cs" />
+    <Compile Include="Discovery\FileSystem\DirectoryPackageListener.cs" />
     <Compile Include="Actions\DuplicateActionDefinitionException.cs" />
-    <Compile Include="Actions\IDetectActionPackages.cs" />
     <Compile Include="Actions\ILoadPackageScannersInRemoteAppDomains.cs" />
     <Compile Include="Actions\IScanActionPackageFiles.cs" />
     <Compile Include="Actions\IScanActionPackages.cs" />
     <Compile Include="Actions\IStoreActions.cs" />
     <Compile Include="Actions\ActionStorageProxy.cs" />
-    <Compile Include="Actions\IWatchPackages.cs" />
+    <Compile Include="Discovery\IProcessPackageChanges.cs" />
+    <Compile Include="Discovery\IWatchPackages.cs" />
     <Compile Include="Actions\RemotePackageScanner.cs" />
     <Compile Include="CommunicationInitializer.cs" />
     <Compile Include="DependencyInjection.cs" />
@@ -214,6 +214,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rules\ILoadRules.cs" />
+    <Compile Include="Rules\IStoreRules.cs" />
+    <Compile Include="Rules\RuleAlreadyExistsException.cs" />
+    <Compile Include="Rules\RuleCollection.cs" />
+    <Compile Include="Rules\RuleDefinitionCheck.cs" />
+    <Compile Include="Rules\RuleLoader.cs" />
+    <Compile Include="Rules\RuleOrigin.cs" />
+    <Compile Include="Rules\RulePackageDetector.cs" />
+    <Compile Include="Rules\ScalarYamlNodeTypeResolver.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
     <Compile Include="StorageConfigurationKeys.cs" />
     <Compile Include="StorageConstants.cs" />
@@ -232,6 +241,10 @@
       <Project>{a893bd41-a429-4382-ba2b-6d766ba70c60}</Project>
       <Name>Metamorphic.Core.Commands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>
       <Name>Metamorphic.Core</Name>
@@ -243,6 +256,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

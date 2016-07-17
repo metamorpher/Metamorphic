@@ -198,12 +198,12 @@
     <Compile Include="..\Test.SourceOnly\MockPath.cs">
       <Link>Mocks\MockPath.cs</Link>
     </Compile>
+    <Compile Include="ActionParameterValueTest.cs" />
     <Compile Include="FailedToConnectToStorageExceptionTest.cs" />
+    <Compile Include="InvalidRuleDefinitionExceptionTest.cs" />
+    <Compile Include="InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="RemoteActionExecutorTest.cs" />
-    <Compile Include="Rules\InvalidConditionTypeExceptionTest.cs" />
-    <Compile Include="Rules\RuleAlreadyExistsExceptionTest.cs" />
-    <Compile Include="Rules\RuleCollectionTest.cs" />
-    <Compile Include="Rules\RuleLoaderTest.cs" />
+    <Compile Include="RuleTest.cs" />
     <Compile Include="SignalProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnableToLoadActionTypeExceptionTest.cs" />
@@ -211,99 +211,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TestFiles\ActionWithoutReference.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ActionWithParameters.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ActionWithParametersReferencingMultipleSignalParameters.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ActionWithParametersReferencingSignal.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ConditionWithoutName.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ConditionWithoutPattern.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ConditionWithoutType.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\EmptyFile.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\EndsWithCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\EqualsCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\GreaterThanCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\LessThanCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MatchRegexCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MissingAction.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MissingDescription.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MissingEnabledFlag.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MissingName.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MissingSignal.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\NotEqualsCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\NotMatchRegexCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithConditionsOnSignalParameterIntoSingleActionParameter.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithEndsWithCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithEqualsCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithGreaterThanCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithLessThanCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithMatchRegexCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithNotEqualsCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithNotMatchRegexCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithoutCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\RuleWithStartsWithCondition.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\SignalWithoutId.mmrule">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Metamorphic.Actions.Powershell\Metamorphic.Actions.Powershell.csproj">
@@ -313,6 +220,10 @@
     <ProjectReference Include="..\Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj">
       <Project>{113b00bc-537a-4ae7-b844-fbf18f1a4e20}</Project>
       <Name>Metamorphic.Core.Queueing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>

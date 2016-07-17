@@ -141,32 +141,8 @@
   <data name="Service_ServiceName" xml:space="preserve">
     <value>Metamorphic.Service</value>
   </data>
-  <data name="Log_Messages_RuleWatcher_CreatedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered new rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Disabled" xml:space="preserve">
-    <value>Rule discovery - Disabled</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Enabled" xml:space="preserve">
-    <value>Rule discovery - Enabled</value>
-  </data>
   <data name="Exceptions_Messages_MissingConfigurationValue_WithKey" xml:space="preserve">
     <value>A required configuration value is missing. The key for the missing configuration value is: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_RemovedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered removed rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered updated rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
-    <value>The rule definition at {0} is not valid.</value>
-  </data>
-  <data name="Exceptions_Messages_InvalidConditionType" xml:space="preserve">
-    <value>The condition type is not valid.</value>
-  </data>
-  <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
-    <value>The specified Rule already exists in the collection.</value>
   </data>
   <data name="Log_Messages_SignalProcessor_ProcessJobFailed_WithException" xml:space="preserve">
     <value>Failure while processing jobs. Error was: {0}.</value>
@@ -194,5 +170,11 @@
   </data>
   <data name="Exceptions_Messages_UnableToLoadActionType" xml:space="preserve">
     <value>Unable to load the action type.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidSignalForRule" xml:space="preserve">
+    <value>The given signal does not match the current rule.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidRuleDefinition" xml:space="preserve">
+    <value>The given rule definition is not valid.</value>
   </data>
 </root>

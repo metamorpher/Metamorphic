@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading;
 using Autofac;
 using Metamorphic.Server.Properties;
-using Metamorphic.Server.Rules;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -48,11 +47,6 @@ namespace Metamorphic.Server
         private volatile bool _isDisposed;
 
         /// <summary>
-        /// The object that is used to keep track of the available rules.
-        /// </summary>
-        private IWatchRules _ruleWatcher;
-
-        /// <summary>
         /// The object that processes signals.
         /// </summary>
         private SignalProcessor _signalProcessor;
@@ -80,7 +74,6 @@ namespace Metamorphic.Server
         {
             _container = DependencyInjection.CreateContainer();
 
-            _ruleWatcher = _container.Resolve<IWatchRules>();
             _signalProcessor = _container.Resolve<SignalProcessor>();
             _diagnostics = _container.Resolve<SystemDiagnostics>();
             var facade = _container.Resolve<ICommunicationFacade>();
@@ -101,8 +94,6 @@ namespace Metamorphic.Server
             {
                 throw new FailedToConnectToStorageException();
             }
-
-            _ruleWatcher.Enable();
 
             _diagnostics.Log(
                 LevelToLog.Info,
@@ -130,12 +121,6 @@ namespace Metamorphic.Server
 
             try
             {
-                if (_ruleWatcher != null)
-                {
-                    _ruleWatcher.Disable();
-                    _ruleWatcher = null;
-                }
-
                 if (_signalProcessor != null)
                 {
                     _signalProcessor = null;
