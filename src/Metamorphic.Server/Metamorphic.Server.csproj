@@ -190,6 +190,7 @@
     <Compile Include="ILoadActionExecutorsInRemoteAppDomains.cs" />
     <Compile Include="InvalidRuleDefinitionException.cs" />
     <Compile Include="InvalidSignalForRuleException.cs" />
+    <Compile Include="IRuleStorageProxy.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.FileBasedResolver.cs" />
@@ -215,6 +216,7 @@
     </Compile>
     <Compile Include="RemoteActionExecutor.cs" />
     <Compile Include="Rule.cs" />
+    <Compile Include="RuleStorageProxy.cs" />
     <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />

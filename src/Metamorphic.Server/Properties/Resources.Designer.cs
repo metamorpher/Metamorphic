@@ -69,7 +69,23 @@ namespace Metamorphic.Server.Properties {
             }
         }
         
-
+        /// <summary>
+        ///   Looks up a localized string similar to The given rule definition is not valid..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidRuleDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidRuleDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given signal does not match the current rule..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidSignalForRule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidSignalForRule", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to The parameter &apos;{0}&apos; required for the action invocation was missing..
@@ -77,6 +93,10 @@ namespace Metamorphic.Server.Properties {
         internal static string Exceptions_Messages_MissingActionParameter_WithParameterName {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MissingActionParameter_WithParameterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A required configuration value is missing. The key for the missing configuration value is: {0}.
         /// </summary>
         internal static string Exceptions_Messages_MissingConfigurationValue_WithKey {

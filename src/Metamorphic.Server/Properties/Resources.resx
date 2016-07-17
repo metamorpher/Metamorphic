@@ -171,4 +171,10 @@
   <data name="Exceptions_Messages_UnableToLoadActionType" xml:space="preserve">
     <value>Unable to load the action type.</value>
   </data>
+  <data name="Exceptions_Messages_InvalidSignalForRule" xml:space="preserve">
+    <value>The given signal does not match the current rule.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidRuleDefinition" xml:space="preserve">
+    <value>The given rule definition is not valid.</value>
+  </data>
 </root>

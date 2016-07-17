@@ -97,14 +97,6 @@ namespace Metamorphic.Server
                 RegisterLoggers(builder);
                 RegisterProcessor(builder);
                 RegisterProxies(builder);
-
-                builder.RegisterModule(new QueueingModule());
-
-                builder.Register(c => new SignalProcessor(
-                        c.Resolve<IQueueJobs>(),
-                        c.Resolve<IDispenseSignals>(),
-                        c.Resolve<SystemDiagnostics>()))
-                    .SingleInstance();
             }
 
             return builder.Build();
@@ -195,7 +187,7 @@ namespace Metamorphic.Server
                     c.Resolve<IInstallPackages>(),
                     c.Resolve<Func<string, string[], AppDomain>>(),
                     executorBuilder,
-                    c.Resolve<IStoreRules>(),
+                    c.Resolve<IRuleStorageProxy>(),
                     c.Resolve<IDispenseSignals>(),
                     c.Resolve<SystemDiagnostics>(),
                     c.Resolve<IFileSystem>()))
@@ -208,7 +200,11 @@ namespace Metamorphic.Server
                     c.Resolve<ISendCommandsToRemoteEndpoints>()))
                 .As<IActionStorageProxy>()
                 .SingleInstance();
+
+            builder.Register(c => new RuleStorageProxy(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                .As<IRuleStorageProxy>()
+                .SingleInstance();
         }
-                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
     }
 }

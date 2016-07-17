@@ -7,15 +7,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Metamorphic.Core.Actions;
 using Metamorphic.Core.Commands;
+using Metamorphic.Core.Rules;
+using Metamorphic.Core.Signals;
 using Nuclei.Communication;
 using Nuclei.Communication.Interaction;
 
 namespace Metamorphic.Server
 {
-    internal sealed class ActionStorageProxy : IActionStorageProxy
+    internal sealed class RuleStorageProxy : IRuleStorageProxy
     {
         /// <summary>
         /// The object that is used to send commands to the remote application.
@@ -32,13 +32,13 @@ namespace Metamorphic.Server
             = new List<EndpointId>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActionStorageProxy"/> class.
+        /// Initializes a new instance of the <see cref="RuleStorageProxy"/> class.
         /// </summary>
         /// <param name="commandSender">The object that is used to send commands to the remote application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandSender"/> is <see langword="null" />.
         /// </exception>
-        public ActionStorageProxy(ISendCommandsToRemoteEndpoints commandSender)
+        public RuleStorageProxy(ISendCommandsToRemoteEndpoints commandSender)
         {
             if (commandSender == null)
             {
@@ -48,42 +48,6 @@ namespace Metamorphic.Server
             _commandSender = commandSender;
             _commandSender.OnEndpointConnected += HandleEndpointConnected;
             _commandSender.OnEndpointDisconnected += HandleEndpointDisconnected;
-        }
-
-        /// <summary>
-        /// Returns the <see cref="ActionDefinition"/> which the given <see cref="ActionId"/>.
-        /// </summary>
-        /// <param name="action">The ID of the action</param>
-        /// <returns>The action definition with the given ID.</returns>
-        public ActionDefinition Action(ActionId action)
-        {
-            foreach (var id in _knownEndpoints)
-            {
-                if (!_commandSender.HasCommandFor(id, typeof(IActionCommandSet)))
-                {
-                    continue;
-                }
-
-                var command = _commandSender.CommandsFor<IActionCommandSet>(id);
-                if (command == null)
-                {
-                    continue;
-                }
-
-                var task = command.Action(action);
-
-                try
-                {
-                    task.Wait();
-                    return task.IsFaulted ? null : task.Result;
-                }
-                catch (AggregateException)
-                {
-                    return null;
-                }
-            }
-
-            return null;
         }
 
         private void HandleEndpointConnected(object sender, EndpointEventArgs e)
@@ -103,46 +67,39 @@ namespace Metamorphic.Server
         }
 
         /// <summary>
-        /// Returns a value indicating whether the storage has an <see cref="ActionDefinition"/>
-        /// with the given <see cref="ActionId"/>.
+        /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
-        /// <param name="action">The ID of the action.</param>
-        /// <returns>
-        ///   <see langword="true" /> if the storage has a definition with the given ID; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage(
-            "Microsoft.StyleCop.CSharp.DocumentationRules",
-            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool HasActionFor(ActionId action)
+        /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
+        /// <returns>A collection containing all the rule definitions that apply to the given signal.</returns>
+        public IEnumerable<RuleDefinition> RulesForSignal(SignalTypeId sensorId)
         {
             foreach (var id in _knownEndpoints)
             {
-                if (!_commandSender.HasCommandFor(id, typeof(IActionCommandSet)))
+                if (!_commandSender.HasCommandFor(id, typeof(IRuleCommandSet)))
                 {
                     continue;
                 }
 
-                var command = _commandSender.CommandsFor<IActionCommandSet>(id);
+                var command = _commandSender.CommandsFor<IRuleCommandSet>(id);
                 if (command == null)
                 {
                     continue;
                 }
 
-                var task = command.HasActionFor(action);
+                var task = command.RulesForSignal(sensorId);
 
                 try
                 {
                     task.Wait();
-                    return task.IsFaulted ? false : task.Result;
+                    return task.IsFaulted ? new RuleDefinition[0] : task.Result;
                 }
                 catch (AggregateException)
                 {
-                    return false;
+                    return null;
                 }
             }
 
-            return false;
+            return null;
         }
     }
 }

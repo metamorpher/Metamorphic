@@ -84,6 +84,16 @@ namespace Metamorphic.Server
                         CommunicationSubjects.ActionVersion,
                         CommunicationSubjects.ActionGroup),
                 });
+
+            registration(
+                typeof(IRuleCommandSet),
+                new[]
+                {
+                    new SubjectGroupIdentifier(
+                        CommunicationSubjects.Rule,
+                        CommunicationSubjects.RuleVersion,
+                        CommunicationSubjects.RuleGroup),
+                });
         }
 
         /// <summary>
