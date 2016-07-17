@@ -29,6 +29,12 @@ namespace Metamorphic.Core.Commands
             = "ApplicationInfo";
 
         /// <summary>
+        /// The subject group that is used to group all rule related subjects.
+        /// </summary>
+        public const string RuleGroup
+            = "Rules";
+
+        /// <summary>
         /// The communication subject for applications that deal with action information.
         /// </summary>
         [SuppressMessage(
@@ -58,6 +64,22 @@ namespace Metamorphic.Core.Commands
         /// The version of the application subject group.
         /// </summary>
         public static readonly Version ApplicationVersion
+            = new Version(1, 0);
+
+        /// <summary>
+        /// The communication subject for applications that deal with rule information.
+        /// </summary>
+        [SuppressMessage(
+            "Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "ConfigurationKey is immutable")]
+        public static readonly CommunicationSubject Rule
+            = new CommunicationSubject("Metamorphic.Subject: Rule");
+
+        /// <summary>
+        /// The version of the rule subject group.
+        /// </summary>
+        public static readonly Version RuleVersion
             = new Version(1, 0);
     }
 }
