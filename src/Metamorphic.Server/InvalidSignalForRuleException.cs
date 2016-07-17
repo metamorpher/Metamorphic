@@ -7,10 +7,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using Metamorphic.Core.Properties;
 using Metamorphic.Core.Signals;
+using Metamorphic.Server.Properties;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     /// <summary>
     /// An exception thrown when a <see cref="Signal"/> is applied to a <see cref="Rule"/> which does not fit

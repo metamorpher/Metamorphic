@@ -179,6 +179,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionParameterValue.cs" />
     <Compile Include="ActionStorageProxy.cs" />
     <Compile Include="AppDomainActionClassLoader.cs" />
     <Compile Include="CommunicationInitializer.cs" />
@@ -187,6 +188,8 @@
     <Compile Include="IExecuteActions.cs" />
     <Compile Include="IActionStorageProxy.cs" />
     <Compile Include="ILoadActionExecutorsInRemoteAppDomains.cs" />
+    <Compile Include="InvalidRuleDefinitionException.cs" />
+    <Compile Include="InvalidSignalForRuleException.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.FileBasedResolver.cs" />
@@ -211,6 +214,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RemoteActionExecutor.cs" />
+    <Compile Include="Rule.cs" />
     <Compile Include="ServerConfigurationKeys.cs" />
     <Compile Include="ServerConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />

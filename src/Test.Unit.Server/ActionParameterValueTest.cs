@@ -12,7 +12,7 @@ using System.Globalization;
 using Metamorphic.Core.Signals;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     [TestFixture]
     public sealed class ActionParameterValueTest
@@ -21,7 +21,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            MessageId = "Metamorphic.Server.ActionParameterValue",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithEmptyParameterFormat()
         {
@@ -32,7 +32,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            MessageId = "Metamorphic.Server.ActionParameterValue",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullParameterFormat()
         {
@@ -43,7 +43,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            MessageId = "Metamorphic.Server.ActionParameterValue",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullParameterList()
         {
@@ -54,7 +54,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.ActionParameterValue",
+            MessageId = "Metamorphic.Server.ActionParameterValue",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullValue()
         {

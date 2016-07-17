@@ -13,12 +13,12 @@ using Metamorphic.Core.Actions;
 using Metamorphic.Core.Jobs;
 using Metamorphic.Core.Signals;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     /// <summary>
     /// Defines methods for transforming signals into work.
     /// </summary>
-    public sealed class Rule
+    internal sealed class Rule
     {
         /// <summary>
         /// The ID of the action that should be executed in response to signals that match the current rule.

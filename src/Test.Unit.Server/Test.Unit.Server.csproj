@@ -198,8 +198,12 @@
     <Compile Include="..\Test.SourceOnly\MockPath.cs">
       <Link>Mocks\MockPath.cs</Link>
     </Compile>
+    <Compile Include="ActionParameterValueTest.cs" />
     <Compile Include="FailedToConnectToStorageExceptionTest.cs" />
+    <Compile Include="InvalidRuleDefinitionExceptionTest.cs" />
+    <Compile Include="InvalidSignalForRuleExceptionTest.cs" />
     <Compile Include="RemoteActionExecutorTest.cs" />
+    <Compile Include="RuleTest.cs" />
     <Compile Include="SignalProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnableToLoadActionTypeExceptionTest.cs" />
@@ -216,6 +220,10 @@
     <ProjectReference Include="..\Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj">
       <Project>{113b00bc-537a-4ae7-b844-fbf18f1a4e20}</Project>
       <Name>Metamorphic.Core.Queueing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>

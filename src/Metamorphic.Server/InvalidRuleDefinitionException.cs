@@ -7,9 +7,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using Metamorphic.Core.Properties;
+using Metamorphic.Core.Rules;
+using Metamorphic.Server.Properties;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     /// <summary>
     /// An exception thrown when an invalid <see cref="RuleDefinition"/> is used to create a <see cref="Rule"/>.

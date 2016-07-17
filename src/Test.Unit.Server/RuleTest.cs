@@ -13,7 +13,7 @@ using Metamorphic.Core.Actions;
 using Metamorphic.Core.Signals;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     [TestFixture]
     public sealed class RuleTest
@@ -22,7 +22,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullActionId()
         {
@@ -36,7 +36,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullConditionCollection()
         {
@@ -52,7 +52,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullDescription()
         {
@@ -68,7 +68,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullName()
         {
@@ -84,7 +84,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullReferenceCollection()
         {
@@ -100,7 +100,7 @@ namespace Metamorphic.Core.Rules
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Core.Rules.Rule",
+            MessageId = "Metamorphic.Server.Rule",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullSensorId()
         {

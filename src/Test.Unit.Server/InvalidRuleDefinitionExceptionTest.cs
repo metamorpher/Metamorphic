@@ -8,7 +8,7 @@
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     [TestFixture]
     public sealed class InvalidRuleDefinitionExceptionTest : ExceptionContractVerifier<InvalidRuleDefinitionException>

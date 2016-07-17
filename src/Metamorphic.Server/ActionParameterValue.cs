@@ -10,22 +10,23 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
 
-namespace Metamorphic.Core.Rules
+namespace Metamorphic.Server
 {
     /// <summary>
     /// Defines a reference to a parameter provided by a signal and the conditions
     /// placed on that parameter.
     /// </summary>
-    public sealed class ActionParameterValue
+    internal sealed class ActionParameterValue
     {
         /// <summary>
         /// The regex that is used to extract the parameter names from a string so that we can
         /// upper case them.
         /// </summary>
         private static readonly Regex StringParameterTransform = new Regex(
-            @"(?:{{signal.)(.*?)(?:}})",
+            RuleConstants.TriggerParameterRegex,
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
