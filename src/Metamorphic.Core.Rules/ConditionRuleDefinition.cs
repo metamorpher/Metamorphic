@@ -5,44 +5,46 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Stores the information about an action reference and the parameter necessary for the given action.
+    /// Stores information about a condition under which a given signal applies to a rule.
     /// </summary>
     /// <remarks>
     /// The naming of the members of this class is linked to the contents of the rule files.
     /// </remarks>
-    public class ActionRuleDefinition
+    [Serializable]
+    public sealed class ConditionRuleDefinition
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActionRuleDefinition"/> class.
+        /// Gets or sets the name of the trigger parameter.
         /// </summary>
-        public ActionRuleDefinition()
-        {
-            Parameters = new Dictionary<string, object>();
-        }
-
-        /// <summary>
-        /// Gets or sets the ID of the action that should be executed.
-        /// </summary>
-        public string Id
+        public string Name
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the parameters for the action.
+        /// Gets or sets the pattern to compare with.
+        /// </summary>
+        public object Pattern
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the comparison method.
         /// </summary>
         [SuppressMessage(
-            "Microsoft.Usage",
-            "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "This class is instantiated when we load the rules from the rule files through third-party code.")]
-        public Dictionary<string, object> Parameters
+            "Microsoft.Naming",
+            "CA1721:PropertyNamesShouldNotMatchGetMethods",
+            Justification = "The name is a reference to the type of the condition.")]
+        public string Type
         {
             get;
             set;

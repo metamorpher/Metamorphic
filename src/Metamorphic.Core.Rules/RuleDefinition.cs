@@ -5,18 +5,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Stores information that describes a <see cref="Rule"/>.
+    /// Stores information that describes a rule.
     /// </summary>
     /// <remarks>
     /// The naming of the members of this class is linked to the contents of the rule files.
     /// </remarks>
-    public class RuleDefinition
+    [Serializable]
+    public sealed class RuleDefinition
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleDefinition"/> class.

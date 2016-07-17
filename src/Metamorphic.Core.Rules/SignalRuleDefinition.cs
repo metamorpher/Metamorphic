@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -13,7 +14,8 @@ namespace Metamorphic.Core.Rules
     /// <summary>
     /// Stores information about a trigger in a rule.
     /// </summary>
-    public class SignalRuleDefinition
+    [Serializable]
+    public sealed class SignalRuleDefinition
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalRuleDefinition"/> class.

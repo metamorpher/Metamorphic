@@ -326,6 +326,10 @@
       <Project>{60c56a7c-86ac-45ef-80d2-47f7f33f6331}</Project>
       <Name>Metamorphic.Actions.Powershell</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>
       <Name>Metamorphic.Core</Name>

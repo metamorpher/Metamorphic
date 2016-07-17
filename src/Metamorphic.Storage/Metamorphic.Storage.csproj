@@ -215,7 +215,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Rules\ILoadRules.cs" />
-    <Compile Include="Rules\InvalidConditionTypeException.cs" />
     <Compile Include="Rules\IStoreRules.cs" />
     <Compile Include="Rules\IWatchRules.cs" />
     <Compile Include="Rules\RuleAlreadyExistsException.cs" />
@@ -240,6 +239,10 @@
     <ProjectReference Include="..\Metamorphic.Core.Commands\Metamorphic.Core.Commands.csproj">
       <Project>{a893bd41-a429-4382-ba2b-6d766ba70c60}</Project>
       <Name>Metamorphic.Core.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
+      <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
+      <Name>Metamorphic.Core.Rules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core\Metamorphic.Core.csproj">
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>

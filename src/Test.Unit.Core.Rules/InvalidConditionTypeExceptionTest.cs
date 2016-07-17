@@ -8,7 +8,7 @@
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Core.Rules
 {
     [TestFixture]
     public sealed class InvalidConditionTypeExceptionTest : ExceptionContractVerifier<InvalidConditionTypeException>
