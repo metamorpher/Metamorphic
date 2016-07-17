@@ -5,7 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Metamorphic.Storage.Actions
+namespace Metamorphic.Storage.Discovery
 {
     /// <summary>
     /// Defines the interface for objects that watch one or more directories for new NuGet packages containing actions.

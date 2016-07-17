@@ -21,7 +21,7 @@ using Test.SourceOnly;
 
 using IFileSystem = System.IO.Abstractions.IFileSystem;
 
-namespace Metamorphic.Storage.Actions
+namespace Metamorphic.Storage.Discovery.FileSystem
 {
     [TestFixture]
     public sealed class DirectoryPackageListenerTest
@@ -30,14 +30,14 @@ namespace Metamorphic.Storage.Actions
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Storage.Actions.DirectoryPackageListener",
+            MessageId = "Metamorphic.Storage.Discovery.FileSystem.DirectoryPackageListener",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullConfiguration()
         {
             Assert.Throws<ArgumentNullException>(
                 () => new DirectoryPackageListener(
                     null,
-                    new Mock<IDetectActionPackages>().Object,
+                    new List<IProcessPackageChanges> { new Mock<IProcessPackageChanges>().Object },
                     new SystemDiagnostics((l, m) => { }, null),
                     new Mock<IFileSystem>().Object));
         }
@@ -46,14 +46,14 @@ namespace Metamorphic.Storage.Actions
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Storage.Actions.DirectoryPackageListener",
+            MessageId = "Metamorphic.Storage.Discovery.FileSystem.DirectoryPackageListener",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullDiagnostics()
         {
             Assert.Throws<ArgumentNullException>(
                 () => new DirectoryPackageListener(
                     new Mock<IConfiguration>().Object,
-                    new Mock<IDetectActionPackages>().Object,
+                    new List<IProcessPackageChanges> { new Mock<IProcessPackageChanges>().Object },
                     null,
                     new Mock<IFileSystem>().Object));
         }
@@ -62,14 +62,14 @@ namespace Metamorphic.Storage.Actions
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Storage.Actions.DirectoryPackageListener",
+            MessageId = "Metamorphic.Storage.Discovery.FileSystem.DirectoryPackageListener",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullFileSystem()
         {
             Assert.Throws<ArgumentNullException>(
                 () => new DirectoryPackageListener(
                     new Mock<IConfiguration>().Object,
-                    new Mock<IDetectActionPackages>().Object,
+                    new List<IProcessPackageChanges> { new Mock<IProcessPackageChanges>().Object },
                     new SystemDiagnostics((l, m) => { }, null),
                     null));
         }
@@ -78,7 +78,7 @@ namespace Metamorphic.Storage.Actions
         [SuppressMessage(
             "Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "Metamorphic.Storage.Actions.DirectoryPackageListener",
+            MessageId = "Metamorphic.Storage.Discovery.FileSystem.DirectoryPackageListener",
             Justification = "Testing that the constructor throws an exception.")]
         public void CreateWithNullLoader()
         {
@@ -101,7 +101,7 @@ namespace Metamorphic.Storage.Actions
                     .Returns(new[] { @"http://nuget.org" });
             }
 
-            var loader = new Mock<IDetectActionPackages>();
+            var loader = new Mock<IProcessPackageChanges>();
             var fileSystem = new Mock<IFileSystem>();
             {
                 fileSystem.Setup(f => f.Directory)
@@ -112,7 +112,7 @@ namespace Metamorphic.Storage.Actions
 
             var listener = new DirectoryPackageListener(
                 configuration.Object,
-                loader.Object,
+                new List<IProcessPackageChanges> { loader.Object },
                 new SystemDiagnostics((l, m) => { }, null),
                 fileSystem.Object);
 
@@ -134,7 +134,7 @@ namespace Metamorphic.Storage.Actions
             }
 
             IEnumerable<PackageName> packages = null;
-            var loader = new Mock<IDetectActionPackages>();
+            var loader = new Mock<IProcessPackageChanges>();
             {
                 loader.Setup(l => l.Added(It.IsAny<IEnumerable<PackageName>>()))
                     .Callback<IEnumerable<PackageName>>(c => packages = c);
@@ -154,7 +154,7 @@ namespace Metamorphic.Storage.Actions
 
             var listener = new DirectoryPackageListener(
                 configuration.Object,
-                loader.Object,
+                new List<IProcessPackageChanges> { loader.Object },
                 new SystemDiagnostics((l, m) => { }, null),
                 fileSystem.Object);
 

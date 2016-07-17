@@ -131,6 +131,10 @@
       <HintPath>..\..\packages\NuGet.Core.2.11.1\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nuclei.Nunit.Extensions, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.8.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -207,14 +211,15 @@
     <Compile Include="Actions\ActionStorageProxyTest.cs" />
     <Compile Include="Actions\ActionStorageTest.cs" />
     <Compile Include="Actions\AppDomainOwningActionPackageScannerTest.cs" />
-    <Compile Include="Actions\DirectoryPackageListenerTest.cs" />
+    <Compile Include="Discovery\FileSystem\DirectoryPackageListenerTest.cs" />
     <Compile Include="Actions\DuplicateActionDefinitionExceptionTest.cs" />
     <Compile Include="Actions\RemotePackageScannerTest.cs" />
-    <Compile Include="Rules\InvalidConditionTypeExceptionTest.cs" />
     <Compile Include="Rules\RuleAlreadyExistsExceptionTest.cs" />
     <Compile Include="Rules\RuleCollectionTest.cs" />
+    <Compile Include="Rules\RuleDefinitionCheckTest.cs" />
     <Compile Include="Rules\RuleLoaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rules\RuleOriginTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

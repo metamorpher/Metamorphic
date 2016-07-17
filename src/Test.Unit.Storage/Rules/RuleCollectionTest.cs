@@ -7,15 +7,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
-using Nuclei.Diagnostics;
+using NuGet;
 using NUnit.Framework;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     [TestFixture]
     public sealed class RuleCollectionTest
@@ -25,65 +23,98 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
+            var ruleDefinition = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(new PackageName("a", new SemanticVersion("1.0.0"))), ruleDefinition);
 
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
         }
 
         [Test]
-        public void AddWithEmptyFilePath()
+        public void AddWithExistingOrigin()
         {
             var collection = new RuleCollection();
 
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            Assert.Throws<ArgumentException>(() => collection.Add(string.Empty, rule));
-        }
+            var packageName1 = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName1), ruleDefinition1);
 
-        [Test]
-        public void AddWithExistingFilePath()
-        {
-            var collection = new RuleCollection();
-
-            var sensor = new SignalTypeId("b");
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
-
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var path2 = "a";
-            var rule2 = new Rule(
-                "a",
-                "b",
-                sensor,
-                new ActionId("e"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            Assert.Throws<RuleAlreadyExistsException>(() => collection.Add(path2, rule2));
+            var packageName2 = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "c",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName2), ruleDefinition2);
+
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
+            Assert.AreEqual(2, matchingRules.Count());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
+            Assert.AreSame(ruleDefinition2, matchingRules.Last());
         }
 
         [Test]
@@ -91,47 +122,91 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            var sensor = new SignalTypeId("b");
-            var path1 = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path1, rule1);
+            var packageName1 = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName1), ruleDefinition1);
 
-            var matchingRules = collection.RulesForSignal(sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var path2 = "d";
-            var rule2 = new Rule(
-                "a",
-                "b",
-                sensor,
-                new ActionId("e"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path2, rule2);
+            var packageName2 = new PackageName("d", new SemanticVersion("1.0.0"));
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName2), ruleDefinition2);
 
-            matchingRules = collection.RulesForSignal(sensor);
-            Assert.That(matchingRules, Is.EquivalentTo(new[] { rule1, rule2 }));
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
+            Assert.That(matchingRules, Is.EquivalentTo(new[] { ruleDefinition1, ruleDefinition2 }));
         }
 
         [Test]
-        public void AddWithNullFilePath()
+        public void AddWithNullOrigin()
         {
             var collection = new RuleCollection();
 
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
+            var rule = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
             Assert.Throws<ArgumentNullException>(() => collection.Add(null, rule));
         }
 
@@ -140,7 +215,7 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            Assert.Throws<ArgumentNullException>(() => collection.Add("a", null));
+            Assert.Throws<ArgumentNullException>(() => collection.Add(new RuleOrigin(new PackageName("a", new SemanticVersion("1.0.0"))), null));
         }
 
         [Test]
@@ -148,48 +223,38 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition);
 
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
 
-            collection.Remove(path);
-            matchingRules = collection.RulesForSignal(rule.Sensor);
+            collection.Remove(new RuleOrigin(packageName));
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(0, matchingRules.Count());
-        }
-
-        [Test]
-        public void RemoveWithEmptyFilePath()
-        {
-            var collection = new RuleCollection();
-
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
-
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
-            Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
-
-            collection.Remove(string.Empty);
-            matchingRules = collection.RulesForSignal(rule.Sensor);
-            Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
         }
 
         [Test]
@@ -197,89 +262,148 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            var sensor = new SignalTypeId("b");
-            var path1 = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path1, rule1);
+            var packageName1 = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName1), ruleDefinition1);
 
-            var matchingRules = collection.RulesForSignal(sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var path2 = "d";
-            var rule2 = new Rule(
-                "a",
-                "b",
-                sensor,
-                new ActionId("e"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path2, rule2);
+            var packageName2 = new PackageName("d", new SemanticVersion("1.0.0"));
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName2), ruleDefinition2);
 
-            matchingRules = collection.RulesForSignal(sensor);
-            Assert.That(matchingRules, Is.EquivalentTo(new[] { rule1, rule2 }));
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition2.Signal.Id));
+            Assert.That(matchingRules, Is.EquivalentTo(new[] { ruleDefinition1, ruleDefinition2 }));
 
-            collection.Remove(path1);
+            collection.Remove(new RuleOrigin(packageName1));
 
-            matchingRules = collection.RulesForSignal(sensor);
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition2.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule2, matchingRules.First());
+            Assert.AreSame(ruleDefinition2, matchingRules.First());
         }
 
         [Test]
-        public void RemoveWithNonExistingFilePath()
+        public void RemoveWithNonExistingOrigin()
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition);
 
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
 
-            collection.Remove("d");
-            matchingRules = collection.RulesForSignal(rule.Sensor);
+            collection.Remove(new RuleOrigin(new PackageName("d", new SemanticVersion("1.0.0"))));
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
         }
 
         [Test]
-        public void RemoveWithNullFilePath()
+        public void RemoveWithNullOrigin()
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition);
 
-            var matchingRules = collection.RulesForSignal(rule.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
 
             collection.Remove(null);
-            matchingRules = collection.RulesForSignal(rule.Sensor);
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
         }
 
         [Test]
@@ -287,145 +411,221 @@ namespace Metamorphic.Server.Rules
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule1);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition1);
 
-            var matchingRules = collection.RulesForSignal(rule1.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var rule2 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Update(path, rule2);
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Update(new RuleOrigin(packageName), ruleDefinition2);
 
-            matchingRules = collection.RulesForSignal(rule1.Sensor);
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule2, matchingRules.First());
+            Assert.AreSame(ruleDefinition2, matchingRules.First());
         }
 
         [Test]
-        public void UpdateWithEmptyFilePath()
+        public void UpdateWithNonExistingPackageName()
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule1);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition1);
 
-            var matchingRules = collection.RulesForSignal(rule1.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var rule2 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            Assert.Throws<ArgumentException>(() => collection.Update(string.Empty, rule2));
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Update(new RuleOrigin(new PackageName("d", new SemanticVersion("1.0.0"))), ruleDefinition2);
+
+            matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
+            Assert.AreEqual(1, matchingRules.Count());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
         }
 
         [Test]
-        public void UpdateWithNonExistingFilePath()
+        public void UpdateWithNullPackageName()
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule1);
+            var packageName = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition1 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(packageName), ruleDefinition1);
 
-            var matchingRules = collection.RulesForSignal(rule1.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition1.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition1, matchingRules.First());
 
-            var rule2 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Update("d", rule2);
-
-            matchingRules = collection.RulesForSignal(rule1.Sensor);
-            Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            var ruleDefinition2 = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            Assert.Throws<ArgumentNullException>(() => collection.Update(null, ruleDefinition2));
         }
 
         [Test]
-        public void UpdateWithNullFilePath()
+        public void UpdateWithNullRuleDefinition()
         {
             var collection = new RuleCollection();
 
-            var path = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule1);
+            var package = new PackageName("a", new SemanticVersion("1.0.0"));
+            var ruleDefinition = new RuleDefinition
+                {
+                    Name = "b",
+                    Action = new ActionRuleDefinition
+                    {
+                        Id = "c",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["a"] = "{{signal.a}}",
+                            ["c"] = "{{signal.c}}",
+                        },
+                    },
+                    Enabled = true,
+                    Signal = new SignalRuleDefinition
+                    {
+                        Id = "d",
+                        Parameters = new Dictionary<string, object>
+                        {
+                            ["e"] = "f"
+                        },
+                    }
+                };
+            collection.Add(new RuleOrigin(package), ruleDefinition);
 
-            var matchingRules = collection.RulesForSignal(rule1.Sensor);
+            var matchingRules = collection.RulesForSignal(new SignalTypeId(ruleDefinition.Signal.Id));
             Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
+            Assert.AreSame(ruleDefinition, matchingRules.First());
 
-            var rule2 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            Assert.Throws<ArgumentNullException>(() => collection.Update(null, rule2));
-        }
-
-        [Test]
-        public void UpdateWithNullRule()
-        {
-            var collection = new RuleCollection();
-
-            var path = "a";
-            var rule1 = new Rule(
-                "a",
-                "b",
-                new SignalTypeId("b"),
-                new ActionId("c"),
-                new Dictionary<string, Predicate<object>>(),
-                new Dictionary<string, ActionParameterValue>());
-            collection.Add(path, rule1);
-
-            var matchingRules = collection.RulesForSignal(rule1.Sensor);
-            Assert.AreEqual(1, matchingRules.Count());
-            Assert.AreSame(rule1, matchingRules.First());
-
-            Assert.Throws<ArgumentNullException>(() => collection.Update(path, null));
+            Assert.Throws<ArgumentNullException>(() => collection.Update(new RuleOrigin(package), null));
         }
     }
 }

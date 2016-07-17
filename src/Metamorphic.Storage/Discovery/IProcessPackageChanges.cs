@@ -8,12 +8,12 @@
 using System.Collections.Generic;
 using NuGet;
 
-namespace Metamorphic.Storage.Actions
+namespace Metamorphic.Storage.Discovery
 {
     /// <summary>
     /// Defines the interface for objects that handle package detection.
     /// </summary>
-    public interface IDetectActionPackages
+    public interface IProcessPackageChanges
     {
         /// <summary>
         /// Processes the added packages.

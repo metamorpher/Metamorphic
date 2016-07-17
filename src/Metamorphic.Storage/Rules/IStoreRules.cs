@@ -17,30 +17,30 @@ namespace Metamorphic.Storage.Rules
     internal interface IStoreRules
     {
         /// <summary>
-        /// Adds a new <see cref="Rule"/> that was created from the given file.
+        /// Adds a new <see cref="RuleDefinition"/> that was created from the given origin.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
-        /// <param name="rule">The rule.</param>
-        void Add(string filePath, Rule rule);
+        /// <param name="origin">The origin of the data that was used to create the rule.</param>
+        /// <param name="rule">The rule definition.</param>
+        void Add(RuleOrigin origin, RuleDefinition rule);
 
         /// <summary>
-        /// Removes the <see cref="Rule"/> that is associated with the given file.
+        /// Removes the <see cref="RuleDefinition"/> that is associated with the given origin.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file.</param>
-        void Remove(string filePath);
+        /// <param name="origin">The origin of the rule.</param>
+        void Remove(RuleOrigin origin);
 
         /// <summary>
         /// Returns a collection containing all rules that are applicable for the given signal type.
         /// </summary>
         /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
-        /// <returns>A collection containing all the rules that apply to the given signal.</returns>
-        IEnumerable<Rule> RulesForSignal(SignalTypeId sensorId);
+        /// <returns>A collection containing all the rule definitions that apply to the given signal.</returns>
+        RuleDefinition[] RulesForSignal(SignalTypeId sensorId);
 
         /// <summary>
-        /// Updates an existing <see cref="Rule"/>.
+        /// Updates an existing <see cref="RuleDefinition"/>.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
-        /// <param name="rule">The rule.</param>
-        void Update(string filePath, Rule rule);
+        /// <param name="origin">The origin of the data that was used to create the rule.</param>
+        /// <param name="rule">The rule definition.</param>
+        void Update(RuleOrigin origin, RuleDefinition rule);
     }
 }

@@ -7,7 +7,7 @@
 
 using System;
 using Autofac;
-using Metamorphic.Storage.Actions;
+using Metamorphic.Storage.Discovery;
 using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;

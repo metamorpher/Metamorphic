@@ -69,7 +69,32 @@ namespace Metamorphic.Storage.Properties {
             }
         }
         
-
+        /// <summary>
+        ///   Looks up a localized string similar to An action with the given ID is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateActionDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateActionDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified file was not found..
+        /// </summary>
+        internal static string Exceptions_Messages_FileNotFound {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The parameter should not be an empty string..
+        /// </summary>
+        internal static string Exceptions_Messages_ParameterShouldNotBeAnEmptyString {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ParameterShouldNotBeAnEmptyString", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to The specified Rule already exists in the collection..
@@ -81,11 +106,38 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The stream should be readable..
+        /// </summary>
+        internal static string Exceptions_Messages_StreamShouldBeReadable {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_StreamShouldBeReadable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action package location process completed..
+        /// </summary>
+        internal static string Log_Messages_ActionPackageDetector_FileScanCompleted {
+            get {
+                return ResourceManager.GetString("Log_Messages_ActionPackageDetector_FileScanCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Locating all the files in {0} failed due to an exception. Exception information is: {1}.
         /// </summary>
         internal static string Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException {
             get {
                 return ResourceManager.GetString("Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating action packages in {0}..
+        /// </summary>
+        internal static string Log_Messages_ActionPackageDetector_FileScanStarted_WithDirectory {
+            get {
+                return ResourceManager.GetString("Log_Messages_ActionPackageDetector_FileScanStarted_WithDirectory", resourceCulture);
             }
         }
         
@@ -108,6 +160,26 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The scanner of type {0} failed to delete the packages  [{1}]. The error was {2}..
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTyp" +
+                        "eAndPackageIdsAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scanner of type {0} failed to scan the packages  [{1}]. The error was {2}..
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScanner" +
+                        "TypeAndPackageIdsAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Package discovery has been disabled..
         /// </summary>
         internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled {
@@ -122,6 +194,26 @@ namespace Metamorphic.Storage.Properties {
         internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled {
             get {
                 return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PackageScanner: File in package {0} [{1}] at {2} already exists in destination at {3}..
+        /// </summary>
+        internal static string Log_Messages_PackageScanner_AssemblyFileAlreadyExistsAtDestination_WithPackageIdAndVersionAndOriginAndDestination {
+            get {
+                return ResourceManager.GetString("Log_Messages_PackageScanner_AssemblyFileAlreadyExistsAtDestination_WithPackageIdA" +
+                        "ndVersionAndOriginAndDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PackageScanner: Copying file in package {0} [{1}] from {2} to {3}..
+        /// </summary>
+        internal static string Log_Messages_PackageScanner_CopyingAssemblyFile_WithPackageIdAndVersionAndOriginAndDestination {
+            get {
+                return ResourceManager.GetString("Log_Messages_PackageScanner_CopyingAssemblyFile_WithPackageIdAndVersionAndOriginA" +
+                        "ndDestination", resourceCulture);
             }
         }
         
@@ -189,11 +281,176 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Action for rule has no ID..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ActionHasNoId {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ActionHasNoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: A complex action parameter with value &quot;{0}&quot; includes values that are not provided by any of the following signal parameters: [{1}]..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ComplexActionParameterHasParametersNotProvidedBySignal_WithActionIdAndValueAndSignalParameters {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ComplexActionParameterHasParametersNotProvidedBy" +
+                        "Signal_WithActionIdAndValueAndSignalParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Condition with name {0} has no matching signal parameter..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ConditionHasNoMatchingSignalParameter_WithConditionName {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ConditionHasNoMatchingSignalParameter_WithCondit" +
+                        "ionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Condition has no parameter name..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ConditionHasNoName {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ConditionHasNoName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Condition with name {0} has no pattern..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ConditionHasNoPattern_WithConditionName {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ConditionHasNoPattern_WithConditionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Condition with name {0} has no valid condition type. The given type is: {1}..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_ConditionTypeIsNotValid_WithNameAndType {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_ConditionTypeIsNotValid_WithNameAndType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Rule has no name..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_DefinitionNameMissing {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_DefinitionNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Rule has no action..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_NoActionDefined {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_NoActionDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Rule has no signal..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_NoSignalDefined {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_NoSignalDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Signal for rule has no ID..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_SignalHasNoId {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_SignalHasNoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule definition check: Signal parameter with name {0} has invalid value..
+        /// </summary>
+        internal static string Log_Messages_RuleDefinitionCheck_SignalParameterHasInvalidValue_WithParameterName {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_SignalParameterHasInvalidValue_WithParameterName" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The rule definition in the given stream is not valid..
+        /// </summary>
+        internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_FromStream {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_FromStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The rule definition is not valid. The definition was: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithDefinitionText {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_WithDefinitionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}. Errors were: {1}.
+        /// </summary>
+        internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithErrors {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_WithErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The rule definition at {0} is not valid..
         /// </summary>
         internal static string Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath {
             get {
                 return ResourceManager.GetString("Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RulePackageDetector: Creating directory to store rule files for packages at {0}..
+        /// </summary>
+        internal static string Log_Messages_RulePackageDetector_CreatingRuleDirectory_WithPath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RulePackageDetector_CreatingRuleDirectory_WithPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RulePackageDetector: Found rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RulePackageDetector_FoundRuleFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RulePackageDetector_FoundRuleFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RulePackageDetector: The following new packages have been found: {0}.
+        /// </summary>
+        internal static string Log_Messages_RulePackageDetector_NewPackagesDetected_WithPackageList {
+            get {
+                return ResourceManager.GetString("Log_Messages_RulePackageDetector_NewPackagesDetected_WithPackageList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RulePackageDetector: The following packages have been removed: {0}.
+        /// </summary>
+        internal static string Log_Messages_RulePackageDetector_RemovedPackagesDetected_WithPackageList {
+            get {
+                return ResourceManager.GetString("Log_Messages_RulePackageDetector_RemovedPackagesDetected_WithPackageList", resourceCulture);
             }
         }
         
@@ -257,6 +514,33 @@ namespace Metamorphic.Storage.Properties {
         internal static string Log_Messages_ServiceStopped {
             get {
                 return ResourceManager.GetString("Log_Messages_ServiceStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the plugin assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting information from Assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apollo plugin scan AppDomain.
+        /// </summary>
+        internal static string Plugins_PluginScanDomainName {
+            get {
+                return ResourceManager.GetString("Plugins_PluginScanDomainName", resourceCulture);
             }
         }
         

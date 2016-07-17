@@ -7,12 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Metamorphic.Core;
-using Metamorphic.Core.Actions;
 using Metamorphic.Storage.Properties;
 using Nuclei;
 using Nuclei.Configuration;
@@ -22,7 +22,7 @@ using NuGet;
 
 using IFileSystem = System.IO.Abstractions.IFileSystem;
 
-namespace Metamorphic.Storage.Actions
+namespace Metamorphic.Storage.Discovery.FileSystem
 {
     internal sealed class DirectoryPackageListener : IWatchPackages
     {
@@ -37,9 +37,10 @@ namespace Metamorphic.Storage.Actions
         private readonly IFileSystem _fileSystem;
 
         /// <summary>
-        /// The object that loads action objects from the NuGet packages.
+        /// The object that processes changes to NuGet packages.
         /// </summary>
-        private readonly IDetectActionPackages _packageScanner;
+        private readonly IList<IProcessPackageChanges> _scanners
+            = new List<IProcessPackageChanges>();
 
         /// <summary>
         /// The collection of objects that watch the file system for newly added packages.
@@ -51,14 +52,14 @@ namespace Metamorphic.Storage.Actions
         /// Initializes a new instance of the <see cref="DirectoryPackageListener"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="actionLoader">The object that loads <see cref="ActionDefinition"/> instances from a NuGet package file.</param>
+        /// <param name="packageScanners">The collection of objects that scan NuGet packages for components.</param>
         /// <param name="diagnostics">The object providing the diagnostics methods for the application.</param>
         /// <param name="fileSystem">The object that provides a virtualizing layer for the file system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="actionLoader"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="packageScanners"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
@@ -68,7 +69,7 @@ namespace Metamorphic.Storage.Actions
         /// </exception>
         internal DirectoryPackageListener(
             IConfiguration configuration,
-            IDetectActionPackages actionLoader,
+            IEnumerable<IProcessPackageChanges> packageScanners,
             SystemDiagnostics diagnostics,
             IFileSystem fileSystem)
         {
@@ -77,9 +78,9 @@ namespace Metamorphic.Storage.Actions
                 throw new ArgumentNullException("configuration");
             }
 
-            if (actionLoader == null)
+            if (packageScanners == null)
             {
-                throw new ArgumentNullException("actionLoader");
+                throw new ArgumentNullException("packageScanners");
             }
 
             if (diagnostics == null)
@@ -94,7 +95,7 @@ namespace Metamorphic.Storage.Actions
 
             _diagnostics = diagnostics;
             _fileSystem = fileSystem;
-            _packageScanner = actionLoader;
+            _scanners.AddRange(packageScanners);
 
             var packagePaths = configuration.HasValueFor(CoreConfigurationKeys.NugetFeeds)
                 ? configuration.Value<string[]>(CoreConfigurationKeys.NugetFeeds)
@@ -164,6 +165,10 @@ namespace Metamorphic.Storage.Actions
             }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Logging the exception but don't want to kill the process because one of the scanners can't handle the package.")]
         private void EnqueueExistingFiles()
         {
             var newPackages = new List<PackageName>();
@@ -180,9 +185,30 @@ namespace Metamorphic.Storage.Actions
                 newPackages.Add(new PackageName(zipPackage.Id, zipPackage.Version));
             }
 
-            _packageScanner.Added(newPackages);
+            foreach (var scanner in _scanners)
+            {
+                try
+                {
+                    scanner.Added(newPackages);
+                }
+                catch (Exception e)
+                {
+                    _diagnostics.Log(
+                        LevelToLog.Warn,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            scanner.GetType(),
+                            string.Join(";", newPackages),
+                            e));
+                }
+            }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Logging the exception but don't want to kill the process because one of the scanners can't handle the package.")]
         private void HandleFileChanged(object sender, FileSystemEventArgs e)
         {
             _diagnostics.Log(
@@ -193,10 +219,32 @@ namespace Metamorphic.Storage.Actions
                     e.FullPath));
 
             var zipPackage = new ZipPackage(e.FullPath);
-            _packageScanner.Removed(new[] { new PackageName(zipPackage.Id, zipPackage.Version) });
-            _packageScanner.Added(new[] { new PackageName(zipPackage.Id, zipPackage.Version) });
+            var updatedPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            foreach (var scanner in _scanners)
+            {
+                try
+                {
+                    scanner.Removed(updatedPackages);
+                    scanner.Added(updatedPackages);
+                }
+                catch (Exception exception)
+                {
+                    _diagnostics.Log(
+                        LevelToLog.Warn,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            scanner.GetType(),
+                            string.Join<PackageName>(";", updatedPackages),
+                            exception));
+                }
+            }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Logging the exception but don't want to kill the process because one of the scanners can't handle the package.")]
         private void HandleFileCreated(object sender, FileSystemEventArgs e)
         {
             _diagnostics.Log(
@@ -207,9 +255,31 @@ namespace Metamorphic.Storage.Actions
                     e.FullPath));
 
             var zipPackage = new ZipPackage(e.FullPath);
-            _packageScanner.Added(new[] { new PackageName(zipPackage.Id, zipPackage.Version) });
+            var newPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            foreach (var scanner in _scanners)
+            {
+                try
+                {
+                    scanner.Added(newPackages);
+                }
+                catch (Exception exception)
+                {
+                    _diagnostics.Log(
+                        LevelToLog.Warn,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            scanner.GetType(),
+                            string.Join<PackageName>(";", newPackages),
+                            exception));
+                }
+            }
         }
 
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Logging the exception but don't want to kill the process because one of the scanners can't handle the package.")]
         private void HandleFileDeleted(object sender, FileSystemEventArgs e)
         {
             _diagnostics.Log(
@@ -220,7 +290,25 @@ namespace Metamorphic.Storage.Actions
                     e.FullPath));
 
             var zipPackage = new ZipPackage(e.FullPath);
-            _packageScanner.Removed(new[] { new PackageName(zipPackage.Id, zipPackage.Version) });
+            var removedPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            foreach (var scanner in _scanners)
+            {
+                try
+                {
+                    scanner.Removed(removedPackages);
+                }
+                catch (Exception exception)
+                {
+                    _diagnostics.Log(
+                        LevelToLog.Warn,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            scanner.GetType(),
+                            string.Join<PackageName>(";", removedPackages),
+                            exception));
+                }
+            }
         }
     }
 }

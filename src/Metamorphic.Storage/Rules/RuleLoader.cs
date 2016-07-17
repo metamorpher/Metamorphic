@@ -10,10 +10,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Metamorphic.Core.Actions;
 using Metamorphic.Core.Rules;
-using Metamorphic.Core.Signals;
 using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -24,26 +24,20 @@ namespace Metamorphic.Storage.Rules
 {
     internal sealed class RuleLoader : ILoadRules
     {
-        private static readonly Regex TriggerParameterMatcher = new Regex(@"(?:{{signal.)(.*?)(?:}})", RegexOptions.IgnoreCase);
-
         // This method is internal only because we want to run unit tests against it.
-        internal static RuleDefinition CreateDefinitionFromFile(string filePath)
+        internal static RuleDefinition CreateDefinition(TextReader ruleDefinitionReader)
         {
-            using (var input = new StreamReader(filePath))
-            {
-                var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
-                deserializer.TypeResolvers.Add(new ScalarYamlNodeTypeResolver());
-                var definition = deserializer.Deserialize<RuleDefinition>(input);
+            var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+            deserializer.TypeResolvers.Add(new ScalarYamlNodeTypeResolver());
+            var definition = deserializer.Deserialize<RuleDefinition>(ruleDefinitionReader);
 
-                return definition;
-            }
+            return definition;
         }
 
         /// <summary>
         /// Returns a value indicating whether the current rule definition is valid or not.
         /// </summary>
         /// <param name="definition">The definition of the rule.</param>
-        /// <param name="doesActionIdExist">The predicate used to determine if a the action ID exists.</param>
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
@@ -51,170 +45,9 @@ namespace Metamorphic.Storage.Rules
             "Microsoft.StyleCop.CSharp.DocumentationRules",
             "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        internal static bool IsValid(
-            RuleDefinition definition,
-            Predicate<string> doesActionIdExist)
+        internal static RuleDefinitionCheck IsValid(RuleDefinition definition)
         {
-            if (definition == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(definition.Name))
-            {
-                return false;
-            }
-
-            if (definition.Signal == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(definition.Signal.Id))
-            {
-                return false;
-            }
-
-            if (definition.Signal.Parameters != null)
-            {
-                foreach (var pair in definition.Signal.Parameters)
-                {
-                    if (pair.Value == null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            foreach (var condition in definition.Condition)
-            {
-                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(condition.Name)))
-                {
-                    return false;
-                }
-
-                if (!IsValidConditionType(condition.Type))
-                {
-                    return false;
-                }
-
-                if (condition.Pattern == null)
-                {
-                    return false;
-                }
-            }
-
-            if (definition.Action == null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(definition.Action.Id) || !doesActionIdExist(definition.Action.Id))
-            {
-                return false;
-            }
-
-            if (definition.Action.Parameters != null)
-            {
-                foreach (var pair in definition.Action.Parameters)
-                {
-                    var parameterText = pair.Value as string;
-                    if (parameterText != null)
-                    {
-                        var matches = TriggerParameterMatcher.Matches(parameterText);
-                        if (matches.Count > 0)
-                        {
-                            foreach (Match match in matches)
-                            {
-                                // The first item in the groups collection is the full string that matched
-                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
-                                // Given that we only expect one match group we'll just use the first item.
-                                var signalParameterName = match.Groups[1].Value;
-                                if ((definition.Signal.Parameters == null) || (!definition.Signal.Parameters.ContainsKey(signalParameterName)))
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        private static bool IsValidConditionType(string conditionType)
-        {
-            switch (conditionType)
-            {
-                case "equals":
-                case "notequals":
-                case "lessthan":
-                case "greaterthan":
-                case "matchregex":
-                case "notmatchregex":
-                case "startswith":
-                case "endswith": return true;
-                default: return false;
-            }
-        }
-
-        [SuppressMessage(
-            "Microsoft.Maintainability",
-            "CA1502:AvoidExcessiveComplexity",
-            Justification = "It's just a big case statement. Nothing horribly complex about it.")]
-        private static Predicate<object> ToCondition(ConditionRuleDefinition condition)
-        {
-            object comparisonValue = condition.Pattern;
-            switch (condition.Type)
-            {
-                case "equals":
-                    return o => o.Equals(comparisonValue);
-                case "notequals":
-                    return o => !o.Equals(comparisonValue);
-                case "lessthan":
-                    return o =>
-                    {
-                        var comparable = o as IComparable;
-                        return comparable.CompareTo(comparisonValue) < 0;
-                    };
-                case "greaterthan":
-                    return o =>
-                    {
-                        var comparable = o as IComparable;
-                        return comparable.CompareTo(comparisonValue) > 0;
-                    };
-                case "matchregex":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
-                    };
-                case "notmatchregex":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
-                    };
-                case "startswith":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && text.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
-                    };
-                case "endswith":
-                    return o =>
-                    {
-                        var text = o as string;
-                        var pattern = comparisonValue as string;
-                        return (text != null) && (pattern != null) && text.EndsWith(pattern, StringComparison.OrdinalIgnoreCase);
-                    };
-                default:
-                    throw new InvalidConditionTypeException();
-            }
+            return new RuleDefinitionCheck(definition);
         }
 
         /// <summary>
@@ -223,118 +56,158 @@ namespace Metamorphic.Storage.Rules
         private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
-        /// The predicate that is used to determine if a given <see cref="ActionId"/> exists.
-        /// </summary>
-        private readonly Predicate<string> _doesActionIdExist;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RuleLoader"/> class.
         /// </summary>
-        /// <param name="doesActionIdExist">The predicate that is used to determine if a given <see cref="ActionId"/> exists.</param>
         /// <param name="diagnostics">The object that stores the diagnostics methods for the current application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="doesActionIdExist"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public RuleLoader(Predicate<string> doesActionIdExist, SystemDiagnostics diagnostics)
+        public RuleLoader(SystemDiagnostics diagnostics)
         {
             {
-                Lokad.Enforce.Argument(() => doesActionIdExist);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            _doesActionIdExist = doesActionIdExist;
             _diagnostics = diagnostics;
         }
 
-        /// <summary>
-        /// Creates a new <see cref="Rule"/> object from the information in the specified file.
-        /// </summary>
-        /// <param name="filePath">The full path to the rule file.</param>
-        /// <returns>A newly created rule instance.</returns>
-        public Rule Load(string filePath)
+        private RuleDefinition CreateRule(TextReader reader, string invalidRuleDefinitionLogMessage)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            var definition = CreateDefinition(reader);
+            if (definition == null)
             {
                 return null;
             }
 
-            if (!File.Exists(filePath))
-            {
-                return null;
-            }
-
-            var definition = CreateDefinitionFromFile(filePath);
-            if (!IsValid(definition, _doesActionIdExist))
+            var check = IsValid(definition);
+            if (!check.IsValid)
             {
                 _diagnostics.Log(
                     LevelToLog.Warn,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath,
-                        filePath));
+                        Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_WithErrors,
+                        invalidRuleDefinitionLogMessage,
+                        check.Errors().Join(Environment.NewLine)));
 
                 return null;
             }
 
-            if (definition.Enabled)
+            return definition;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="RuleDefinition"/> object from the information in the specified file.
+        /// </summary>
+        /// <param name="filePath">The full path to the rule file.</param>
+        /// <returns>A newly created rule definition.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">
+        ///     Thrown if <paramref name="filePath"/> cannot be found.
+        /// </exception>
+        public RuleDefinition LoadFromFile(string filePath)
+        {
+            if (filePath == null)
             {
-                var signalParameterConditions = new Dictionary<string, Predicate<object>>();
-                foreach (var condition in definition.Condition)
-                {
-                    var pred = ToCondition(condition);
-                    if (pred != null)
-                    {
-                        signalParameterConditions.Add(condition.Name, pred);
-                    }
-                }
-
-                var parameters = new Dictionary<string, ActionParameterValue>();
-                foreach (var pair in definition.Action.Parameters)
-                {
-                    ActionParameterValue reference = null;
-
-                    var parameterText = pair.Value as string;
-                    if (parameterText != null)
-                    {
-                        var matches = TriggerParameterMatcher.Matches(parameterText);
-                        if (matches.Count > 0)
-                        {
-                            var signalParameters = new List<string>();
-
-                            foreach (Match match in matches)
-                            {
-                                // The first item in the groups collection is the full string that matched
-                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
-                                // Given that we only expect one match group we'll just use the first item.
-                                var signalParameterName = match.Groups[1].Value;
-                                signalParameters.Add(signalParameterName);
-                            }
-
-                            reference = new ActionParameterValue(parameterText, signalParameters);
-                        }
-                    }
-
-                    if (reference == null)
-                    {
-                        reference = new ActionParameterValue(pair.Value);
-                    }
-
-                    parameters.Add(pair.Key, reference);
-                }
-
-                return new Rule(
-                    definition.Name,
-                    definition.Description,
-                    new SignalTypeId(definition.Signal.Id),
-                    new ActionId(definition.Action.Id),
-                    signalParameterConditions,
-                    parameters);
+                throw new ArgumentNullException("filePath");
             }
 
-            return null;
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_ParameterShouldNotBeAnEmptyString,
+                    "filePath");
+            }
+
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException(
+                    Resources.Exceptions_Messages_FileNotFound,
+                    filePath);
+            }
+
+            var invalidRuleDefinitionLogMessage = string.Format(
+                CultureInfo.InvariantCulture,
+                Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath,
+                filePath);
+
+            using (var input = new StreamReader(filePath))
+            {
+                return CreateRule(input, invalidRuleDefinitionLogMessage);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="RuleDefinition"/> object from the information in the specified string.
+        /// </summary>
+        /// <param name="ruleDefinition">The full rule definition.</param>
+        /// <returns>A newly created rule definition.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="ruleDefinition"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="ruleDefinition"/> is an empty string.
+        /// </exception>
+        public RuleDefinition LoadFromMemory(string ruleDefinition)
+        {
+            if (ruleDefinition == null)
+            {
+                throw new ArgumentNullException("ruleDefinition");
+            }
+
+            if (string.IsNullOrWhiteSpace(ruleDefinition))
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_ParameterShouldNotBeAnEmptyString,
+                    "ruleDefinition");
+            }
+
+            var invalidRuleDefinitionLogMessage = string.Format(
+                CultureInfo.InvariantCulture,
+                Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_WithDefinitionText,
+                ruleDefinition);
+
+            using (var reader = new StringReader(ruleDefinition))
+            {
+                return CreateRule(reader, invalidRuleDefinitionLogMessage);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="RuleDefinition"/> object from the information in the specified string.
+        /// </summary>
+        /// <param name="stream">The stream that contains the full rule definition.</param>
+        /// <returns>A newly created rule definition.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="stream"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="stream"/> does not allow reading.
+        /// </exception>
+        public RuleDefinition LoadFromStream(Stream stream)
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_StreamShouldBeReadable,
+                    "stream");
+            }
+
+            var invalidRuleDefinitionLogMessage = Resources.Log_Messages_RuleLoader_InvalidRuleDefinition_FromStream;
+            using (var reader = new StreamReader(stream))
+            {
+                return CreateRule(reader, invalidRuleDefinitionLogMessage);
+            }
         }
     }
 }

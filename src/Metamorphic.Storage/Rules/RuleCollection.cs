@@ -15,9 +15,10 @@ namespace Metamorphic.Storage.Rules
     internal sealed class RuleCollection : IStoreRules
     {
         /// <summary>
-        /// The collection that maps file paths to rules.
+        /// The collection that maps package names to rules.
         /// </summary>
-        private readonly Dictionary<string, Rule> _fileToRuleMap = new Dictionary<string, Rule>();
+        private readonly Dictionary<RuleOrigin, List<RuleDefinition>> _packageToRuleMap
+            = new Dictionary<RuleOrigin, List<RuleDefinition>>();
 
         /// <summary>
         /// The object used to lock on.
@@ -27,46 +28,49 @@ namespace Metamorphic.Storage.Rules
         /// <summary>
         /// The collection that maps signal types to rules.
         /// </summary>
-        private readonly Dictionary<SignalTypeId, List<Rule>> _signalTypeToRuleMap = new Dictionary<SignalTypeId, List<Rule>>();
+        private readonly Dictionary<SignalTypeId, List<RuleDefinition>> _signalTypeToRuleMap
+            = new Dictionary<SignalTypeId, List<RuleDefinition>>();
 
         /// <summary>
-        /// Adds a new <see cref="Rule"/> that was created from the given file.
+        /// Adds a new <see cref="RuleDefinition"/> that was created from the given origin.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
+        /// <param name="origin">The origin of the data that was used to create the rule.</param>
         /// <param name="rule">The rule.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="rule"/> is <see langword="null" />.
         /// </exception>
-        public void Add(string filePath, Rule rule)
+        public void Add(RuleOrigin origin, RuleDefinition rule)
         {
+            if (origin == null)
             {
-                Lokad.Enforce.Argument(() => filePath);
-                Lokad.Enforce.Argument(() => filePath, Lokad.Rules.StringIs.NotEmpty);
+                throw new ArgumentNullException("origin");
+            }
 
-                Lokad.Enforce.Argument(() => rule);
+            if (rule == null)
+            {
+                throw new ArgumentNullException("rule");
             }
 
             lock (_lock)
             {
-                if (_fileToRuleMap.ContainsKey(filePath))
+                if (!_packageToRuleMap.ContainsKey(origin))
                 {
-                    throw new RuleAlreadyExistsException();
+                    _packageToRuleMap.Add(origin, new List<RuleDefinition>());
                 }
 
-                _fileToRuleMap.Add(filePath, rule);
+                var rules = _packageToRuleMap[origin];
+                rules.Add(rule);
 
-                if (!_signalTypeToRuleMap.ContainsKey(rule.Sensor))
+                var signalId = new SignalTypeId(rule.Signal.Id);
+                if (!_signalTypeToRuleMap.ContainsKey(signalId))
                 {
-                    _signalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
+                    _signalTypeToRuleMap.Add(signalId, new List<RuleDefinition>());
                 }
 
-                List<Rule> collection = _signalTypeToRuleMap[rule.Sensor];
+                List<RuleDefinition> collection = _signalTypeToRuleMap[signalId];
                 if (!collection.Contains(rule))
                 {
                     collection.Add(rule);
@@ -75,35 +79,39 @@ namespace Metamorphic.Storage.Rules
         }
 
         /// <summary>
-        /// Removes the <see cref="Rule"/> that is associated with the given file.
+        /// Removes the <see cref="RuleDefinition"/> that is associated with the given origin.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file.</param>
-        public void Remove(string filePath)
+        /// <param name="origin">The origin of the rule.</param>
+        public void Remove(RuleOrigin origin)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (origin == null)
             {
                 return;
             }
 
             lock (_lock)
             {
-                Rule rule = null;
-                if (_fileToRuleMap.ContainsKey(filePath))
+                List<RuleDefinition> rules = null;
+                if (_packageToRuleMap.ContainsKey(origin))
                 {
-                    rule = _fileToRuleMap[filePath];
-                    _fileToRuleMap.Remove(filePath);
+                    rules = _packageToRuleMap[origin];
+                    _packageToRuleMap.Remove(origin);
                 }
 
-                if (rule != null)
+                if (rules != null)
                 {
-                    if (_signalTypeToRuleMap.ContainsKey(rule.Sensor))
+                    foreach (var rule in rules)
                     {
-                        var collection = _signalTypeToRuleMap[rule.Sensor];
-                        collection.Remove(rule);
-
-                        if (collection.Count == 0)
+                        var signalId = new SignalTypeId(rule.Signal.Id);
+                        if (_signalTypeToRuleMap.ContainsKey(signalId))
                         {
-                            _signalTypeToRuleMap.Remove(rule.Sensor);
+                            var collection = _signalTypeToRuleMap[signalId];
+                            collection.Remove(rule);
+
+                            if (collection.Count == 0)
+                            {
+                                _signalTypeToRuleMap.Remove(signalId);
+                            }
                         }
                     }
                 }
@@ -115,73 +123,84 @@ namespace Metamorphic.Storage.Rules
         /// </summary>
         /// <param name="sensorId">The ID of the sensor from which the signal originated.</param>
         /// <returns>A collection that contains all the rules that apply to the given signal.</returns>
-        public IEnumerable<Rule> RulesForSignal(SignalTypeId sensorId)
+        public RuleDefinition[] RulesForSignal(SignalTypeId sensorId)
         {
             lock (_lock)
             {
                 if (_signalTypeToRuleMap.ContainsKey(sensorId))
                 {
-                    return new List<Rule>(_signalTypeToRuleMap[sensorId]);
+                    return _signalTypeToRuleMap[sensorId].ToArray();
                 }
                 else
                 {
-                    return new List<Rule>();
+                    return new RuleDefinition[0];
                 }
             }
         }
 
         /// <summary>
-        /// Updates an existing <see cref="Rule"/>.
+        /// Updates an existing <see cref="RuleDefinition"/>.
         /// </summary>
-        /// <param name="filePath">The full path to the rule file that was used to create the rule.</param>
+        /// <param name="origin">The origin of the data that was used to create the rule.</param>
         /// <param name="rule">The rule.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="rule"/> is <see langword="null" />.
         /// </exception>
-        public void Update(string filePath, Rule rule)
+        public void Update(RuleOrigin origin, RuleDefinition rule)
         {
+            if (origin == null)
             {
-                Lokad.Enforce.Argument(() => filePath);
-                Lokad.Enforce.Argument(() => filePath, Lokad.Rules.StringIs.NotEmpty);
+                throw new ArgumentNullException("origin");
+            }
 
-                Lokad.Enforce.Argument(() => rule);
+            if (rule == null)
+            {
+                throw new ArgumentNullException("rule");
             }
 
             lock (_lock)
             {
-                Rule ruleToReplace = null;
-                if (_fileToRuleMap.ContainsKey(filePath))
+                RuleDefinition ruleToReplace = null;
+                if (_packageToRuleMap.ContainsKey(origin))
                 {
-                    ruleToReplace = _fileToRuleMap[filePath];
-                    _fileToRuleMap[filePath] = rule;
+                    var rules = _packageToRuleMap[origin];
+                    var index = rules.FindIndex(r => string.Equals(rule.Name, r.Name, StringComparison.OrdinalIgnoreCase));
+                    if (index > -1)
+                    {
+                        ruleToReplace = rules[index];
+                        rules[index] = rule;
+                    }
+                    else
+                    {
+                        rules.Add(rule);
+                    }
                 }
 
                 if (ruleToReplace != null)
                 {
-                    List<Rule> oldCollection = null;
-                    if (_signalTypeToRuleMap.ContainsKey(ruleToReplace.Sensor))
+                    var signalIdToReplace = new SignalTypeId(ruleToReplace.Signal.Id);
+                    List<RuleDefinition> oldCollection = null;
+                    if (_signalTypeToRuleMap.ContainsKey(signalIdToReplace))
                     {
-                        oldCollection = _signalTypeToRuleMap[ruleToReplace.Sensor];
+                        oldCollection = _signalTypeToRuleMap[signalIdToReplace];
                         oldCollection.Remove(ruleToReplace);
                     }
 
-                    if (!_signalTypeToRuleMap.ContainsKey(rule.Sensor))
+                    var signalId = new SignalTypeId(rule.Signal.Id);
+                    if (!_signalTypeToRuleMap.ContainsKey(signalId))
                     {
-                        _signalTypeToRuleMap.Add(rule.Sensor, new List<Rule>());
+                        _signalTypeToRuleMap.Add(signalId, new List<RuleDefinition>());
                     }
 
-                    var newCollection = _signalTypeToRuleMap[rule.Sensor];
+                    var newCollection = _signalTypeToRuleMap[signalId];
                     newCollection.Add(rule);
 
                     if ((oldCollection != null) && (oldCollection.Count == 0))
                     {
-                        _signalTypeToRuleMap.Remove(rule.Sensor);
+                        _signalTypeToRuleMap.Remove(signalId);
                     }
                 }
             }

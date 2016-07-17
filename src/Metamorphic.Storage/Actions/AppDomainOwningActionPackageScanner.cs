@@ -7,10 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.IO.Abstractions;
 using Metamorphic.Core;
 using Metamorphic.Storage.Properties;
 using Nuclei.Diagnostics;

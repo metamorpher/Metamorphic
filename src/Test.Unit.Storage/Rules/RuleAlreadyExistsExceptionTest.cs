@@ -8,7 +8,7 @@
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Metamorphic.Server.Rules
+namespace Metamorphic.Storage.Rules
 {
     [TestFixture]
     public sealed class RuleAlreadyExistsExceptionTest : ExceptionContractVerifier<RuleAlreadyExistsException>

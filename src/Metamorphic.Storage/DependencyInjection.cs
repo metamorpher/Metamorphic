@@ -13,7 +13,10 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Metamorphic.Core;
+using Metamorphic.Core.Actions;
 using Metamorphic.Storage.Actions;
+using Metamorphic.Storage.Discovery;
+using Metamorphic.Storage.Discovery.FileSystem;
 using Metamorphic.Storage.Nuclei.AppDomains;
 using Metamorphic.Storage.Rules;
 using Nuclei;
@@ -33,7 +36,7 @@ namespace Metamorphic.Storage
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultInfoFileName = "server.info.log";
+        private const string DefaultInfoFileName = "storage.info.log";
 
         private static AppDomainResolutionPaths AppDomainResolutionPathsFor(string[] additionalPaths)
         {
@@ -90,6 +93,7 @@ namespace Metamorphic.Storage
                 RegisterAppDomainBuilder(builder);
                 RegisterCommunication(builder);
                 RegisterDiagnostics(builder);
+                RegisterDiscovery(builder);
                 RegisterLoggers(builder);
                 RegisterRules(builder);
             }
@@ -123,19 +127,11 @@ namespace Metamorphic.Storage
                         return r => ctx.Resolve<IScanActionPackages>(new TypedParameter(typeof(IStoreActions), r));
                     });
 
-            builder.Register(c => new DirectoryPackageListener(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<IDetectActionPackages>(),
-                    c.Resolve<SystemDiagnostics>(),
-                    c.Resolve<IFileSystem>()))
-                .As<IWatchPackages>()
-                .SingleInstance();
-
             builder.Register(c => new ActionPackageDetector(
                     c.Resolve<IStoreActions>(),
                     c.Resolve<Func<IStoreActions, IScanActionPackages>>(),
                     c.Resolve<SystemDiagnostics>()))
-                .As<IDetectActionPackages>();
+                .As<IProcessPackageChanges>();
 
             builder.Register(c => new ActionStorage())
                 .As<IStoreActions>()
@@ -200,6 +196,17 @@ namespace Metamorphic.Storage
                 .SingleInstance();
         }
 
+        private static void RegisterDiscovery(ContainerBuilder builder)
+        {
+            builder.Register(c => new DirectoryPackageListener(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<IEnumerable<IProcessPackageChanges>>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .As<IWatchPackages>()
+                .SingleInstance();
+        }
+
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             var assemblyInfo = Assembly.GetExecutingAssembly().GetName();
@@ -218,23 +225,17 @@ namespace Metamorphic.Storage
                 .As<IStoreRules>()
                 .SingleInstance();
 
-            builder.Register(
-                    c =>
-                    {
-                        var ctx = c.Resolve<IComponentContext>();
-                        return new RuleLoader(
-                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
-                            c.Resolve<SystemDiagnostics>());
-                    })
+            builder.Register(c => new RuleLoader(c.Resolve<SystemDiagnostics>()))
                 .As<ILoadRules>()
                 .SingleInstance();
 
-            builder.Register(c => new RuleWatcher(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<ILoadRules>(),
+            builder.Register(c => new RulePackageDetector(
                     c.Resolve<IStoreRules>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IWatchRules>()
+                    c.Resolve<ILoadRules>(),
+                    c.Resolve<IInstallPackages>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .As<IProcessPackageChanges>()
                 .SingleInstance();
         }
     }
