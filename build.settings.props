@@ -422,6 +422,7 @@
             <Targets>Rebuild</Targets>
             <Properties>
                 ShouldPerformCodeAnalysis=false;
+                PublishProfile=PublishToWebDeploy;
             </Properties>
         </SolutionsToBuild>
     </ItemGroup>

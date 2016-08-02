@@ -147,6 +147,8 @@
         <OutputPath Condition=" '$(IsWebProject)' == 'true' ">bin\</OutputPath>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' != 'true' ">false</RunCodeAnalysis>
         <RunCodeAnalysis Condition=" '$(ShouldPerformCodeAnalysis)' == 'true' ">false</RunCodeAnalysis>
+        <DeployOnBuild>false</DeployOnBuild>
+        <DeployOnBuild Condition=" '$(PublishProfile)' != '' AND Exists('$(MSBuildProjectDirectory)\$(AppDesignerFolder)\PublishProfiles\$(PublishProfile).pubxml')">true</DeployOnBuild>
     </PropertyGroup>
 
     <!-- Generate the XML documentation file -->
