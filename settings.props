@@ -473,6 +473,10 @@
                 ISSUE_LABELS   - The labels / type for the issue.
         -->
         <!-- <ScriptWriteReleaseNotes Condition=" '$(ScriptWriteReleaseNotes)' == '' ">UNDEFINED</ScriptWriteReleaseNotes> -->
+        <!--
+            A flag that indicates whether or not the build should fail if there is a failure to gather the release notes.
+        -->
+        <!-- <ContinueBuildIfReleaseNoteGatheringFails Condition=" '$(ContinueBuildIfReleaseNoteGatheringFails)' == '' ">true</ContinueBuildIfReleaseNoteGatheringFails> -->
     </PropertyGroup>
 
 
@@ -633,7 +637,7 @@
         NuGet if no package is specified in the packages.config file.
     -->
     <PropertyGroup>
-        <NBuildKitMinimumVersion>0.8.0</NBuildKitMinimumVersion>
-        <NBuildKitMaximumVersion>1.0.0</NBuildKitMaximumVersion>
+        <NBuildKitMinimumVersion Condition=" '$(NBuildKitMinimumVersion)' == '' ">0.8.0</NBuildKitMinimumVersion>
+        <NBuildKitMaximumVersion Condition=" '$(NBuildKitMaximumVersion)' == '' ">1.0.0</NBuildKitMaximumVersion>
     </PropertyGroup>
 </Project>
