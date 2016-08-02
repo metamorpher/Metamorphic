@@ -6,25 +6,24 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using NuGet;
 
 namespace Metamorphic.Storage.Discovery
 {
     /// <summary>
-    /// Defines the interface for objects that handle package detection.
+    /// Defines the interface for objects that handle file detection.
     /// </summary>
-    internal interface IProcessPackageChanges
+    internal interface IProcessFileChanges
     {
         /// <summary>
-        /// Processes the added packages.
+        /// Processes the added files.
         /// </summary>
-        /// <param name="newPackages">The collection that contains the names of all the new packages.</param>
-        void Added(IEnumerable<PackageName> newPackages);
+        /// <param name="newFiles">The collection that contains the names of all the new files.</param>
+        void Added(IEnumerable<string> newFiles);
 
         /// <summary>
-        /// Processes the removed packages.
+        /// Processes the removed files.
         /// </summary>
-        /// <param name="removedPackages">The collection that contains the names of all the packages that were removed.</param>
-        void Removed(IEnumerable<PackageName> removedPackages);
+        /// <param name="removedFiles">The collection that contains the names of all the files that were removed.</param>
+        void Removed(IEnumerable<string> removedFiles);
     }
 }

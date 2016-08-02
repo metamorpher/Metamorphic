@@ -90,6 +90,10 @@
       <HintPath>..\..\packages\Nuclei.Build.0.8.0\lib\net45\Nuclei.Build.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nuclei.Configuration, Version=0.8.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nuclei.Configuration.0.8.0\lib\net45\Nuclei.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -109,6 +113,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RuleConfigurationKeys.cs" />
     <Compile Include="RuleConstants.cs" />
     <Compile Include="RuleDefinition.cs" />
     <Compile Include="SignalRuleDefinition.cs" />

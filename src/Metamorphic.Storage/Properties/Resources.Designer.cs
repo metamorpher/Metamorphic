@@ -160,6 +160,80 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discovered new rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_CreatedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_CreatedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scanner of type {0} failed to delete the files  [{1}]. The error was {2}..
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_DeletedFile_ScannerFailed_WithScannerTypeAndFilePathsAndError {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_DeletedFile_ScannerFailed_WithScannerTypeAndFi" +
+                        "lePathsAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scanner of type {0} failed to scan the files  [{1}]. The error was {2}..
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAn" +
+                        "dFilePathsAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File discovery - Disabled.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_FileDiscovery_Disabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_FileDiscovery_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File discovery - Enabled.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_FileDiscovery_Enabled {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_FileDiscovery_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered new rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_LocatedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_LocatedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered removed rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_RemovedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_RemovedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered updated rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryFileListener_UpdatedFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryFileListener_UpdatedFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The scanner of type {0} failed to delete the packages  [{1}]. The error was {2}..
         /// </summary>
         internal static string Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError {
@@ -180,6 +254,15 @@ namespace Metamorphic.Storage.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discovered new package at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Package discovery has been disabled..
         /// </summary>
         internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled {
@@ -194,6 +277,24 @@ namespace Metamorphic.Storage.Properties {
         internal static string Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled {
             get {
                 return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered removed package at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_RemovedPackage_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_RemovedPackage_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered updated package at: {0}.
+        /// </summary>
+        internal static string Log_Messages_DirectoryPackageListener_UpdatedPackage_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_DirectoryPackageListener_UpdatedPackage_WithFilePath", resourceCulture);
             }
         }
         
@@ -379,6 +480,24 @@ namespace Metamorphic.Storage.Properties {
             get {
                 return ResourceManager.GetString("Log_Messages_RuleDefinitionCheck_SignalParameterHasInvalidValue_WithParameterName" +
                         "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleFileDetector: Found rule file at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleFileDetector_FoundRuleFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleFileDetector_FoundRuleFile_WithFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleFileDetector: Rule file removed at: {0}.
+        /// </summary>
+        internal static string Log_Messages_RuleFileDetector_RemovedRuleFile_WithFilePath {
+            get {
+                return ResourceManager.GetString("Log_Messages_RuleFileDetector_RemovedRuleFile_WithFilePath", resourceCulture);
             }
         }
         

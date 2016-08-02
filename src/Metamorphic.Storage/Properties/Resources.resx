@@ -285,4 +285,43 @@
   <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithErrors" xml:space="preserve">
     <value>{0}. Errors were: {1}</value>
   </data>
+  <data name="Log_Messages_DirectoryFileListener_CreatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_DeletedFile_ScannerFailed_WithScannerTypeAndFilePathsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to delete the files  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to scan the files  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_FileDiscovery_Disabled" xml:space="preserve">
+    <value>File discovery - Disabled</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_FileDiscovery_Enabled" xml:space="preserve">
+    <value>File discovery - Enabled</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_LocatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_RemovedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered removed rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_UpdatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered updated rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered new package at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_RemovedPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered removed package at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_UpdatedPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered updated package at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleFileDetector_FoundRuleFile_WithFilePath" xml:space="preserve">
+    <value>RuleFileDetector: Found rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleFileDetector_RemovedRuleFile_WithFilePath" xml:space="preserve">
+    <value>RuleFileDetector: Rule file removed at: {0}</value>
+  </data>
 </root>

@@ -6,15 +6,27 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Nuclei.Configuration;
 
-namespace Metamorphic.Storage
+namespace Metamorphic.Core.Rules
 {
     /// <summary>
-    /// Defines all the configuration keys.
+    /// Defines the configuration keys for the rule part of the application.
     /// </summary>
-    internal static class StorageConfigurationKeys
+    public static class RuleConfigurationKeys
     {
+        /// <summary>
+        /// The configuration key that is used to retrieve the paths in which
+        /// single rule files are placed.
+        /// </summary>
+        [SuppressMessage(
+            "Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "ConfigurationKey objects are immutable.")]
+        public static readonly ConfigurationKey RuleLocations
+            = new ConfigurationKey("RuleLocations", typeof(string[]));
+
         /// <summary>
         /// Returns a collection containing all the configuration keys for the application.
         /// </summary>
@@ -23,6 +35,7 @@ namespace Metamorphic.Storage
         {
             return new List<ConfigurationKey>
                 {
+                    RuleLocations,
                 };
         }
     }

@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Autofac;
 using Metamorphic.Storage.Discovery;
 using Metamorphic.Storage.Properties;
@@ -47,7 +48,7 @@ namespace Metamorphic.Storage
         /// <summary>
         /// The object that that watches the NuGet feed directories for new packages.
         /// </summary>
-        private IWatchPackages _packageWatcher;
+        private IEnumerable<IWatchPackages> _packageWatchers;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -72,10 +73,13 @@ namespace Metamorphic.Storage
         {
             _container = DependencyInjection.CreateContainer();
 
-            _packageWatcher = _container.Resolve<IWatchPackages>();
+            _packageWatchers = _container.Resolve<IEnumerable<IWatchPackages>>();
             _diagnostics = _container.Resolve<SystemDiagnostics>();
 
-            _packageWatcher.Enable();
+            foreach (var watcher in _packageWatchers)
+            {
+                watcher.Enable();
+            }
 
             _diagnostics.Log(
                 LevelToLog.Info,
@@ -108,10 +112,14 @@ namespace Metamorphic.Storage
                     StorageConstants.LogPrefix,
                     Resources.Log_Messages_ServiceStopped);
 
-                if (_packageWatcher != null)
+                if (_packageWatchers != null)
                 {
-                    _packageWatcher.Disable();
-                    _packageWatcher = null;
+                    foreach (var watcher in _packageWatchers)
+                    {
+                        watcher.Disable();
+                    }
+
+                    _packageWatchers = null;
                 }
 
                 if (_container != null)

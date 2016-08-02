@@ -351,11 +351,13 @@
         <!--
         <BuildFilesToGenerate Include="$(DirBuildTemp)\MyFile.txt">
             <Template>$(DirTemplates)\MyTemplatefile.txt</Template>
+            <Encoding>UTF-8</Encoding>
         </BuildFilesToGenerate>
         <BuildFilesToGenerate Include="$(DirBuildTemp)\MyOtherFile.txt">
             <Template>$(DirTemplates)\MyOtherTemplatefile.txt</Template>
             <Token>MyAdditionalTemplateParameter</Token>
             <ReplacementValue>MyAdditionalTemplateValue</ReplacementValue>
+            <Encoding>UTF-8</Encoding>
         </BuildFilesToGenerate>
         -->
     </ItemGroup>
@@ -464,6 +466,37 @@
         -->
         <ShouldGenerateAssemblyBuildInfo>true</ShouldGenerateAssemblyBuildInfo>
     </PropertyGroup>
+    <!--
+        The ItemGroup defining the information for the generation of the InternalsVisibleAttribute.
+        Three different ways of referencing the test projects public key are available. Test assemblies
+        can be referenced by:
+        - Providing the snk key that was / is used to sign the test assembly. This is mainly of use
+          for test assemblies which are compiled at the same time as the target assemblies, i.e. test
+          assemblies that are part of the same Visual Studio solution.
+        - Providing the signed test assembly. This is mainly of use for test assemblies that have been
+          compiled prior to compiling the target assemblies, e.g. third party test assemblies.
+        - Providing the full public key for the assembly. This is mainly of use for assemblies that
+          do not exists on disk, e.g. assemblies that are dynamically generated.
+        Multiple projects can be referenced in the 'projects' section by separating them with a semi-colon (;). Whitespace
+        can be added if required but it has no influence on the project list.
+        If the assemblies are not signed it is possible to leave out the signing information, e.g. the 'KeyFile'
+        property, the 'AssemblyFromPackage' property and the 'PublicKey' property.
+    -->
+    <PropertyGroup>
+        <!--
+            Defines the compiler constants for which the InternalsVisibleTo attributes should
+            be generated.
+            Separate multiple compiler constants with semi-colons.
+        -->
+        <!-- <InternalsVisibletoCompilerConstants>$(TestConfiguration.ToUpper())</InternalsVisibletoCompilerConstants> -->
+    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Test.Unit.Storage">
+            <Projects>
+                Metamorphic.Storage;
+            </Projects>
+        </InternalsVisibleTo>
+    </ItemGroup>
 
     <!-- Build configuration -->
     <PropertyGroup>
@@ -514,7 +547,7 @@
             The ItemGroup items that define which files contain the unit test cases. Paths can include build templates,
             e.g. $(DirBuildBinPlatformConfig)\${VersionMajor}.0\**\test*.dll
         -->
-        <!-- <UnitTestAssemblies Include="$(DirSrc)\**\bin\**\$(UnitTestAssemblyNamePrefix)*.dll" /> -->
+        <!-- <UnitTestAssemblies Include="$(DirSrc)\**\bin\$(Configuration)\**\$(UnitTestAssemblyNamePrefix)*.dll" /> -->
     </ItemGroup>
     <ItemGroup>
         <!--
@@ -767,7 +800,14 @@
         <!--
             The full path to the sn.exe command line executable.
         -->
-        <!-- <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' ">UNDEFINED</ToolsExternalSnPath>-->
+        <!--
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' AND Exists('C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\x64\sn.exe')">C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\x64\sn.exe</ToolsExternalSnPath>
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' AND Exists('C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6 Tools\x64\sn.exe')">C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6 Tools\x64\sn.exe</ToolsExternalSnPath>
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' AND Exists('C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe')">C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe</ToolsExternalSnPath>
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' AND Exists('C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\x64\sn.exe')">C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\x64\sn.exe</ToolsExternalSnPath>
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' AND Exists('C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\x64\sn.exe')">C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\x64\sn.exe</ToolsExternalSnPath>
+        <ToolsExternalSnPath Condition=" '$(ToolsExternalSnPath)' == '' ">UNDEFINED</ToolsExternalSnPath>
+        -->
 
         <!--
             The full path to the SourceMonitor command line executable. If not defined the packages directory is searched.

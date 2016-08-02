@@ -7,6 +7,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using Nuclei;
 using NuGet;
 
@@ -30,9 +31,27 @@ namespace Metamorphic.Storage.Rules
             : base(
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0}.{1}",
+                    "Package: {0}.{1}",
                     value.Id,
                     value.Version.ToString()))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RuleOrigin"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "Unfortunately we cannot validate this before using it because it's being passed to the base constructor.")]
+        public RuleOrigin(FileInfo value)
+            : base(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "File: {0}",
+                    value.FullName))
         {
         }
 
