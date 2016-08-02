@@ -179,6 +179,7 @@
     <Compile Include="Actions\ActionStorage.cs" />
     <Compile Include="Actions\AppDomainOwningActionPackageScanner.cs" />
     <Compile Include="Actions\AppDomainPackageClassLoader.cs" />
+    <Compile Include="Discovery\FileSystem\DirectoryFileListener.cs" />
     <Compile Include="Discovery\FileSystem\DirectoryPackageListener.cs" />
     <Compile Include="Actions\DuplicateActionDefinitionException.cs" />
     <Compile Include="Actions\ILoadPackageScannersInRemoteAppDomains.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Actions\IScanActionPackages.cs" />
     <Compile Include="Actions\IStoreActions.cs" />
     <Compile Include="Actions\ActionStorageProxy.cs" />
+    <Compile Include="Discovery\IProcessFileChanges.cs" />
     <Compile Include="Discovery\IProcessPackageChanges.cs" />
     <Compile Include="Discovery\IWatchPackages.cs" />
     <Compile Include="Actions\RemotePackageScanner.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="Rules\RuleAlreadyExistsException.cs" />
     <Compile Include="Rules\RuleCollection.cs" />
     <Compile Include="Rules\RuleDefinitionCheck.cs" />
+    <Compile Include="Rules\RuleFileDetector.cs" />
     <Compile Include="Rules\RuleLoader.cs" />
     <Compile Include="Rules\RuleOrigin.cs" />
     <Compile Include="Rules\RulePackageDetector.cs" />

@@ -10,21 +10,22 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
-using Metamorphic.Core;
+using Metamorphic.Core.Rules;
 using Metamorphic.Storage.Properties;
 using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
-using NuGet;
-
-using IFileSystem = System.IO.Abstractions.IFileSystem;
 
 namespace Metamorphic.Storage.Discovery.FileSystem
 {
-    internal sealed class DirectoryPackageListener : IWatchPackages
+    /// <summary>
+    /// Handles the detection of new, updated and removed rule files stored in a directory.
+    /// </summary>
+    internal sealed class DirectoryFileListener : IWatchPackages
     {
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
@@ -37,10 +38,10 @@ namespace Metamorphic.Storage.Discovery.FileSystem
         private readonly IFileSystem _fileSystem;
 
         /// <summary>
-        /// The object that processes changes to NuGet packages.
+        /// The object that processes changes to files.
         /// </summary>
-        private readonly IList<IProcessPackageChanges> _scanners
-            = new List<IProcessPackageChanges>();
+        private readonly List<IProcessFileChanges> _scanners
+            = new List<IProcessFileChanges>();
 
         /// <summary>
         /// The collection of objects that watch the file system for newly added packages.
@@ -49,7 +50,7 @@ namespace Metamorphic.Storage.Discovery.FileSystem
             = new Dictionary<string, FileSystemWatcher>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DirectoryPackageListener"/> class.
+        /// Initializes a new instance of the <see cref="DirectoryFileListener"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="packageScanners">The collection of objects that scan NuGet packages for components.</param>
@@ -67,9 +68,9 @@ namespace Metamorphic.Storage.Discovery.FileSystem
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
         /// </exception>
-        internal DirectoryPackageListener(
+        public DirectoryFileListener(
             IConfiguration configuration,
-            IEnumerable<IProcessPackageChanges> packageScanners,
+            IEnumerable<IProcessFileChanges> packageScanners,
             SystemDiagnostics diagnostics,
             IFileSystem fileSystem)
         {
@@ -97,10 +98,10 @@ namespace Metamorphic.Storage.Discovery.FileSystem
             _fileSystem = fileSystem;
             _scanners.AddRange(packageScanners);
 
-            var packagePaths = configuration.HasValueFor(CoreConfigurationKeys.NugetFeeds)
-                ? configuration.Value<string[]>(CoreConfigurationKeys.NugetFeeds)
-                : new[] { CoreConstants.DefaultFeedDirectory };
-            foreach (var path in packagePaths)
+            var fileSearchPaths = configuration.HasValueFor(RuleConfigurationKeys.RuleLocations)
+                ? configuration.Value<string[]>(RuleConfigurationKeys.RuleLocations)
+                : new[] { RuleConstants.DefaultRuleLocation };
+            foreach (var path in fileSearchPaths)
             {
                 var uri = new Uri(path);
                 if (uri.IsFile || uri.IsUnc)
@@ -118,7 +119,7 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                         var watcher = new FileSystemWatcher
                         {
                             Path = localPath,
-                            Filter = "*.nupkg",
+                            Filter = "*.mmrule",
                             IncludeSubdirectories = true,
                             EnableRaisingEvents = false,
                             NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.CreationTime | NotifyFilters.LastWrite,
@@ -146,7 +147,7 @@ namespace Metamorphic.Storage.Discovery.FileSystem
 
             _diagnostics.Log(
                 LevelToLog.Info,
-                Resources.Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled);
+                Resources.Log_Messages_DirectoryFileListener_FileDiscovery_Disabled);
         }
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace Metamorphic.Storage.Discovery.FileSystem
         {
             _diagnostics.Log(
                 LevelToLog.Info,
-                Resources.Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled);
+                Resources.Log_Messages_DirectoryFileListener_FileDiscovery_Enabled);
 
             EnqueueExistingFiles();
             foreach (var pair in _watchers)
@@ -171,25 +172,24 @@ namespace Metamorphic.Storage.Discovery.FileSystem
             Justification = "Logging the exception but don't want to kill the process because one of the scanners can't handle the package.")]
         private void EnqueueExistingFiles()
         {
-            var newPackages = new List<PackageName>();
-            foreach (var file in _watchers.Keys.SelectMany(path => _fileSystem.Directory.GetFiles(path, "*.nupkg", SearchOption.AllDirectories)))
+            var newFiles = new List<string>();
+            foreach (var file in _watchers.Keys.SelectMany(path => _fileSystem.Directory.GetFiles(path, "*.mmrule", SearchOption.AllDirectories)))
             {
                 _diagnostics.Log(
                     LevelToLog.Info,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath,
+                        Resources.Log_Messages_DirectoryFileListener_LocatedFile_WithFilePath,
                         file));
 
-                var zipPackage = new ZipPackage(file);
-                newPackages.Add(new PackageName(zipPackage.Id, zipPackage.Version));
+                newFiles.Add(file);
             }
 
             foreach (var scanner in _scanners)
             {
                 try
                 {
-                    scanner.Added(newPackages);
+                    scanner.Added(newFiles);
                 }
                 catch (Exception e)
                 {
@@ -197,9 +197,9 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            Resources.Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError,
                             scanner.GetType(),
-                            string.Join(";", newPackages),
+                            string.Join(";", newFiles),
                             e));
                 }
             }
@@ -215,11 +215,10 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_DirectoryPackageListener_UpdatedPackage_WithFilePath,
+                    Resources.Log_Messages_DirectoryFileListener_UpdatedFile_WithFilePath,
                     e.FullPath));
 
-            var zipPackage = new ZipPackage(e.FullPath);
-            var updatedPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            var updatedPackages = new[] { e.FullPath };
             foreach (var scanner in _scanners)
             {
                 try
@@ -233,9 +232,9 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            Resources.Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError,
                             scanner.GetType(),
-                            string.Join<PackageName>(";", updatedPackages),
+                            string.Join(";", updatedPackages),
                             exception));
                 }
             }
@@ -251,11 +250,10 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath,
+                    Resources.Log_Messages_DirectoryFileListener_CreatedFile_WithFilePath,
                     e.FullPath));
 
-            var zipPackage = new ZipPackage(e.FullPath);
-            var newPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            var newPackages = new[] { e.FullPath };
             foreach (var scanner in _scanners)
             {
                 try
@@ -268,9 +266,9 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            Resources.Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError,
                             scanner.GetType(),
-                            string.Join<PackageName>(";", newPackages),
+                            string.Join(";", newPackages),
                             exception));
                 }
             }
@@ -286,11 +284,10 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_DirectoryPackageListener_RemovedPackage_WithFilePath,
+                    Resources.Log_Messages_DirectoryFileListener_RemovedFile_WithFilePath,
                     e.FullPath));
 
-            var zipPackage = new ZipPackage(e.FullPath);
-            var removedPackages = new[] { new PackageName(zipPackage.Id, zipPackage.Version) };
+            var removedPackages = new[] { e.FullPath };
             foreach (var scanner in _scanners)
             {
                 try
@@ -303,9 +300,9 @@ namespace Metamorphic.Storage.Discovery.FileSystem
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError,
+                            Resources.Log_Messages_DirectoryFileListener_DeletedFile_ScannerFailed_WithScannerTypeAndFilePathsAndError,
                             scanner.GetType(),
-                            string.Join<PackageName>(";", removedPackages),
+                            string.Join(";", removedPackages),
                             exception));
                 }
             }
