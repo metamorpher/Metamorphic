@@ -13,7 +13,7 @@ namespace Metamorphic.Storage.Discovery
     /// <summary>
     /// Defines the interface for objects that handle package detection.
     /// </summary>
-    public interface IProcessPackageChanges
+    internal interface IProcessPackageChanges
     {
         /// <summary>
         /// Processes the added packages.

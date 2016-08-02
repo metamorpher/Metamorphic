@@ -24,6 +24,9 @@ using IFileSystem = System.IO.Abstractions.IFileSystem;
 
 namespace Metamorphic.Storage.Discovery.FileSystem
 {
+    /// <summary>
+    /// Handles the detection of new, updated and removed nuget packages stored in a file share.
+    /// </summary>
     internal sealed class DirectoryPackageListener : IWatchPackages
     {
         /// <summary>
@@ -67,7 +70,7 @@ namespace Metamorphic.Storage.Discovery.FileSystem
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
         /// </exception>
-        internal DirectoryPackageListener(
+        public DirectoryPackageListener(
             IConfiguration configuration,
             IEnumerable<IProcessPackageChanges> packageScanners,
             SystemDiagnostics diagnostics,
