@@ -1,2 +1,3 @@
-# MogrificationCascade
-A pipeline application for streaming information through multiple stages
+# Metamorphic
+
+A workflow system that provides the ability to streaming and transform information through multiple stages
