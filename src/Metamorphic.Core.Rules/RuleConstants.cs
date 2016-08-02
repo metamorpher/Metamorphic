@@ -13,6 +13,11 @@ namespace Metamorphic.Core.Rules
     public static class RuleConstants
     {
         /// <summary>
+        /// The default relative path to the directory that contains individual rule files.
+        /// </summary>
+        public const string DefaultRuleLocation = "rules";
+
+        /// <summary>
         /// The regular expression used to extract trigger parameters from a rule parameter.
         /// </summary>
         /// <remarks>
