@@ -14,6 +14,7 @@ using System.Reflection;
 using Autofac;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
+using Metamorphic.Core.Rules;
 using Metamorphic.Storage.Actions;
 using Metamorphic.Storage.Discovery;
 using Metamorphic.Storage.Discovery.FileSystem;
@@ -65,6 +66,7 @@ namespace Metamorphic.Storage
                 builder.Register(c => new XmlConfiguration(
                         StorageConfigurationKeys.ToCollection()
                             .Append(CoreConfigurationKeys.ToCollection())
+                            .Append(RuleConfigurationKeys.ToCollection())
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
                             .ToList(),
                         StorageConstants.ConfigurationSectionApplicationSettings))
@@ -205,6 +207,14 @@ namespace Metamorphic.Storage
                     c.Resolve<IFileSystem>()))
                 .As<IWatchPackages>()
                 .SingleInstance();
+
+            builder.Register(c => new DirectoryFileListener(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<IEnumerable<IProcessFileChanges>>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
+                .As<IWatchPackages>()
+                .SingleInstance();
         }
 
         private static void RegisterLoggers(ContainerBuilder builder)
@@ -236,6 +246,13 @@ namespace Metamorphic.Storage
                     c.Resolve<SystemDiagnostics>(),
                     c.Resolve<IFileSystem>()))
                 .As<IProcessPackageChanges>()
+                .SingleInstance();
+
+            builder.Register(c => new RuleFileDetector(
+                    c.Resolve<IStoreRules>(),
+                    c.Resolve<ILoadRules>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IProcessFileChanges>()
                 .SingleInstance();
         }
     }
