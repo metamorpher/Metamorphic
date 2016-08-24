@@ -187,7 +187,7 @@ namespace Metamorphic.Server
                         CultureInfo.InvariantCulture,
                         Resources.Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException,
                         job.Action,
-                        e));
+                        e.ToString()));
             }
         }
     }
