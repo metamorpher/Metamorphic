@@ -115,7 +115,7 @@ namespace Metamorphic.Server.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failure while processing job with ID {0}. Error was: {0}..
+        ///   Looks up a localized string similar to Failure while processing job with ID {0}. Error was: {1}..
         /// </summary>
         internal static string Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException {
             get {

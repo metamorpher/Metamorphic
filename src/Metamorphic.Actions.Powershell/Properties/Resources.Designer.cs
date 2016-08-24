@@ -61,6 +61,25 @@ namespace Metamorphic.Actions.Powershell.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Script to execute ({0}) is a remote script, copying to a local directory..
+        /// </summary>
+        internal static string PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePath {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying script from {0} to {1}..
+        /// </summary>
+        internal static string PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePathAndDestinationPath {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePathAndDestin" +
+                        "ationPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to run powershell.exe. Error: {0}.
         /// </summary>
         internal static string PowershellActionbuilder_Error_FailedToRunExe_WithError {
@@ -75,6 +94,15 @@ namespace Metamorphic.Actions.Powershell.Properties {
         internal static string PowershellActionBuilder_ErrorWhileRunningPowershell_WithError {
             get {
                 return ResourceManager.GetString("PowershellActionBuilder_ErrorWhileRunningPowershell_WithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executing {0} with arguments {1}.
+        /// </summary>
+        internal static string PowershellActionBuilder_ExecutingScript_WithScriptAndArguments {
+            get {
+                return ResourceManager.GetString("PowershellActionBuilder_ExecutingScript_WithScriptAndArguments", resourceCulture);
             }
         }
         

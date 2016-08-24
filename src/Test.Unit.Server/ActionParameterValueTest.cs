@@ -144,10 +144,42 @@ namespace Metamorphic.Server
         }
 
         [Test]
+        public void ValueForParameterMatchingArgumentName()
+        {
+            var parameterName = "a";
+            var parameterValue = 100;
+            var reference = new ActionParameterValue(parameterName);
+
+            var signal = new Signal(
+                new SignalTypeId("b"),
+                new Dictionary<string, object>
+                {
+                    { parameterName, parameterValue }
+                });
+            Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
+        }
+
+        [Test]
         public void ValueForParameterWithDefaultValue()
         {
             var parameterName = "a";
             var parameterValue = 10;
+            var reference = new ActionParameterValue(parameterValue);
+
+            var signal = new Signal(
+                new SignalTypeId("b"),
+                new Dictionary<string, object>
+                {
+                    { parameterName, "100" }
+                });
+            Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
+        }
+
+        [Test]
+        public void ValueForParameterWithDefaultValueAsString()
+        {
+            var parameterName = "a";
+            var parameterValue = "SomeString";
             var reference = new ActionParameterValue(parameterValue);
 
             var signal = new Signal(
@@ -172,7 +204,7 @@ namespace Metamorphic.Server
                 {
                     [parameterName] = parameterValue
                 });
-            Assert.AreEqual(parameterValue, reference.ValueForParameter(signal));
+            Assert.AreEqual(parameterValue.ToString(CultureInfo.InvariantCulture), reference.ValueForParameter(signal));
         }
     }
 }

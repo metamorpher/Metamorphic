@@ -84,6 +84,41 @@ namespace Metamorphic.Actions.Powershell
                 scriptFullPath = Path.GetFullPath(Path.Combine(_scriptPath, scriptFullPath));
             }
 
+            var scriptLocalPath = scriptFullPath;
+            if (new Uri(scriptFullPath).IsUnc)
+            {
+                // Copy the file to a local temp directory
+                var tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                if (!Directory.Exists(tempDirectory))
+                {
+                    Directory.CreateDirectory(tempDirectory);
+                }
+
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePath,
+                        scriptFullPath));
+
+                var originDirectory = Path.GetDirectoryName(scriptFullPath);
+                foreach (var sourcePath in Directory.GetFiles(originDirectory))
+                {
+                    var destinationPath = Path.Combine(tempDirectory, Path.GetFileName(sourcePath));
+                    _diagnostics.Log(
+                        LevelToLog.Info,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePathAndDestinationPath,
+                            scriptFullPath,
+                            destinationPath));
+
+                    File.Copy(sourcePath, destinationPath);
+                }
+
+                scriptLocalPath = Path.Combine(tempDirectory, Path.GetFileName(scriptFullPath));
+            }
+
             var startInfo = new ProcessStartInfo();
             {
                 startInfo.FileName = @"c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
@@ -92,7 +127,7 @@ namespace Metamorphic.Actions.Powershell
                 startInfo.Arguments = string.Format(
                     CultureInfo.InvariantCulture,
                     "-nologo -noprofile -noninteractive -windowstyle hidden -file \"{0}\" {1}",
-                    scriptFullPath,
+                    scriptLocalPath,
                     arguments);
 
                 // do not display an error dialog if the process
@@ -109,6 +144,13 @@ namespace Metamorphic.Actions.Powershell
                 startInfo.RedirectStandardError = true;
             }
 
+            _diagnostics.Log(
+                LevelToLog.Info,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.PowershellActionBuilder_ExecutingScript_WithScriptAndArguments,
+                    startInfo.FileName,
+                    startInfo.Arguments));
             try
             {
                 // Start the console app?
@@ -123,11 +165,6 @@ namespace Metamorphic.Actions.Powershell
                     // see e.g. here: http://msdn.microsoft.com/en-us/library/system.diagnostics.process.errordatareceived.aspx
                     exec.ErrorDataReceived += (s, e) =>
                     {
-                        // There is no reason to get a lock
-                        // before setting the value because
-                        // we wait for the process to exit before
-                        // checking the value. So there is no
-                        // simultaneous access at any point.
                         if (!string.IsNullOrEmpty(e.Data))
                         {
                             var output = string.Format(

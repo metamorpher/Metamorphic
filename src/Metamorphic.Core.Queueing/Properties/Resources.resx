@@ -127,7 +127,7 @@
     <value>Failed to process [{0}].</value>
   </data>
   <data name="Log_Messages_PersistentDispenser_FailedToProcess_WithIdAndException" xml:space="preserve">
-    <value>Failed to publish[{0}] to the persistent store. The error was {1}.</value>
+    <value>Failed to process[{0}] to the persistent store. The error was {1}.</value>
   </data>
   <data name="Log_Messages_PersistentDispenser_Processed_WithId" xml:space="preserve">
     <value>Processed [{0}].</value>

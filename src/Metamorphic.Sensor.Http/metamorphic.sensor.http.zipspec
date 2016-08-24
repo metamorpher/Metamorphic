@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<archive>
+    <name>Metamorphic.Sensor.Http-${VersionSemantic}</name>
+    <files>
+        <file src="${DirWorkspace}\readme.md" target="" />
+        <file src="${DirWorkspace}\license" target="" />
+        <file src="${DirTemp}\deploy\metamorphic.sensor.http\**\*.*"
+              target="" />
+    </files>
+</archive>

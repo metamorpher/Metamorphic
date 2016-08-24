@@ -154,7 +154,7 @@
     <value>Processing job with ID: {0}</value>
   </data>
   <data name="Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException" xml:space="preserve">
-    <value>Failure while processing job with ID {0}. Error was: {0}.</value>
+    <value>Failure while processing job with ID {0}. Error was: {1}.</value>
   </data>
   <data name="Log_Messages_SignalProcessor_ProcessJob_ActionIdNotFound_WithId" xml:space="preserve">
     <value>Failure while processing jobs. Action with ID {0} could not be found.</value>

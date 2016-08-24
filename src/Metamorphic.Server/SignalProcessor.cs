@@ -345,13 +345,16 @@ namespace Metamorphic.Server
             _packageInstaller.Install(
                 packageId,
                 tempDirectory,
-                (outputLocation, path, id) => PackageUtilities.CopyPackageFilesToSinglePath(
-                    path,
-                    id,
-                    "*.dll",
-                    binPath,
-                    _diagnostics,
-                    _fileSystem));
+                (outputLocation, path, id) =>
+                {
+                    PackageUtilities.CopyPackageFilesToSinglePath(
+                        path,
+                        id,
+                        "*.*",
+                        binPath,
+                        _diagnostics,
+                        _fileSystem);
+                });
 
             return binPath;
         }

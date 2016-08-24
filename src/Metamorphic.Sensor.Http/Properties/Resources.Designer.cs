@@ -61,6 +61,60 @@ namespace Metamorphic.Sensor.Http.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected the HTTP POST request to have a JSON body..
+        /// </summary>
+        internal static string HttpResponseMessage_ExpectedJsonBody {
+            get {
+                return ResourceManager.GetString("HttpResponseMessage_ExpectedJsonBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of the signal was not specified correctly..
+        /// </summary>
+        internal static string HttpResponseMessage_MissingSignalType {
+            get {
+                return ResourceManager.GetString("HttpResponseMessage_MissingSignalType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No request information was provided..
+        /// </summary>
+        internal static string HttpResponseMessage_NoInputStreamDefined {
+            get {
+                return ResourceManager.GetString("HttpResponseMessage_NoInputStreamDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/jenkins by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_JenkinsController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_JenkinsController_PostMethodInputDataInvalid_WithOriginAndBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/jenkins by {0}.
+        /// </summary>
+        internal static string Log_Messages_JenkinsController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_JenkinsController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing signal {0} with parameters ({1}).
+        /// </summary>
+        internal static string Log_Messages_JenkinsController_PostMethodPublishingSignal_WithSignalInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_JenkinsController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A HTTP GET was triggered for /api/signal by {0}.
         /// </summary>
         internal static string Log_Messages_SignalController_GetMethodInvoked_WithOrigin {
@@ -93,6 +147,33 @@ namespace Metamorphic.Sensor.Http.Properties {
         internal static string Log_Messages_SignalController_PostMethodPublishingSignal_WithSignalInformation {
             get {
                 return ResourceManager.GetString("Log_Messages_SignalController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfs by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_TfsController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsController_PostMethodInputDataInvalid_WithOriginAndBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/tfs by {0}.
+        /// </summary>
+        internal static string Log_Messages_TfsController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing signal {0} with parameters ({1}).
+        /// </summary>
+        internal static string Log_Messages_TfsController_PostMethodPublishingSignal_WithSignalInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
             }
         }
     }
