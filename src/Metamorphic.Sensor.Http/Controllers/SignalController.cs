@@ -6,13 +6,13 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
 using Metamorphic.Core.Queueing.Signals;
@@ -25,9 +25,8 @@ using Nuclei.Diagnostics.Logging;
 namespace Metamorphic.Sensor.Http.Controllers
 {
     /// <summary>
-    /// The controller that handles the generatoin of signals from HTTP web requests.
+    /// The controller that handles the generation of signals from HTTP web requests.
     /// </summary>
-    [Authorize]
     [VersionedApiRoute(template: "api/signal", allowedVersion: 1)]
     public sealed class SignalController : ApiController
     {
@@ -116,6 +115,24 @@ namespace Metamorphic.Sensor.Http.Controllers
             _publisher = signalPublisher;
         }
 
+        private string ClientIp(HttpRequestMessage request)
+        {
+            if (request.Properties.ContainsKey("MS_HttpContext"))
+            {
+                return ((HttpContextWrapper)request.Properties["MS_HttpContext"]).Request.UserHostAddress;
+            }
+            else if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name))
+            {
+                RemoteEndpointMessageProperty prop;
+                prop = (RemoteEndpointMessageProperty)Request.Properties[RemoteEndpointMessageProperty.Name];
+                return prop.Address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Returns the status of the controller.
         /// </summary>
@@ -126,15 +143,22 @@ namespace Metamorphic.Sensor.Http.Controllers
             Justification = "Controller methods cannot be static.")]
         public HttpResponseMessage Get()
         {
-            if (HttpContext.Current != null)
+            if ((ControllerContext == null) || (ControllerContext.Request == null))
             {
-                _diagnostics.Log(
-                    LevelToLog.Info,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_SignalController_GetMethodInvoked_WithOrigin,
-                        HttpContext.Current.Request.UserHostAddress));
+                return new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = Resources.HttpResponseMessage_NoInputStreamDefined,
+                };
             }
+
+            var clientIp = ClientIp(ControllerContext.Request);
+            _diagnostics.Log(
+                LevelToLog.Info,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Log_Messages_SignalController_GetMethodInvoked_WithOrigin,
+                    clientIp));
 
             return new HttpResponseMessage
             {
@@ -145,38 +169,59 @@ namespace Metamorphic.Sensor.Http.Controllers
         /// <summary>
         /// Triggers a new signal.
         /// </summary>
-        /// <param name="jsonData">The JSON data.</param>
         /// <returns>A http response message indicating whether the call was successful.</returns>
-        public HttpResponseMessage Post([FromBody]JObject jsonData)
+        [SuppressMessage(
+            "Microsoft.Maintainability",
+            "CA1502:AvoidExcessiveComplexity",
+            Justification = "Lot's of if statements to get out early. Should probably refactor but can't be stuffed for now.")]
+        public HttpResponseMessage Post()
         {
-            if (HttpContext.Current != null)
+            if ((ControllerContext == null) || (ControllerContext.Request == null) || (ControllerContext.Request.Content == null))
             {
-                _diagnostics.Log(
-                    LevelToLog.Info,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_SignalController_PostMethodInvoked_WithOrigin,
-                        HttpContext.Current.Request.UserHostAddress));
+                return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.InternalServerError,
+                        ReasonPhrase = Resources.HttpResponseMessage_NoInputStreamDefined,
+                    };
             }
 
+            var clientIp = ClientIp(ControllerContext.Request);
+            _diagnostics.Log(
+                LevelToLog.Info,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Log_Messages_SignalController_GetMethodInvoked_WithOrigin,
+                    clientIp));
+
+            var text = ControllerContext.Request.Content.ReadAsStringAsync().Result;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        ReasonPhrase = Resources.HttpResponseMessage_ExpectedJsonBody,
+                    };
+            }
+
+            var jsonData = JObject.Parse(text);
             if (jsonData == null)
             {
                 if (HttpContext.Current != null)
                 {
-                    var body = new StreamReader(HttpContext.Current.Request.InputStream).ReadToEnd();
                     _diagnostics.Log(
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Messages_SignalController_PostMethodInputDataInvalid_WithOriginAndBody,
-                            HttpContext.Current.Request.UserHostAddress,
-                            body));
+                            clientIp,
+                            text));
                 }
 
                 return new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.BadRequest,
-                };
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        ReasonPhrase = Resources.HttpResponseMessage_ExpectedJsonBody,
+                    };
             }
 
             var signalType = jsonData.Children()
@@ -185,6 +230,14 @@ namespace Metamorphic.Sensor.Http.Controllers
                 .Where(t => t.Name.Equals("Type"))
                 .Select(t => t.ToObject<string>())
                 .FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(signalType))
+            {
+                return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        ReasonPhrase = Resources.HttpResponseMessage_MissingSignalType,
+                    };
+            }
 
             var arguments = jsonData.Children()
                 .Where(t => t is JProperty)
