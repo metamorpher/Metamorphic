@@ -168,17 +168,17 @@ namespace Metamorphic.Server
                 throw new InvalidSignalForRuleException();
             }
 
+            var text = _value as string;
             if ((_value != null) && (_signalParameters.Count == 0))
             {
+                if ((text != null) && signal.ContainsParameter(text))
+                {
+                    return signal.ParameterValue(text);
+                }
+
                 return _value;
             }
 
-            if (_signalParameters.Count == 1)
-            {
-                return signal.ParameterValue(_signalParameters[0]);
-            }
-
-            var text = _value as string;
             foreach (var parameter in _signalParameters)
             {
                 text = text.Replace(
