@@ -163,13 +163,16 @@ namespace Metamorphic.Storage.Actions
                     _packageInstaller.Install(
                         package,
                         tempDirectory,
-                        (outputLocation, path, id) => PackageUtilities.CopyPackageFilesToSinglePath(
-                            path,
-                            id,
-                            "*.dll",
-                            binPath,
-                            _diagnostics,
-                            _fileSystem));
+                        (outputLocation, path, id) =>
+                        {
+                            PackageUtilities.CopyPackageFilesToSinglePath(
+                                path,
+                                id,
+                                "*.*",
+                                binPath,
+                                _diagnostics,
+                                _fileSystem);
+                        });
 
                     var domain = _appDomainBuilder(Resources.ActionScanDomainName, new string[] { binPath });
                     try
