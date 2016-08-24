@@ -129,4 +129,13 @@
   <data name="PowershellActionBuilder_Output_ProcessCompleted" xml:space="preserve">
     <value>Powershell script finished</value>
   </data>
+  <data name="PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePath" xml:space="preserve">
+    <value>Script to execute ({0}) is a remote script, copying to a local directory.</value>
+  </data>
+  <data name="PowershellActionBuilder_CopyRemoteScript_ToLocalDirectory_WithSourcePathAndDestinationPath" xml:space="preserve">
+    <value>Copying script from {0} to {1}.</value>
+  </data>
+  <data name="PowershellActionBuilder_ExecutingScript_WithScriptAndArguments" xml:space="preserve">
+    <value>Executing {0} with arguments {1}</value>
+  </data>
 </root>

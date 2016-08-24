@@ -105,8 +105,8 @@ namespace Metamorphic.Server
                 });
             executor.Execute(job, actionDefinition);
 
-            Assert.AreEqual(2, output.Count);
-            Assert.AreEqual("Powershell script finished", output[1]);
+            Assert.AreEqual(3, output.Count);
+            Assert.AreEqual("Powershell script finished", output[2]);
         }
 
         [Test]
