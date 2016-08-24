@@ -1,28 +1,53 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Signals;
-using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 
 namespace Metamorphic.Core.Signals
 {
     [TestFixture]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+    [SuppressMessage(
+        "Microsoft.StyleCop.CSharp.DocumentationRules",
+        "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public class SignalTest
     {
         [Test]
-        public void Construct()
+        public void Create()
         {
             var type = new SignalTypeId("a");
             var signal = new Signal(type, new Dictionary<string, object>());
 
             Assert.AreSame(type, signal.Sensor);
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Signals.Signal",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullParameters()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Signal(new SignalTypeId("a"), null));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Signals.Signal",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullSensorId()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Signal(null, new Dictionary<string, object>()));
         }
 
         [Test]
@@ -127,6 +152,22 @@ namespace Metamorphic.Core.Signals
             var signal = new Signal(type, parameters);
 
             Assert.AreEqual("b", signal.ParameterValue("a"));
+        }
+
+        [Test]
+        public void ToDataObject()
+        {
+            var typeId = "a";
+            var type = new SignalTypeId(typeId);
+            var parameters = new Dictionary<string, object>
+                {
+                    { "A", "b" }
+                };
+            var signal = new Signal(type, parameters);
+
+            var obj = ((ITranslateToDataObject<SignalData>)signal).ToDataObject();
+            Assert.AreEqual(typeId, obj.SensorId);
+            Assert.That(obj.Parameters, Is.EquivalentTo(parameters));
         }
     }
 }

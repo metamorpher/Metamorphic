@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -24,8 +25,9 @@ namespace Metamorphic.Core.Actions
         /// </exception>
         public ActionParameterValueMap(ActionParameterDefinition parameter, object value)
         {
+            if (parameter == null)
             {
-                Lokad.Enforce.Argument(() => parameter);
+                throw new ArgumentNullException("parameter");
             }
 
             Parameter = parameter;

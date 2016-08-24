@@ -1,15 +1,16 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Metamorphic.Core.Actions;
-using Metamorphic.Core.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Properties;
 
 namespace Metamorphic.Core.Jobs
 {
@@ -28,7 +29,7 @@ namespace Metamorphic.Core.Jobs
         /// stored in lower case so as to provide case-insensitive comparisons between the signal and
         /// rule parameter names.
         /// </summary>
-        private readonly Dictionary<string, object> m_Parameters
+        private readonly Dictionary<string, object> _parameters
             = new Dictionary<string, object>();
 
         /// <summary>
@@ -44,15 +45,20 @@ namespace Metamorphic.Core.Jobs
         /// </exception>
         public Job(ActionId action, IDictionary<string, object> parameters)
         {
+            if (action == null)
             {
-                Lokad.Enforce.Argument(() => action);
-                Lokad.Enforce.Argument(() => parameters);
+                throw new ArgumentNullException("action");
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters");
             }
 
             Action = action;
             foreach (var pair in parameters)
             {
-                m_Parameters.Add(pair.Key.ToLower(), pair.Value);
+                _parameters.Add(pair.Key.ToUpper(CultureInfo.InvariantCulture), pair.Value);
             }
         }
 
@@ -71,7 +77,9 @@ namespace Metamorphic.Core.Jobs
         /// <returns>
         ///   <see langword="true" /> if the current rule applies to the given signal; otherwise, <see langword="false" />.
         /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+        [SuppressMessage(
+            "Microsoft.StyleCop.CSharp.DocumentationRules",
+            "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool ContainsParameter(string name)
         {
@@ -80,7 +88,7 @@ namespace Metamorphic.Core.Jobs
                 return false;
             }
 
-            return m_Parameters.ContainsKey(name.ToLower());
+            return _parameters.ContainsKey(name.ToUpper(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -89,7 +97,7 @@ namespace Metamorphic.Core.Jobs
         /// <returns>The collection of parameter names.</returns>
         public IEnumerable<string> ParameterNames()
         {
-            return m_Parameters.Keys;
+            return _parameters.Keys;
         }
 
         /// <summary>
@@ -97,6 +105,11 @@ namespace Metamorphic.Core.Jobs
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <returns>The value for the given parameter with the provided name.</returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1062:Validate arguments of public methods",
+            MessageId = "0",
+            Justification = "The 'name' parameter is validated through the ContainsParameter method.")]
         public object ParameterValue(string name)
         {
             if (!ContainsParameter(name))
@@ -108,7 +121,7 @@ namespace Metamorphic.Core.Jobs
                         name));
             }
 
-            return m_Parameters[name.ToLower()];
+            return _parameters[name.ToUpper(CultureInfo.InvariantCulture)];
         }
     }
 }

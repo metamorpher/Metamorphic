@@ -1,285 +1,451 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Metamorphic.Core;
+using Metamorphic.Core.Actions;
+using Metamorphic.Core.Jobs;
+using Metamorphic.Core.Queueing;
+using Metamorphic.Core.Queueing.Signals;
+using Metamorphic.Core.Rules;
 using Metamorphic.Core.Signals;
-using Metamorphic.Server.Jobs;
 using Metamorphic.Server.Properties;
-using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
+using NuGet;
+
+using IFileSystem = System.IO.Abstractions.IFileSystem;
 
 namespace Metamorphic.Server
 {
-    internal sealed class SignalProcessor : IProcessSignals, IDisposable
+    internal sealed class SignalProcessor
     {
+        private static readonly Regex TriggerParameterMatcher = new Regex(RuleConstants.TriggerParameterRegex, RegexOptions.IgnoreCase);
+
+        private static Rule CreateRule(RuleDefinition definition)
+        {
+            if (definition.Enabled)
+            {
+                var signalParameterConditions = new Dictionary<string, Predicate<object>>();
+                foreach (var condition in definition.Condition)
+                {
+                    var pred = ToCondition(condition);
+                    if (pred != null)
+                    {
+                        signalParameterConditions.Add(condition.Name, pred);
+                    }
+                }
+
+                var parameters = new Dictionary<string, ActionParameterValue>();
+                foreach (var pair in definition.Action.Parameters)
+                {
+                    ActionParameterValue reference = null;
+
+                    var parameterText = pair.Value as string;
+                    if (parameterText != null)
+                    {
+                        var matches = TriggerParameterMatcher.Matches(parameterText);
+                        if (matches.Count > 0)
+                        {
+                            var signalParameters = new List<string>();
+
+                            foreach (Match match in matches)
+                            {
+                                // The first item in the groups collection is the full string that matched
+                                // (i.e. 'some stuff {{signal.XXXXX}} and some more'), the next items are the match groups.
+                                // Given that we only expect one match group we'll just use the first item.
+                                var signalParameterName = match.Groups[1].Value;
+                                signalParameters.Add(signalParameterName);
+                            }
+
+                            reference = new ActionParameterValue(parameterText, signalParameters);
+                        }
+                    }
+
+                    if (reference == null)
+                    {
+                        reference = new ActionParameterValue(pair.Value);
+                    }
+
+                    parameters.Add(pair.Key, reference);
+                }
+
+                return new Rule(
+                    definition.Name,
+                    definition.Description,
+                    new SignalTypeId(definition.Signal.Id),
+                    new ActionId(definition.Action.Id),
+                    signalParameterConditions,
+                    parameters);
+            }
+
+            return null;
+        }
+
+        [SuppressMessage(
+            "Microsoft.Maintainability",
+            "CA1502:AvoidExcessiveComplexity",
+            Justification = "It's just a big case statement. Nothing horribly complex about it.")]
+        private static Predicate<object> ToCondition(ConditionRuleDefinition condition)
+        {
+            object comparisonValue = condition.Pattern;
+            switch (condition.Type)
+            {
+                case "equals":
+                    return o => o.Equals(comparisonValue);
+                case "notequals":
+                    return o => !o.Equals(comparisonValue);
+                case "lessthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) < 0;
+                    };
+                case "greaterthan":
+                    return o =>
+                    {
+                        var comparable = o as IComparable;
+                        return comparable.CompareTo(comparisonValue) > 0;
+                    };
+                case "matchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "notmatchregex":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && !Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase);
+                    };
+                case "startswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                case "endswith":
+                    return o =>
+                    {
+                        var text = o as string;
+                        var pattern = comparisonValue as string;
+                        return (text != null) && (pattern != null) && text.EndsWith(pattern, StringComparison.OrdinalIgnoreCase);
+                    };
+                default:
+                    throw new InvalidConditionTypeException();
+            }
+        }
+
+        /// <summary>
+        /// The function that builds an <c>AppDomain</c> when requested.
+        /// </summary>
+        private readonly Func<string, string[], AppDomain> _appDomainBuilder;
+
+        /// <summary>
+        /// The object that forms a proxy for the remote action storage.
+        /// </summary>
+        private readonly IActionStorageProxy _actionStorage;
+
         /// <summary>
         /// The object that provides the diagnostics methods for the application.
         /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
+        private readonly SystemDiagnostics _diagnostics;
 
         /// <summary>
-        /// The queue that contains the jobs that should be executed.
+        /// The function that is used to create a new <see cref="IExecuteActions"/> instance in a remote <see cref="AppDomain"/>.
         /// </summary>
-        private readonly IQueueJobs m_JobQueue;
+        private readonly Func<AppDomain, ILoadActionExecutorsInRemoteAppDomains> _executorBuilder;
 
         /// <summary>
-        /// The object used to lock on.
+        /// The object that provides a virtualizing layer for the file system.
         /// </summary>
-        private readonly object m_Lock = new object();
+        private readonly IFileSystem _fileSystem;
+
+        /// <summary>
+        /// The object that installs NuGet packages.
+        /// </summary>
+        private readonly IInstallPackages _packageInstaller;
 
         /// <summary>
         /// The collection containing all the rules.
         /// </summary>
-        private readonly IStoreRules m_RuleCollection;
+        private readonly IRuleStorageProxy _ruleCollection;
 
         /// <summary>
-        /// The queue that stores the location of the non-processed packages.
+        /// The object that dispenses signals that need to be processed.
         /// </summary>
-        private readonly IQueueSignals m_SignalQueue;
-
-        /// <summary>
-        /// The cancellation source that is used to cancel the worker task.
-        /// </summary>
-        private CancellationTokenSource m_CancellationSource;
-
-        /// <summary>
-        /// A flag indicating if the processing of symbols has started or not.
-        /// </summary>
-        private bool m_IsStarted;
-
-        /// <summary>
-        /// The task that handles the actual symbol indexing process.
-        /// </summary>
-        private Task m_Worker;
+        private readonly IDispenseSignals _signalDispenser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalProcessor"/> class.
         /// </summary>
-        /// <param name="jobQueue">The object that queues jobs that need to be processed.</param>
+        /// <param name="actionStorage">The object that forms a proxy for the remote action storage.</param>
+        /// <param name="packageInstaller"> The object that installs NuGet packages.</param>
+        /// <param name="appDomainBuilder">The function that is used to create a new <c>AppDomain</c> which will be used to scan action packages.</param>
+        /// <param name="executorBuilder">The function that is used to create a new <see cref="IExecuteActions"/> instance in a remote <see cref="AppDomain"/>.</param>
         /// <param name="ruleCollection">The object that stores all the known rules for the application.</param>
-        /// <param name="signalQueue">The object that queues signals that need to be processed.</param>
+        /// <param name="signalDispenser">The object that dispenses signals that need to be processed.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+        /// <param name="fileSystem">The object that provides a virtualizing layer for the file system.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="jobQueue"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="actionStorage"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="packageInstaller"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="appDomainBuilder"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="executorBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="ruleCollection"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="signalQueue"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="signalDispenser"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
+        /// </exception>
         public SignalProcessor(
-            IQueueJobs jobQueue,
-            IStoreRules ruleCollection,
-            IQueueSignals signalQueue,
-            SystemDiagnostics diagnostics)
+            IActionStorageProxy actionStorage,
+            IInstallPackages packageInstaller,
+            Func<string, string[], AppDomain> appDomainBuilder,
+            Func<AppDomain, ILoadActionExecutorsInRemoteAppDomains> executorBuilder,
+            IRuleStorageProxy ruleCollection,
+            IDispenseSignals signalDispenser,
+            SystemDiagnostics diagnostics,
+            IFileSystem fileSystem)
         {
+            if (actionStorage == null)
             {
-                Lokad.Enforce.Argument(() => jobQueue);
-                Lokad.Enforce.Argument(() => ruleCollection);
-                Lokad.Enforce.Argument(() => signalQueue);
-                Lokad.Enforce.Argument(() => diagnostics);
+                throw new ArgumentNullException("actionStorage");
             }
 
-            m_Diagnostics = diagnostics;
-            m_JobQueue = jobQueue;
-            m_RuleCollection = ruleCollection;
-            m_SignalQueue = signalQueue;
-            m_SignalQueue.OnEnqueue += HandleOnEnqueue;
-        }
-
-        private void CleanUpWorkerTask()
-        {
-            lock (m_Lock)
+            if (packageInstaller == null)
             {
-                m_Diagnostics.Log(
-                    LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_CleaningUpWorker);
-
-                m_CancellationSource = null;
-                m_Worker = null;
+                throw new ArgumentNullException("packageInstaller");
             }
-        }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            var task = Stop(false);
-            task.Wait();
-        }
-
-        private void HandleOnEnqueue(object sender, EventArgs e)
-        {
-            lock (m_Lock)
+            if (appDomainBuilder == null)
             {
-                if (!m_IsStarted)
+                throw new ArgumentNullException("appDomainBuilder");
+            }
+
+            if (executorBuilder == null)
+            {
+                throw new ArgumentNullException("executorBuilder");
+            }
+
+            if (ruleCollection == null)
+            {
+                throw new ArgumentNullException("ruleCollection");
+            }
+
+            if (signalDispenser == null)
+            {
+                throw new ArgumentNullException("signalDispenser");
+            }
+
+            if (fileSystem == null)
+            {
+                throw new ArgumentNullException("fileSystem");
+            }
+
+            if (diagnostics == null)
+            {
+                throw new ArgumentNullException("diagnostics");
+            }
+
+            _appDomainBuilder = appDomainBuilder;
+            _actionStorage = actionStorage;
+            _diagnostics = diagnostics;
+            _executorBuilder = executorBuilder;
+            _fileSystem = fileSystem;
+            _packageInstaller = packageInstaller;
+            _ruleCollection = ruleCollection;
+            _signalDispenser = signalDispenser;
+            _signalDispenser.OnItemAvailable += HandleOnEnqueue;
+        }
+
+        private void HandleOnEnqueue(object sender, ItemEventArgs<Signal> e)
+        {
+            Signal signal = e.Item;
+            if (signal == null)
+            {
+                return;
+            }
+
+            _diagnostics.Log(
+                LevelToLog.Info,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
+                    signal.Sensor));
+
+            foreach (var parameter in signal.Parameters())
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_SignalProcessor_ProcessSignal_ForParameters,
+                        parameter,
+                        signal.ParameterValue(parameter)));
+            }
+
+            var rules = _ruleCollection.RulesForSignal(signal.Sensor);
+            foreach (var definition in rules)
+            {
+                var rule = CreateRule(definition);
+                if (rule == null)
                 {
-                    m_Diagnostics.Log(
-                        LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted);
-
-                    return;
+                    continue;
                 }
 
-                if (m_Worker != null)
+                if (rule.ShouldProcess(signal))
                 {
-                    m_Diagnostics.Log(
-                        LevelToLog.Trace,
-                        Resources.Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists);
-
-                    return;
+                    var job = rule.ToJob(signal);
+                    ProcessJob(job);
                 }
-
-                m_Diagnostics.Log(
-                    LevelToLog.Trace,
-                    Resources.Log_Messages_SignalProcessor_NewItemInQueue_StartingThread);
-
-                m_CancellationSource = new CancellationTokenSource();
-                m_Worker = Task.Factory.StartNew(
-                    () => ProcessSignals(m_CancellationSource.Token),
-                    m_CancellationSource.Token,
-                    TaskCreationOptions.LongRunning,
-                    TaskScheduler.Default);
             }
         }
 
-        private void ProcessSignals(CancellationToken token)
+        private string InstallActionPackages(PackageName packageId, string tempDirectory)
         {
+            var binPath = _fileSystem.Path.Combine(tempDirectory, "bin");
+            if (!_fileSystem.Directory.Exists(binPath))
+            {
+                _diagnostics.Log(
+                    LevelToLog.Debug,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_SignalProcessor_CreatingBinDirectory_WithPath,
+                        binPath));
+
+                _fileSystem.Directory.CreateDirectory(binPath);
+            }
+
+            _packageInstaller.Install(
+                packageId,
+                tempDirectory,
+                (outputLocation, path, id) =>
+                {
+                    PackageUtilities.CopyPackageFilesToSinglePath(
+                        path,
+                        id,
+                        "*.*",
+                        binPath,
+                        _diagnostics,
+                        _fileSystem);
+                });
+
+            return binPath;
+        }
+
+        private void InvokeActionInSeparateAppdomain(Job job, ActionDefinition action, string packageInstallPath)
+        {
+            var domain = _appDomainBuilder(Resources.ActionExecuteDomainName, new string[] { packageInstallPath });
             try
             {
-                m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_StartingSignalProcessing);
+                // Inject the actual scanner
+                var loader = _executorBuilder(domain);
 
-                while (!token.IsCancellationRequested)
+                var logger = new LogForwardingPipe(_diagnostics);
+                var executorProxy = loader.Load(logger);
+                executorProxy.Execute(job, action);
+            }
+            finally
+            {
+                if ((domain != null) && (!AppDomain.CurrentDomain.Equals(domain)))
                 {
-                    if (m_SignalQueue.IsEmpty)
-                    {
-                        m_Diagnostics.Log(LevelToLog.Trace, Resources.Log_Messages_SignalProcessor_QueueEmpty);
-                        break;
-                    }
+                    AppDomain.Unload(domain);
+                }
+            }
+        }
 
-                    Signal signal = null;
-                    if (!m_SignalQueue.IsEmpty)
-                    {
-                        signal = m_SignalQueue.Dequeue();
-                    }
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching to prevent a failure from killing the processor. Would catch more specific exceptions if we knew what they would be.")]
+        private void ProcessJob(Job job)
+        {
+            if (job == null)
+            {
+                return;
+            }
 
-                    if (signal == null)
-                    {
-                        continue;
-                    }
+            try
+            {
+                _diagnostics.Log(
+                    LevelToLog.Info,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Log_Messages_SignalProcessor_ProcessJob_WithId,
+                        job.Action));
 
-                    m_Diagnostics.Log(
+                foreach (var parameter in job.ParameterNames())
+                {
+                    _diagnostics.Log(
                         LevelToLog.Info,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_SignalProcessor_ProcessSignal_WithType,
-                            signal.Sensor));
+                            Resources.Log_Messages_SignalProcessor_ProcessJob_ForParameters,
+                            parameter,
+                            job.ParameterValue(parameter)));
+                }
 
-                    foreach (var parameter in signal.Parameters())
-                    {
-                        m_Diagnostics.Log(
-                            LevelToLog.Info,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                Resources.Log_Messages_SignalProcessor_ProcessSignal_ForParameters,
-                                parameter,
-                                signal.ParameterValue(parameter)));
-                    }
+                ActionDefinition action = _actionStorage.Action(job.Action);
+                if (action == null)
+                {
+                    _diagnostics.Log(
+                        LevelToLog.Error,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Log_Messages_SignalProcessor_ProcessJob_ActionIdNotFound_WithId,
+                            job.Action));
+                    return;
+                }
 
-                    var rules = m_RuleCollection.RulesForSignal(signal.Sensor);
-                    foreach (var rule in rules)
+                var tempDirectory = _fileSystem.Path.Combine(_fileSystem.Path.GetTempPath(), Guid.NewGuid().ToString());
+                try
+                {
+                    var packageInstallPath = InstallActionPackages(action.Package, tempDirectory);
+                    InvokeActionInSeparateAppdomain(job, action, packageInstallPath);
+                }
+                finally
+                {
+                    if (_fileSystem.Directory.Exists(tempDirectory))
                     {
-                        if (rule.ShouldProcess(signal))
-                        {
-                            var job = rule.ToJob(signal);
-                            m_JobQueue.Enqueue(job);
-                        }
+                        _fileSystem.Directory.Delete(tempDirectory, true);
                     }
                 }
             }
             catch (Exception e)
             {
-                m_Diagnostics.Log(
+                _diagnostics.Log(
                     LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException,
+                        Resources.Log_Messages_SignalProcessor_ProcessJobFailed_WithException,
                         e));
             }
-            finally
-            {
-                CleanUpWorkerTask();
-            }
-        }
-
-        /// <summary>
-        /// Starts the signal processing.
-        /// </summary>
-        public void Start()
-        {
-            lock (m_Lock)
-            {
-                m_IsStarted = true;
-            }
-        }
-
-        /// <summary>
-        /// Stops the signal processing.
-        /// </summary>
-        /// <param name="clearCurrentQueue">
-        /// Indicates if the elements currently in the queue need to be processed before stopping or not.
-        /// </param>
-        /// <returns>A task that completes when the indexer has stopped.</returns>
-        public Task Stop(bool clearCurrentQueue)
-        {
-            m_IsStarted = false;
-
-            var result = Task.Factory.StartNew(
-                () =>
-                {
-                    m_Diagnostics.Log(
-                        LevelToLog.Info,
-                        Resources.Log_Messages_SignalProcessor_StoppingProcessing);
-
-                    if (!clearCurrentQueue && !m_SignalQueue.IsEmpty)
-                    {
-                        lock (m_Lock)
-                        {
-                            if (m_CancellationSource != null)
-                            {
-                                m_CancellationSource.Cancel();
-                            }
-                        }
-                    }
-
-                    Task worker;
-                    lock (m_Lock)
-                    {
-                        worker = m_Worker;
-                    }
-
-                    if (worker != null)
-                    {
-                        worker.Wait();
-                    }
-
-                    CleanUpWorkerTask();
-                });
-
-            return result;
         }
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<archive>
+    <name>Metamorphic.Server-${VersionSemantic}</name>
+    <files>
+        <file src="${DirWorkspace}\readme.md" target="" />
+        <file src="${DirWorkspace}\license" target="" />
+        <file src="${DirSrc}\metamorphic.server\bin\${Configuration}\*.dll"
+              target="" />
+        <file src="${DirSrc}\metamorphic.server\bin\${Configuration}\*.exe"
+              exclude="${DirSrc}\metamorphic.server\bin\${Configuration}\*.vshost.exe"
+              target="" />
+        <file src="${DirSrc}\metamorphic.server\bin\${Configuration}\*.config"
+              exclude="${DirSrc}\metamorphic.server\bin\${Configuration}\*.vshost.exe.config"
+              target="" />
+    </files>
+</archive>

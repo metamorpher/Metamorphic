@@ -123,18 +123,6 @@
   <data name="Log_Messages_ServiceStopped" xml:space="preserve">
     <value>The Metamorphic server has stopped.</value>
   </data>
-  <data name="Log_Messages_SignalProcessor_CleaningUpWorker" xml:space="preserve">
-    <value>Cleaning up worker thread.</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_NewItemInQueue_ProcessingNotStarted" xml:space="preserve">
-    <value>A new signal was added to the queue, but the processing of signals is turned off. Signal will not be processed.</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_NewItemInQueue_StartingThread" xml:space="preserve">
-    <value>New item in signal queue. Starting processing thread.</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_NewItemInQueue_WorkerAlreadyExists" xml:space="preserve">
-    <value>A new signal was added to the queue. The processing thread is already running. Signal should be processed shortly.</value>
-  </data>
   <data name="Log_Messages_SignalProcessor_ProcessSignalsFailed_WithException" xml:space="preserve">
     <value>Failure while processing signals. Error was: {0}.</value>
   </data>
@@ -143,15 +131,6 @@
   </data>
   <data name="Log_Messages_SignalProcessor_ProcessSignal_WithType" xml:space="preserve">
     <value>Processing signal of type: {0}</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_QueueEmpty" xml:space="preserve">
-    <value>Signal queue empty. Stopping signal processing.</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_StartingSignalProcessing" xml:space="preserve">
-    <value>Starting signal processing.</value>
-  </data>
-  <data name="Log_Messages_SignalProcessor_StoppingProcessing" xml:space="preserve">
-    <value>Stopping processing.</value>
   </data>
   <data name="Service_Description" xml:space="preserve">
     <value>The service that provides the core capabilities for Metamorphic</value>
@@ -162,73 +141,40 @@
   <data name="Service_ServiceName" xml:space="preserve">
     <value>Metamorphic.Service</value>
   </data>
-  <data name="Log_Messages_RuleWatcher_CreatedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered new rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Disabled" xml:space="preserve">
-    <value>Rule discovery - Disabled</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Enabled" xml:space="preserve">
-    <value>Rule discovery - Enabled</value>
-  </data>
   <data name="Exceptions_Messages_MissingConfigurationValue_WithKey" xml:space="preserve">
     <value>A required configuration value is missing. The key for the missing configuration value is: {0}</value>
   </data>
-  <data name="Log_Messages_RuleWatcher_RemovedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered removed rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
-    <value>Discovered updated rule file at: {0}</value>
-  </data>
-  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
-    <value>The rule definition at {0} is not valid.</value>
-  </data>
-  <data name="Exceptions_Messages_InvalidConditionType" xml:space="preserve">
-    <value>The condition type is not valid.</value>
-  </data>
-  <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
-    <value>The specified Rule already exists in the collection.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_CleaningUpWorker" xml:space="preserve">
-    <value>Cleaning up worker thread.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_NewItemInQueue_ProcessingNotStarted" xml:space="preserve">
-    <value>A new job was added to the queue, but the processing of jobs is turned off. Job will not be processed.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_NewItemInQueue_StartingThread" xml:space="preserve">
-    <value>New item in job queue. Starting processing thread.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_NewItemInQueue_WorkerAlreadyExists" xml:space="preserve">
-    <value>A new job was added to the queue. The processing thread is already running. Job should be processed shortly.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_ProcessJobsFailed_WithException" xml:space="preserve">
+  <data name="Log_Messages_SignalProcessor_ProcessJobFailed_WithException" xml:space="preserve">
     <value>Failure while processing jobs. Error was: {0}.</value>
   </data>
-  <data name="Log_Messages_JobProcessor_ProcessJob_ForParameters" xml:space="preserve">
+  <data name="Log_Messages_SignalProcessor_ProcessJob_ForParameters" xml:space="preserve">
     <value>Job parameter: Name = {0}; Value = {1}</value>
   </data>
-  <data name="Log_Messages_JobProcessor_ProcessJob_WithId" xml:space="preserve">
+  <data name="Log_Messages_SignalProcessor_ProcessJob_WithId" xml:space="preserve">
     <value>Processing job with ID: {0}</value>
   </data>
-  <data name="Log_Messages_JobProcessor_QueueEmpty" xml:space="preserve">
-    <value>Job queue empty. Stopping job processing.</value>
+  <data name="Log_Messages_RemoteActionExecutor_ProcessJobFailed_WithId_WithException" xml:space="preserve">
+    <value>Failure while processing job with ID {0}. Error was: {1}.</value>
   </data>
-  <data name="Log_Messages_JobProcessor_StartingJobProcessing" xml:space="preserve">
-    <value>Starting job processing.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_StoppingProcessing" xml:space="preserve">
-    <value>Stopping processing.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_ProcessJobFailed_WithId_WithException" xml:space="preserve">
-    <value>Failure while processing job with ID {0}. Error was: {0}.</value>
-  </data>
-  <data name="Log_Messages_JobProcessor_ProcessJob_ActionIdNotFound_WithId" xml:space="preserve">
+  <data name="Log_Messages_SignalProcessor_ProcessJob_ActionIdNotFound_WithId" xml:space="preserve">
     <value>Failure while processing jobs. Action with ID {0} could not be found.</value>
   </data>
-  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
-    <value>An action with the given ID is already registered.</value>
+  <data name="Log_Messages_SignalProcessor_CreatingBinDirectory_WithPath" xml:space="preserve">
+    <value>Creating bin directory to store assemblies for packages at {0}.</value>
   </data>
-  <data name="Exceptions_Messages_DuplicateSignalGenerator" xml:space="preserve">
-    <value>A signal generator with the given ID is already registered.</value>
+  <data name="ActionExecuteDomainName" xml:space="preserve">
+    <value>Metamorphic.Server action execute AppDomain</value>
+  </data>
+  <data name="Exceptions_Messages_MissingActionParameter_WithParameterName" xml:space="preserve">
+    <value>The parameter '{0}' required for the action invocation was missing.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadActionType" xml:space="preserve">
+    <value>Unable to load the action type.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidSignalForRule" xml:space="preserve">
+    <value>The given signal does not match the current rule.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidRuleDefinition" xml:space="preserve">
+    <value>The given rule definition is not valid.</value>
   </data>
 </root>

@@ -1,10 +1,13 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Metamorphic.Core.Actions;
 using NUnit.Framework;
 
@@ -14,12 +17,34 @@ namespace Metamorphic.Core.Jobs
     public sealed class JobTest
     {
         [Test]
-        public void Construct()
+        public void Create()
         {
             var type = new ActionId("a");
-            var Job = new Job(type, new Dictionary<string, object>());
+            var job = new Job(type, new Dictionary<string, object>());
 
-            Assert.AreSame(type, Job.Action);
+            Assert.AreSame(type, job.Action);
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Jobs.Job",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullAction()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Job(null, new Dictionary<string, object>()));
+        }
+
+        [Test]
+        [SuppressMessage(
+            "Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "Metamorphic.Core.Jobs.Job",
+            Justification = "Testing that the constructor throws an exception.")]
+        public void CreateWithNullParameters()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Job(new ActionId("a"), null));
         }
 
         [Test]
@@ -30,9 +55,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.IsFalse(Job.ContainsParameter(null));
+            Assert.IsFalse(job.ContainsParameter(null));
         }
 
         [Test]
@@ -43,9 +68,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.IsFalse(Job.ContainsParameter(string.Empty));
+            Assert.IsFalse(job.ContainsParameter(string.Empty));
         }
 
         [Test]
@@ -56,9 +81,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.IsFalse(Job.ContainsParameter("c"));
+            Assert.IsFalse(job.ContainsParameter("c"));
         }
 
         [Test]
@@ -69,9 +94,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.IsTrue(Job.ContainsParameter("a"));
+            Assert.IsTrue(job.ContainsParameter("a"));
         }
 
         [Test]
@@ -82,9 +107,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.Throws<ParameterNotFoundException>(() => Job.ParameterValue(null));
+            Assert.Throws<ParameterNotFoundException>(() => job.ParameterValue(null));
         }
 
         [Test]
@@ -95,9 +120,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.Throws<ParameterNotFoundException>(() => Job.ParameterValue(string.Empty));
+            Assert.Throws<ParameterNotFoundException>(() => job.ParameterValue(string.Empty));
         }
 
         [Test]
@@ -108,9 +133,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.Throws<ParameterNotFoundException>(() => Job.ParameterValue("c"));
+            Assert.Throws<ParameterNotFoundException>(() => job.ParameterValue("c"));
         }
 
         [Test]
@@ -121,9 +146,9 @@ namespace Metamorphic.Core.Jobs
                 {
                     { "a", "b" }
                 };
-            var Job = new Job(type, parameters);
+            var job = new Job(type, parameters);
 
-            Assert.AreEqual("b", Job.ParameterValue("a"));
+            Assert.AreEqual("b", job.ParameterValue("a"));
         }
     }
 }

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Metamorphic.Actions.Powershell</id>
+        <version>$VersionSemantic$</version>
+        <authors>Metamorpher</authors>
+        <owners>metamorpher</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/metamorpher/metamorphic</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>
+            Provides a powershell action that can be used in the Metamorphic application.
+        </description>
+        <releaseNotes>
+            $ReleaseNotes$
+        </releaseNotes>
+    </metadata>
+    <files>
+        <file src="$DirSrc$\Metamorphic.Actions.Powershell\bin\$Configuration$\Metamorphic.Actions.Powershell.dll" target="lib\net40" />
+        <file src="$DirSrc$\Metamorphic.Actions.Powershell\bin\$Configuration$\Metamorphic.Actions.Powershell.pdb" target="lib\net40" />
+        <file src="$DirSrc$\Metamorphic.Actions.Powershell\bin\$Configuration$\Metamorphic.Actions.Powershell.xml" target="lib\net40" />
+        <file src="$DirSrc$\Metamorphic.Actions.Powershell\**\*.cs" target="src\Metamorphic.Actions.Powershell" />
+    </files>
+</package>

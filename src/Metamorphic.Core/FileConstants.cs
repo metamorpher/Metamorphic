@@ -1,10 +1,12 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Metamorphic.Core
@@ -18,7 +20,7 @@ namespace Metamorphic.Core
         /// <summary>
         /// The object that stores constant values for the application.
         /// </summary>
-        private readonly ApplicationConstants m_Constants;
+        private readonly ApplicationConstants _constants;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileConstants"/> class.
@@ -30,13 +32,17 @@ namespace Metamorphic.Core
                 Lokad.Enforce.Argument(() => constants);
             }
 
-            m_Constants = constants;
+            _constants = constants;
         }
 
         /// <summary>
         /// Gets the extension for an assembly file.
         /// </summary>
         /// <value>The extension for an assembly file.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string AssemblyExtension
         {
             get
@@ -49,6 +55,10 @@ namespace Metamorphic.Core
         /// Gets the extension for a log file.
         /// </summary>
         /// <value>The extension for a log file.</value>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string LogExtension
         {
             get
@@ -60,6 +70,10 @@ namespace Metamorphic.Core
         /// <summary>
         /// Gets the extension for a feedback file.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "The property is used through a instance reference.")]
         public string FeedbackReportExtension
         {
             get
@@ -78,7 +92,7 @@ namespace Metamorphic.Core
         public string CompanyCommonPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, _constants.CompanyName);
 
             return companyDirectory;
         }
@@ -93,13 +107,13 @@ namespace Metamorphic.Core
         public string CompanyUserPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, _constants.CompanyName);
 
             return companyDirectory;
         }
 
         /// <summary>
-        /// Returns the path for the directory where the global 
+        /// Returns the path for the directory where the global
         /// settings for the product are written to.
         /// </summary>
         /// <returns>
@@ -109,14 +123,14 @@ namespace Metamorphic.Core
         public string ProductSettingsCommonPath()
         {
             var companyDirectory = CompanyCommonPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, _constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, _constants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }
 
         /// <summary>
-        /// Returns the path for the directory where the global 
+        /// Returns the path for the directory where the global
         /// settings for the product are written to.
         /// </summary>
         /// <returns>
@@ -126,8 +140,8 @@ namespace Metamorphic.Core
         public string ProductSettingsUserPath()
         {
             var companyDirectory = CompanyUserPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, _constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, _constants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }

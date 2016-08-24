@@ -1,6 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -14,7 +15,7 @@ namespace Metamorphic.Core
     /// An exception thrown when the user tries to get a value for a parameter that does not exist.
     /// </summary>
     [Serializable]
-    public class ParameterNotFoundException : Exception
+    public sealed class ParameterNotFoundException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterNotFoundException"/> class.
@@ -47,7 +48,7 @@ namespace Metamorphic.Core
         /// Initializes a new instance of the <see cref="ParameterNotFoundException"/> class.
         /// </summary>
         /// <param name="info">
-        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized 
+        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized
         ///     object data about the exception being thrown.
         /// </param>
         /// <param name="context">

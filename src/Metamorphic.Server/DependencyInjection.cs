@@ -1,26 +1,26 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http;
 using Autofac;
-using Autofac.Integration.WebApi;
 using Metamorphic.Core;
 using Metamorphic.Core.Actions;
-using Metamorphic.Core.Signals;
-using Metamorphic.Server.Actions;
-using Metamorphic.Server.Jobs;
-using Metamorphic.Server.Rules;
-using Metamorphic.Server.Signals;
-using NLog;
+using Metamorphic.Core.Commands;
+using Metamorphic.Core.Queueing;
+using Metamorphic.Core.Queueing.Signals;
+using Metamorphic.Server.Nuclei.AppDomains;
 using Nuclei;
+using Nuclei.Communication;
+using Nuclei.Communication.Interaction;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -38,6 +38,22 @@ namespace Metamorphic.Server
         /// </summary>
         private const string DefaultInfoFileName = "server.info.log";
 
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(string[] additionalPaths)
+        {
+            var directoryPaths = new List<string>();
+            directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
+
+            if (additionalPaths != null)
+            {
+                directoryPaths.AddRange(additionalPaths);
+            }
+
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                new string[0],
+                directoryPaths);
+        }
+
         /// <summary>
         /// Creates the dependency injection container for the application.
         /// </summary>
@@ -48,6 +64,8 @@ namespace Metamorphic.Server
             {
                 builder.Register(c => new XmlConfiguration(
                         ServerConfigurationKeys.ToCollection()
+                            .Append(CoreConfigurationKeys.ToCollection())
+                            .Append(QueueingConfigurationKeys.ToCollection())
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
                             .ToList(),
                         ServerConstants.ConfigurationSectionApplicationSettings))
@@ -60,54 +78,52 @@ namespace Metamorphic.Server
                 builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
                     .As<FileConstants>();
 
-                RegisterActions(builder);
-                RegisterControllers(builder);
-                RegisterDiagnostics(builder);
-                RegisterJobs(builder);
-                RegisterLoggers(builder);
-                RegisterRules(builder);
-                RegisterSignals(builder);
+                builder.RegisterModule(
+                    new CommunicationModule(
+                        new[]
+                            {
+                                // For now only allowing the different applications to be on the same machine
+                                // because there is no way to do a limited discovery (i.e. only a fixed set of machines)
+                                ChannelTemplate.NamedPipe
+                            },
+                        true));
 
-                builder.Register(c => new SignalProcessor(
-                        c.Resolve<IQueueJobs>(),
-                        c.Resolve<IStoreRules>(),
-                        c.Resolve<IQueueSignals>(),
-                        c.Resolve<SystemDiagnostics>()))
-                    .As<IProcessSignals>()
-                    .SingleInstance();
+                builder.RegisterModule(new CoreModule());
+                builder.RegisterModule(new QueueingModule());
+
+                RegisterAppDomainBuilder(builder);
+                RegisterCommunication(builder);
+                RegisterDiagnostics(builder);
+                RegisterLoggers(builder);
+                RegisterProcessor(builder);
+                RegisterProxies(builder);
             }
 
             return builder.Build();
         }
 
-        private static void RegisterActions(ContainerBuilder builder)
+        private static void RegisterAppDomainBuilder(ContainerBuilder builder)
         {
-            builder.Register(c => new PowershellActionBuilder(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IActionBuilder>()
-                .SingleInstance();
+            builder.Register(
+                c =>
+                {
+                    Func<string, string[], AppDomain> result =
+                        (name, paths) => AppDomainBuilder.Assemble(
+                            name,
+                            AppDomainResolutionPathsFor(paths));
 
-            builder.Register(c => new ActionStorage())
-                .As<IStoreActions>()
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Instance;
-                        var builders = a.Context.Resolve<IEnumerable<IActionBuilder>>();
-                        foreach (var b in builders)
-                        {
-                            var definition = b.ToDefinition();
-                            collection.Add(definition);
-                        }
-                    })
+                    return result;
+                })
+                .As<Func<string, string[], AppDomain>>()
                 .SingleInstance();
         }
 
-        private static void RegisterControllers(ContainerBuilder builder)
+        private static void RegisterCommunication(ContainerBuilder builder)
         {
-            builder.Register(c => new SignalController(c.Resolve<IQueueSignals>()))
-                .InstancePerRequest();
+            builder.Register(c => new CommunicationInitializer(
+                    c.Resolve<IComponentContext>()))
+                .As<IInitializeCommunicationInstances>()
+                .SingleInstance();
         }
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
@@ -125,7 +141,7 @@ namespace Metamorphic.Server
                             {
                                 logger.Log(msg);
                             }
-                            catch (NLogRuntimeException)
+                            catch (NLog.NLogRuntimeException)
                             {
                                 // Ignore it and move on to the next logger.
                             }
@@ -144,68 +160,50 @@ namespace Metamorphic.Server
                 .SingleInstance();
         }
 
-        private static void RegisterJobs(ContainerBuilder builder)
-        {
-            builder.Register(c => new JobProcessor(
-                    c.Resolve<IStoreActions>(),
-                    c.Resolve<IQueueJobs>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IProcessJobs>()
-                .SingleInstance();
-
-            builder.Register(c => new JobQueue())
-                .As<IQueueJobs>()
-                .SingleInstance();
-        }
-
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             var assemblyInfo = Assembly.GetExecutingAssembly().GetName();
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
-                    new DebugLogTemplate(
-                        c.Resolve<IConfiguration>(),
-                        () => DateTimeOffset.Now),
+                    new DebugLogTemplate(c.Resolve<IConfiguration>(), () => DateTimeOffset.Now),
                     assemblyInfo.Name,
                     assemblyInfo.Version))
                 .As<ILogger>()
                 .SingleInstance();
         }
 
-        private static void RegisterRules(ContainerBuilder builder)
+        private static void RegisterProcessor(ContainerBuilder builder)
         {
-            builder.Register(c => new RuleCollection(c.Resolve<SystemDiagnostics>()))
-                .As<IStoreRules>()
-                .SingleInstance();
-
-            builder.Register(
-                    c => 
-                    {
-                        var ctx = c.Resolve<IComponentContext>();
-                        return new RuleLoader(
-                            (string id) => ctx.Resolve<IStoreActions>().HasActionFor(new ActionId(id)),
-                            c.Resolve<SystemDiagnostics>());
-                    })
-                .As<ILoadRules>()
-                .SingleInstance();
-
-            builder.Register(c => new RuleWatcher(
-                    c.Resolve<IConfiguration>(),
-                    c.Resolve<ILoadRules>(),
-                    c.Resolve<IStoreRules>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<IWatchRules>()
+            Func<AppDomain, ILoadActionExecutorsInRemoteAppDomains> executorBuilder =
+                a =>
+                {
+                    var loader = a.CreateInstanceAndUnwrap(
+                        typeof(AppDomainActionClassLoader).Assembly.FullName,
+                        typeof(AppDomainActionClassLoader).FullName) as AppDomainActionClassLoader;
+                    return loader;
+                };
+            builder.Register(c => new SignalProcessor(
+                    c.Resolve<IActionStorageProxy>(),
+                    c.Resolve<IInstallPackages>(),
+                    c.Resolve<Func<string, string[], AppDomain>>(),
+                    executorBuilder,
+                    c.Resolve<IRuleStorageProxy>(),
+                    c.Resolve<IDispenseSignals>(),
+                    c.Resolve<SystemDiagnostics>(),
+                    c.Resolve<IFileSystem>()))
                 .SingleInstance();
         }
 
-        private static void RegisterSignals(ContainerBuilder builder)
+        private static void RegisterProxies(ContainerBuilder builder)
         {
-            builder.Register(c => new WebCallSignalGenerator())
-                .As<IGenerateSignals>()
+            builder.Register(c => new ActionStorageProxy(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                .As<IActionStorageProxy>()
                 .SingleInstance();
 
-            builder.Register(c => new SignalQueue())
-                .As<IQueueSignals>()
+            builder.Register(c => new RuleStorageProxy(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                .As<IRuleStorageProxy>()
                 .SingleInstance();
         }
     }

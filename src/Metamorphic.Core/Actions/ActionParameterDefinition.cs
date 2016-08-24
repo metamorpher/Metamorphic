@@ -1,17 +1,20 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright company="Metamorphic">
-//     Copyright 2013 Metamorphic. Licensed under the Apache License, Version 2.0.
+// Copyright (c) Metamorphic. All rights reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENCE.md file in the project root for full license information.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Diagnostics;
+using Metamorphic.Core.Properties;
 
 namespace Metamorphic.Core.Actions
 {
     /// <summary>
     /// Stores information about a single parameter on an action method.
     /// </summary>
+    [Serializable]
     public sealed class ActionParameterDefinition
     {
         /// <summary>
@@ -26,9 +29,16 @@ namespace Metamorphic.Core.Actions
         /// </exception>
         public ActionParameterDefinition(string name)
         {
+            if (name == null)
             {
-                Lokad.Enforce.Argument(() => name);
-                Lokad.Enforce.Argument(() => name, Lokad.Rules.StringIs.NotEmpty);
+                throw new ArgumentNullException("name");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_ParameterShouldNotBeAnEmptyString,
+                    "name");
             }
 
             Name = name;

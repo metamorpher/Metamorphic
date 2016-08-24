@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionScanDomainName" xml:space="preserve">
+    <value>Metamorphic.Storage action scan AppDomain</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateActionDefinition" xml:space="preserve">
+    <value>An action with the given ID is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_RuleAlreadyExists" xml:space="preserve">
+    <value>The specified Rule already exists in the collection.</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_FileScanFailed_WithDirectoryAndException" xml:space="preserve">
+    <value>Locating all the files in {0} failed due to an exception. Exception information is: {1}</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_NewPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>The following new packages have been found: {0}</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_RemovedPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>The following packages have been removed: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_PackageDiscovery_Disabled" xml:space="preserve">
+    <value>Package discovery has been disabled.</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_PackageDiscovery_Enabled" xml:space="preserve">
+    <value>Package discovery has been enabled.</value>
+  </data>
+  <data name="Log_Messages_PackageScanner_CreatingBinDirectory_WithPath" xml:space="preserve">
+    <value>PackageScanner: Creating bin directory to store assemblies for packages at {0}.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyLoadFailed_WithNameAndException" xml:space="preserve">
+    <value>The loading of the plugin assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyScanWithoutFiles_WithPackageInfo" xml:space="preserve">
+    <value>RemotePackageScanner: No files were scanned because no files were provided. Package information was: {0} [{1}].</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_AssemblyScanWithoutPackageName_WithFiles" xml:space="preserve">
+    <value>RemotePackageScanner: No files were scanned because no package information was provided. Files to scan were: {0}.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_RegisteringAction_WithActionInformation" xml:space="preserve">
+    <value>RemotePackageScanner: Registering action {0} from package {1} [{2}]</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_ScanningAssembly_WithName" xml:space="preserve">
+    <value>Scanning assembly [{0}] for plugins.</value>
+  </data>
+  <data name="Log_Messages_RemotePackageScanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
+    <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_FileScanCompleted" xml:space="preserve">
+    <value>Action package location process completed.</value>
+  </data>
+  <data name="Log_Messages_ActionPackageDetector_FileScanStarted_WithDirectory" xml:space="preserve">
+    <value>Locating action packages in {0}.</value>
+  </data>
+  <data name="Log_Messages_PackageScanner_AssemblyFileAlreadyExistsAtDestination_WithPackageIdAndVersionAndOriginAndDestination" xml:space="preserve">
+    <value>PackageScanner: File in package {0} [{1}] at {2} already exists in destination at {3}.</value>
+  </data>
+  <data name="Log_Messages_PackageScanner_CopyingAssemblyFile_WithPackageIdAndVersionAndOriginAndDestination" xml:space="preserve">
+    <value>PackageScanner: Copying file in package {0} [{1}] from {2} to {3}.</value>
+  </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_FromStream" xml:space="preserve">
+    <value>The rule definition in the given stream is not valid.</value>
+  </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithDefinitionText" xml:space="preserve">
+    <value>The rule definition is not valid. The definition was: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithFilePath" xml:space="preserve">
+    <value>The rule definition at {0} is not valid.</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_CreatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RemovedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered removed rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Disabled" xml:space="preserve">
+    <value>Rule discovery - Disabled</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_RuleDiscovery_Enabled" xml:space="preserve">
+    <value>Rule discovery - Enabled</value>
+  </data>
+  <data name="Log_Messages_RuleWatcher_UpdatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered updated rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_ServiceStarted" xml:space="preserve">
+    <value>The Metamorphic storage service has started.</value>
+  </data>
+  <data name="Log_Messages_ServiceStopped" xml:space="preserve">
+    <value>The Metamorphic storage service has stopped.</value>
+  </data>
+  <data name="Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException" xml:space="preserve">
+    <value>The loading of the plugin assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
+    <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Plugins_PluginScanDomainName" xml:space="preserve">
+    <value>Apollo plugin scan AppDomain</value>
+  </data>
+  <data name="Service_Description" xml:space="preserve">
+    <value>The service that provides the storage capabilities for Metamorphic</value>
+  </data>
+  <data name="Service_DisplayName" xml:space="preserve">
+    <value>Metamorphic Storage</value>
+  </data>
+  <data name="Service_ServiceName" xml:space="preserve">
+    <value>Metamorphic.Storage</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_DeletedPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to delete the packages  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_DiscoveredPackage_ScannerFailed_WithScannerTypeAndPackageIdsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to scan the packages  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_RulePackageDetector_CreatingRuleDirectory_WithPath" xml:space="preserve">
+    <value>RulePackageDetector: Creating directory to store rule files for packages at {0}.</value>
+  </data>
+  <data name="Log_Messages_RulePackageDetector_FoundRuleFile_WithFilePath" xml:space="preserve">
+    <value>RulePackageDetector: Found rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RulePackageDetector_NewPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>RulePackageDetector: The following new packages have been found: {0}</value>
+  </data>
+  <data name="Log_Messages_RulePackageDetector_RemovedPackagesDetected_WithPackageList" xml:space="preserve">
+    <value>RulePackageDetector: The following packages have been removed: {0}</value>
+  </data>
+  <data name="Exceptions_Messages_ParameterShouldNotBeAnEmptyString" xml:space="preserve">
+    <value>The parameter should not be an empty string.</value>
+  </data>
+  <data name="Exceptions_Messages_StreamShouldBeReadable" xml:space="preserve">
+    <value>The stream should be readable.</value>
+  </data>
+  <data name="Exceptions_Messages_FileNotFound" xml:space="preserve">
+    <value>The specified file was not found.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ActionHasNoId" xml:space="preserve">
+    <value>Rule definition check: Action for rule has no ID.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ComplexActionParameterHasParametersNotProvidedBySignal_WithActionIdAndValueAndSignalParameters" xml:space="preserve">
+    <value>Rule definition check: A complex action parameter with value "{0}" includes values that are not provided by any of the following signal parameters: [{1}].</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ConditionHasNoMatchingSignalParameter_WithConditionName" xml:space="preserve">
+    <value>Rule definition check: Condition with name {0} has no matching signal parameter.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ConditionHasNoName" xml:space="preserve">
+    <value>Rule definition check: Condition has no parameter name.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ConditionHasNoPattern_WithConditionName" xml:space="preserve">
+    <value>Rule definition check: Condition with name {0} has no pattern.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_ConditionTypeIsNotValid_WithNameAndType" xml:space="preserve">
+    <value>Rule definition check: Condition with name {0} has no valid condition type. The given type is: {1}.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_DefinitionNameMissing" xml:space="preserve">
+    <value>Rule definition check: Rule has no name.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_NoActionDefined" xml:space="preserve">
+    <value>Rule definition check: Rule has no action.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_NoSignalDefined" xml:space="preserve">
+    <value>Rule definition check: Rule has no signal.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_SignalHasNoId" xml:space="preserve">
+    <value>Rule definition check: Signal for rule has no ID.</value>
+  </data>
+  <data name="Log_Messages_RuleDefinitionCheck_SignalParameterHasInvalidValue_WithParameterName" xml:space="preserve">
+    <value>Rule definition check: Signal parameter with name {0} has invalid value.</value>
+  </data>
+  <data name="Log_Messages_RuleLoader_InvalidRuleDefinition_WithErrors" xml:space="preserve">
+    <value>{0}. Errors were: {1}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_CreatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_DeletedFile_ScannerFailed_WithScannerTypeAndFilePathsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to delete the files  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_DiscoveredFile_ScannerFailed_WithScannerTypeAndFilePathsAndError" xml:space="preserve">
+    <value>The scanner of type {0} failed to scan the files  [{1}]. The error was {2}.</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_FileDiscovery_Disabled" xml:space="preserve">
+    <value>File discovery - Disabled</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_FileDiscovery_Enabled" xml:space="preserve">
+    <value>File discovery - Enabled</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_LocatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered new rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_RemovedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered removed rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryFileListener_UpdatedFile_WithFilePath" xml:space="preserve">
+    <value>Discovered updated rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_DiscoveredPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered new package at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_RemovedPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered removed package at: {0}</value>
+  </data>
+  <data name="Log_Messages_DirectoryPackageListener_UpdatedPackage_WithFilePath" xml:space="preserve">
+    <value>Discovered updated package at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleFileDetector_FoundRuleFile_WithFilePath" xml:space="preserve">
+    <value>RuleFileDetector: Found rule file at: {0}</value>
+  </data>
+  <data name="Log_Messages_RuleFileDetector_RemovedRuleFile_WithFilePath" xml:space="preserve">
+    <value>RuleFileDetector: Rule file removed at: {0}</value>
+  </data>
+</root>
