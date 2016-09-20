@@ -24,3 +24,10 @@ using System.Diagnostics.CodeAnalysis;
     Scope = "resource",
     Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
     Justification = "It's an REST API method call.")]
+[assembly: SuppressMessage(
+    "Microsoft.Naming",
+    "CA1703:ResourceStringsShouldBeSpelledCorrectly",
+    MessageId = "tfsworkitem",
+    Scope = "resource",
+    Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
+    Justification = "It's an REST API method call.")]
