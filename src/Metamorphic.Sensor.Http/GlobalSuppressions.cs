@@ -17,3 +17,10 @@ using System.Diagnostics.CodeAnalysis;
     Scope = "type",
     Target = "~T:Metamorphic.Sensor.Http.WebApiApplication",
     Justification = "This class is the entry point for the ASP WebAPI site and should stay in the global.asx file.")]
+[assembly: SuppressMessage(
+    "Microsoft.Naming",
+    "CA1703:ResourceStringsShouldBeSpelledCorrectly",
+    MessageId = "tfsgit",
+    Scope = "resource",
+    Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
+    Justification = "It's an REST API method call.")]

@@ -156,4 +156,13 @@
   <data name="Log_Messages_TfsController_PostMethodPublishingSignal_WithSignalInformation" xml:space="preserve">
     <value>Publishing signal {0} with parameters ({1})</value>
   </data>
+  <data name="Log_Messages_TfsGitController_PostMethodInputDataInvalid_WithOriginAndBody" xml:space="preserve">
+    <value>The HTTP POST triggered for /api/tfsgit by {0} was not provided with valid data. Body was: {1}</value>
+  </data>
+  <data name="Log_Messages_TfsGitController_PostMethodInvoked_WithOrigin" xml:space="preserve">
+    <value>A HTTP POST was triggered for /api/tfsgit by {0}</value>
+  </data>
+  <data name="Log_Messages_TfsGitController_PostMethodPublishingSignal_WithSignalInformation" xml:space="preserve">
+    <value>Publishing signal {0} with parameters ({1})</value>
+  </data>
 </root>

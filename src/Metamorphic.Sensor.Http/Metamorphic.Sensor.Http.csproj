@@ -239,6 +239,7 @@
     <Compile Include="Controllers\JenkinsController.cs" />
     <Compile Include="Controllers\SignalController.cs" />
     <Compile Include="Controllers\TfsController.cs" />
+    <Compile Include="Controllers\TfsGitController.cs" />
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
