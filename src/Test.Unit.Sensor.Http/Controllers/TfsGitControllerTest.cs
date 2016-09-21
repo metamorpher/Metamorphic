@@ -137,9 +137,11 @@ namespace Test.Unit.Sensor.Http.Controllers
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("GitBranchDelete", data.SensorId);
-            Assert.AreEqual(2, data.Parameters.Count);
-            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["NAME"]);
-            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["REVISION"]);
+            Assert.AreEqual(4, data.Parameters.Count);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["TFSPROJECT"]);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["GITREPOSITORY"]);
+            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["GITBRANCH"]);
+            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["GITREVISION"]);
         }
 
         [Test]
@@ -232,9 +234,11 @@ namespace Test.Unit.Sensor.Http.Controllers
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("GitTagDelete", data.SensorId);
-            Assert.AreEqual(2, data.Parameters.Count);
-            Assert.AreEqual("1.2.3", data.Parameters["NAME"]);
-            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["REVISION"]);
+            Assert.AreEqual(4, data.Parameters.Count);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["TFSPROJECT"]);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["GITREPOSITORY"]);
+            Assert.AreEqual("1.2.3", data.Parameters["GITTAG"]);
+            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["GITREVISION"]);
         }
 
         [Test]
@@ -327,9 +331,11 @@ namespace Test.Unit.Sensor.Http.Controllers
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("GitBranchCreate", data.SensorId);
-            Assert.AreEqual(2, data.Parameters.Count);
-            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["NAME"]);
-            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["REVISION"]);
+            Assert.AreEqual(4, data.Parameters.Count);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["TFSPROJECT"]);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["GITREPOSITORY"]);
+            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["GITBRANCH"]);
+            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["GITREVISION"]);
         }
 
         [Test]
@@ -422,10 +428,12 @@ namespace Test.Unit.Sensor.Http.Controllers
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("GitCommit", data.SensorId);
-            Assert.AreEqual(3, data.Parameters.Count);
-            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["NAME"]);
-            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["PREVIOUSREVISION"]);
-            Assert.AreEqual("aad331d8d3b131fa9ae03cf5e53965b51942618a", data.Parameters["CURRENTREVISION"]);
+            Assert.AreEqual(5, data.Parameters.Count);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["TFSPROJECT"]);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["GITREPOSITORY"]);
+            Assert.AreEqual("feature/mybranch_with_almost_spaces", data.Parameters["GITBRANCH"]);
+            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["GITPREVIOUSREVISION"]);
+            Assert.AreEqual("aad331d8d3b131fa9ae03cf5e53965b51942618a", data.Parameters["GITCURRENTREVISION"]);
         }
 
         [Test]
@@ -518,9 +526,11 @@ namespace Test.Unit.Sensor.Http.Controllers
 
             var data = ((ITranslateToDataObject<SignalData>)capturedSignal).ToDataObject();
             Assert.AreEqual("GitTagCreate", data.SensorId);
-            Assert.AreEqual(2, data.Parameters.Count);
-            Assert.AreEqual("1.2.3", data.Parameters["NAME"]);
-            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["REVISION"]);
+            Assert.AreEqual(4, data.Parameters.Count);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["TFSPROJECT"]);
+            Assert.AreEqual("Fabrikam-Fiber-Git", data.Parameters["GITREPOSITORY"]);
+            Assert.AreEqual("1.2.3", data.Parameters["GITTAG"]);
+            Assert.AreEqual("33b55f7cb7e7e245323987634f960cf4a6e6bc74", data.Parameters["GITREVISION"]);
         }
     }
 }

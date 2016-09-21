@@ -64,6 +64,8 @@ namespace Metamorphic.Sensor.Http.Controllers
 
             string signalType = "Unknown";
             var parameters = new Dictionary<string, object>();
+            parameters.Add("tfsproject", dynamicObject.resource.repository.project.name.ToString());
+            parameters.Add("gitrepository", dynamicObject.resource.repository.name.ToString());
             if (refName.StartsWith("refs/heads", StringComparison.OrdinalIgnoreCase))
             {
                 var branchName = ParseBranchNameFromRef(refName);
@@ -72,23 +74,23 @@ namespace Metamorphic.Sensor.Http.Controllers
                     return null;
                 }
 
-                parameters.Add("name", branchName);
+                parameters.Add("gitbranch", branchName);
                 if (previousCommit.Equals("0000000000000000000000000000000000000000"))
                 {
-                    parameters.Add("revision", currentCommit);
+                    parameters.Add("gitrevision", currentCommit);
                     signalType = "GitBranchCreate";
                 }
                 else
                 {
                     if (currentCommit.Equals("0000000000000000000000000000000000000000"))
                     {
-                        parameters.Add("revision", previousCommit);
+                        parameters.Add("gitrevision", previousCommit);
                         signalType = "GitBranchDelete";
                     }
                     else
                     {
-                        parameters.Add("previousrevision", previousCommit);
-                        parameters.Add("currentrevision", currentCommit);
+                        parameters.Add("gitpreviousrevision", previousCommit);
+                        parameters.Add("gitcurrentrevision", currentCommit);
                         signalType = "GitCommit";
                     }
                 }
@@ -103,15 +105,15 @@ namespace Metamorphic.Sensor.Http.Controllers
                         return null;
                     }
 
-                    parameters.Add("name", tagName);
+                    parameters.Add("gittag", tagName);
                     if (previousCommit.Equals("0000000000000000000000000000000000000000"))
                     {
-                        parameters.Add("revision", currentCommit);
+                        parameters.Add("gitrevision", currentCommit);
                         signalType = "GitTagCreate";
                     }
                     else
                     {
-                        parameters.Add("revision", previousCommit);
+                        parameters.Add("gitrevision", previousCommit);
                         signalType = "GitTagDelete";
                     }
                 }
