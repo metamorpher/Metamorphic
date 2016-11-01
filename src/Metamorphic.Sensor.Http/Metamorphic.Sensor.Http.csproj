@@ -240,6 +240,7 @@
     <Compile Include="Controllers\SignalController.cs" />
     <Compile Include="Controllers\TfsController.cs" />
     <Compile Include="Controllers\TfsGitController.cs" />
+    <Compile Include="Controllers\TfsPullRequestController.cs" />
     <Compile Include="Controllers\TfsWorkItemController.cs" />
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="Global.asax.cs">

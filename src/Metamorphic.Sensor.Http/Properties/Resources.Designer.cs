@@ -205,6 +205,25 @@ namespace Metamorphic.Sensor.Http.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfspullrequest by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_TfsPullRequestController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsPullRequestController_PostMethodInputDataInvalid_WithOriginAndBod" +
+                        "y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/tfspullrequest by {0}.
+        /// </summary>
+        internal static string Log_Messages_TfsPullRequestController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsPullRequestController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfsworkitem by {0} was not provided with valid data. Body was: {1}.
         /// </summary>
         internal static string Log_Messages_TfsWorkItemController_PostMethodInputDataInvalid_WithOriginAndBody {

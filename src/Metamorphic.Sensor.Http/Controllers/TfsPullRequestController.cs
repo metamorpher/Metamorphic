@@ -14,7 +14,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.ServiceModel.Channels;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using Metamorphic.Core.Queueing.Signals;
@@ -29,28 +28,14 @@ namespace Metamorphic.Sensor.Http.Controllers
     /// <summary>
     /// The controller that handles the generation of signals from TFS GIT POST requests.
     /// </summary>
-    [VersionedApiRoute(template: "api/tfsgit", allowedVersion: 1)]
-    public sealed class TfsGitController : ApiController
+    [VersionedApiRoute(template: "api/tfspullrequest", allowedVersion: 1)]
+    public sealed class TfsPullRequestController : ApiController
     {
-        /// <summary>
-        /// The regex that is used to extract the branch name from a git tag branch.
-        /// </summary>
-        private static readonly Regex GitBranchMatcher = new Regex(
-            @"(?:refs)\/(?:heads)\/(.*)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        /// <summary>
-        /// The regex that is used to extract the tag name from a git tag ref.
-        /// </summary>
-        private static readonly Regex GitTagMatcher = new Regex(
-            @"(?:refs)\/(?:tags)\/(.*)",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         [SuppressMessage(
             "Microsoft.Maintainability",
             "CA1502:AvoidExcessiveComplexity",
             Justification = "Cannot be stuffed fixing that. Just wanting this to work. Will fix later when we split this out.")]
-        private static Signal CreateSignalForCommit(string text)
+        private static Signal CreateSignalForPullRequest(string text)
         {
             var dynamicObject = JsonConvert.DeserializeObject<dynamic>(text);
             if (dynamicObject == null)
@@ -58,90 +43,37 @@ namespace Metamorphic.Sensor.Http.Controllers
                 return null;
             }
 
-            string refName = dynamicObject.resource.refUpdates[0].name;
-            string previousCommit = dynamicObject.resource.refUpdates[0].oldObjectId;
-            string currentCommit = dynamicObject.resource.refUpdates[0].newObjectId;
-
             string signalType = "Unknown";
             var parameters = new Dictionary<string, object>();
             parameters.Add("tfsproject", dynamicObject.resource.repository.project.name.ToString());
             parameters.Add("gitrepository", dynamicObject.resource.repository.name.ToString());
-            if (refName.StartsWith("refs/heads", StringComparison.OrdinalIgnoreCase))
-            {
-                var branchName = ParseBranchNameFromRef(refName);
-                if (string.IsNullOrEmpty(branchName))
-                {
-                    return null;
-                }
 
-                parameters.Add("gitbranch", branchName);
-                if (previousCommit.Equals("0000000000000000000000000000000000000000"))
-                {
-                    parameters.Add("gitrevision", currentCommit);
-                    signalType = "GitBranchCreate";
-                }
-                else
-                {
-                    if (currentCommit.Equals("0000000000000000000000000000000000000000"))
-                    {
-                        parameters.Add("gitrevision", previousCommit);
-                        signalType = "GitBranchDelete";
-                    }
-                    else
-                    {
-                        parameters.Add("gitpreviousrevision", previousCommit);
-                        parameters.Add("gitcurrentrevision", currentCommit);
-                        signalType = "GitCommit";
-                    }
-                }
+            parameters.Add("sourcebranch", dynamicObject.resource.sourceRefName.ToString());
+            parameters.Add("targetbranch", dynamicObject.resource.targetRefName.ToString());
+
+            parameters.Add("pullrequestid", dynamicObject.resource.pullRequestId.ToString());
+
+            parameters.Add("status", dynamicObject.resource.status.ToString());
+
+            parameters.Add("user", dynamicObject.resource.createdBy.displayName.ToString());
+
+            parameters.Add("title", dynamicObject.resource.title.ToString());
+            parameters.Add("description", dynamicObject.resource.description.ToString());
+
+            string eventType = dynamicObject.eventType;
+            if (eventType.EndsWith("created", StringComparison.OrdinalIgnoreCase))
+            {
+                signalType = "TfsPullRequestCreated";
             }
             else
             {
-                if (refName.StartsWith("refs/tags", StringComparison.OrdinalIgnoreCase))
+                if (eventType.EndsWith("updated", StringComparison.OrdinalIgnoreCase))
                 {
-                    var tagName = ParseTagNameFromRef(refName);
-                    if (string.IsNullOrEmpty(tagName))
-                    {
-                        return null;
-                    }
-
-                    parameters.Add("gittag", tagName);
-                    if (previousCommit.Equals("0000000000000000000000000000000000000000"))
-                    {
-                        parameters.Add("gitrevision", currentCommit);
-                        signalType = "GitTagCreate";
-                    }
-                    else
-                    {
-                        parameters.Add("gitrevision", previousCommit);
-                        signalType = "GitTagDelete";
-                    }
+                    signalType = "TfsPullRequestUpdated";
                 }
             }
 
-            return new Signal(new SignalTypeId(signalType), parameters);
-        }
-
-        private static string ParseBranchNameFromRef(string refName)
-        {
-            var match = GitBranchMatcher.Match(refName);
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-
-            return string.Empty;
-        }
-
-        private static string ParseTagNameFromRef(string refName)
-        {
-            var match = GitTagMatcher.Match(refName);
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-
-            return string.Empty;
+                return new Signal(new SignalTypeId(signalType), parameters);
         }
 
         /// <summary>
@@ -155,7 +87,7 @@ namespace Metamorphic.Sensor.Http.Controllers
         private readonly IPublishSignals _publisher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TfsGitController"/> class.
+        /// Initializes a new instance of the <see cref="TfsPullRequestController"/> class.
         /// </summary>
         /// <param name="signalPublisher">The publisher that publishes all the signals.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
@@ -165,7 +97,7 @@ namespace Metamorphic.Sensor.Http.Controllers
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public TfsGitController(IPublishSignals signalPublisher, SystemDiagnostics diagnostics)
+        public TfsPullRequestController(IPublishSignals signalPublisher, SystemDiagnostics diagnostics)
         {
             if (signalPublisher == null)
             {
@@ -213,66 +145,95 @@ namespace Metamorphic.Sensor.Http.Controllers
                 Expecting something like:
 
                 {
-                  "subscriptionId": "d4e9c98f-5dd2-4b81-b494-b35dca5a4761",
-                  "notificationId": 1,
-                  "id": "03c164c2-8912-4d5e-8009-3707d5f83734",
-                  "eventType": "git.push",
+                  "subscriptionId": "00000000-0000-0000-0000-000000000000",
+                  "notificationId": 50,
+                  "id": "2ab4e3d3-b7a6-425e-92b1-5a9982c1269e",
+                  "eventType": "git.pullrequest.created",
                   "publisherId": "tfs",
+                  "scope": "all",
                   "message": {
-                    "text": "Jamal Hartnett pushed updates to branch master of repository Fabrikam-Fiber-Git."
+                    "text": "Jamal Hartnett created a new pull request"
                   },
                   "detailedMessage": {
-                    "text": "Jamal Hartnett pushed 1 commit to branch master of repository Fabrikam-Fiber-Git.\n - Fixed bug in web.config file 33b55f7c"
+                    "text": "Jamal Hartnett created a new pull request\r\n\r\n- Merge status: Succeeded\r\n- Merge commit: eef717(https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/commits/eef717f69257a6333f221566c1c987dc94cc0d72)\r\n"
                   },
                   "resource": {
-                    "commits": [
-                      {
-                        "commitId": "33b55f7cb7e7e245323987634f960cf4a6e6bc74",
-                        "author": {
-                          "name": "Jamal Hartnett",
-                          "email": "fabrikamfiber4@hotmail.com",
-                          "date": "2015-02-25T19:01:00Z"
-                        },
-                        "committer": {
-                          "name": "Jamal Hartnett",
-                          "email": "fabrikamfiber4@hotmail.com",
-                          "date": "2015-02-25T19:01:00Z"
-                        },
-                        "comment": "Fixed bug in web.config file",
-                        "url": "https://fabrikam-fiber-inc.visualstudio.com/DefaultCollection/_git/Fabrikam-Fiber-Git/commit/33b55f7cb7e7e245323987634f960cf4a6e6bc74"
-                      }
-                    ],
-                    "refUpdates": [
-                      {
-                        "name": "refs/heads/master",
-                        "oldObjectId": "aad331d8d3b131fa9ae03cf5e53965b51942618a",
-                        "newObjectId": "33b55f7cb7e7e245323987634f960cf4a6e6bc74"
-                      }
-                    ],
                     "repository": {
-                      "id": "278d5cd2-584d-4b63-824a-2ba458937249",
-                      "name": "Fabrikam-Fiber-Git",
-                      "url": "https://fabrikam-fiber-inc.visualstudio.com/DefaultCollection/_apis/git/repositories/278d5cd2-584d-4b63-824a-2ba458937249",
+                      "id": "4bc14d40-c903-45e2-872e-0462c7748079",
+                      "name": "Fabrikam",
+                      "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079",
                       "project": {
                         "id": "6ce954b1-ce1f-45d1-b94d-e6bf2464ba2c",
-                        "name": "Fabrikam-Fiber-Git",
-                        "url": "https://fabrikam-fiber-inc.visualstudio.com/DefaultCollection/_apis/projects/6ce954b1-ce1f-45d1-b94d-e6bf2464ba2c",
+                        "name": "Fabrikam",
+                        "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/projects/6ce954b1-ce1f-45d1-b94d-e6bf2464ba2c",
                         "state": "wellFormed"
                       },
                       "defaultBranch": "refs/heads/master",
-                      "remoteUrl": "https://fabrikam-fiber-inc.visualstudio.com/DefaultCollection/_git/Fabrikam-Fiber-Git"
+                      "remoteUrl": "https://fabrikam.visualstudio.com/DefaultCollection/_git/Fabrikam"
                     },
-                    "pushedBy": {
-                      "id": "00067FFED5C7AF52@Live.com",
+                    "pullRequestId": 1,
+                    "status": "active",
+                    "createdBy": {
+                      "id": "54d125f7-69f7-4191-904f-c5b96b6261c8",
                       "displayName": "Jamal Hartnett",
-                      "uniqueName": "Windows Live ID\\fabrikamfiber4@hotmail.com"
+                      "uniqueName": "fabrikamfiber4@hotmail.com",
+                      "url": "https://fabrikam.vssps.visualstudio.com/_apis/Identities/54d125f7-69f7-4191-904f-c5b96b6261c8",
+                      "imageUrl": "https://fabrikam.visualstudio.com/DefaultCollection/_api/_common/identityImage?id=54d125f7-69f7-4191-904f-c5b96b6261c8"
                     },
-                    "pushId": 14,
-                    "date": "2014-05-02T19:17:13.3309587Z",
-                    "url": "https://fabrikam-fiber-inc.visualstudio.com/DefaultCollection/_apis/git/repositories/278d5cd2-584d-4b63-824a-2ba458937249/pushes/14"
+                    "creationDate": "2014-06-17T16:55:46.589889Z",
+                    "title": "my first pull request",
+                    "description": " - test2\r\n",
+                    "sourceRefName": "refs/heads/mytopic",
+                    "targetRefName": "refs/heads/master",
+                    "mergeStatus": "succeeded",
+                    "mergeId": "a10bb228-6ba6-4362-abd7-49ea21333dbd",
+                    "lastMergeSourceCommit": {
+                      "commitId": "53d54ac915144006c2c9e90d2c7d3880920db49c",
+                      "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/commits/53d54ac915144006c2c9e90d2c7d3880920db49c"
+                    },
+                    "lastMergeTargetCommit": {
+                      "commitId": "a511f535b1ea495ee0c903badb68fbc83772c882",
+                      "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/commits/a511f535b1ea495ee0c903badb68fbc83772c882"
+                    },
+                    "lastMergeCommit": {
+                      "commitId": "eef717f69257a6333f221566c1c987dc94cc0d72",
+                      "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/commits/eef717f69257a6333f221566c1c987dc94cc0d72"
+                    },
+                    "reviewers": [
+                      {
+                        "reviewerUrl": null,
+                        "vote": 0,
+                        "id": "2ea2d095-48f9-4cd6-9966-62f6f574096c",
+                        "displayName": "[Mobile]\\Mobile Team",
+                        "uniqueName": "vstfs:///Classification/TeamProject/f0811a3b-8c8a-4e43-a3bf-9a049b4835bd\\Mobile Team",
+                        "url": "https://fabrikam.vssps.visualstudio.com/_apis/Identities/2ea2d095-48f9-4cd6-9966-62f6f574096c",
+                        "imageUrl": "https://fabrikam.visualstudio.com/DefaultCollection/_api/_common/identityImage?id=2ea2d095-48f9-4cd6-9966-62f6f574096c",
+                        "isContainer": true
+                      }
+                    ],
+                    "commits": [
+                      {
+                        "commitId": "53d54ac915144006c2c9e90d2c7d3880920db49c",
+                        "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/commits/53d54ac915144006c2c9e90d2c7d3880920db49c"
+                      }
+                    ],
+                    "url": "https://fabrikam.visualstudio.com/DefaultCollection/_apis/git/repositories/4bc14d40-c903-45e2-872e-0462c7748079/pullRequests/1"
                   },
-                  "createdDate": "2016-09-20T02:28:06.9969612Z"
+                  "resourceVersion": "1.0-preview.1",
+                  "resourceContainers": {
+                    "collection": {
+                      "id": "c12d0eb8-e382-443b-9f9c-c52cba5014c2"
+                    },
+                    "account": {
+                      "id": "f844ec47-a9db-4511-8281-8b63f4eaf94e"
+                    },
+                    "project": {
+                      "id": "be9b3917-87e6-42a4-a549-2bc06a7a878f"
+                    }
+                  },
+                  "createdDate": "2016-10-31T22:14:11.0194327Z"
                 }
+
 
             */
 
@@ -290,7 +251,7 @@ namespace Metamorphic.Sensor.Http.Controllers
                 LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.Log_Messages_TfsGitController_PostMethodInvoked_WithOrigin,
+                    Resources.Log_Messages_TfsPullRequestController_PostMethodInvoked_WithOrigin,
                     clientIp));
 
             var text = ControllerContext.Request.Content.ReadAsStringAsync().Result;
@@ -303,7 +264,7 @@ namespace Metamorphic.Sensor.Http.Controllers
                 };
             }
 
-            var signal = (Signal)CreateSignalForCommit(text);
+            var signal = (Signal)CreateSignalForPullRequest(text);
             if (signal == null)
             {
                 if (HttpContext.Current != null)
@@ -313,7 +274,7 @@ namespace Metamorphic.Sensor.Http.Controllers
                         LevelToLog.Warn,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Log_Messages_TfsGitController_PostMethodInputDataInvalid_WithOriginAndBody,
+                            Resources.Log_Messages_TfsPullRequestController_PostMethodInputDataInvalid_WithOriginAndBody,
                             HttpContext.Current.Request.UserHostAddress,
                             body));
                 }

@@ -23,11 +23,18 @@ using System.Diagnostics.CodeAnalysis;
     MessageId = "tfsgit",
     Scope = "resource",
     Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
-    Justification = "It's an REST API method call.")]
+    Justification = "It's a REST API method call.")]
 [assembly: SuppressMessage(
     "Microsoft.Naming",
     "CA1703:ResourceStringsShouldBeSpelledCorrectly",
     MessageId = "tfsworkitem",
     Scope = "resource",
     Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
-    Justification = "It's an REST API method call.")]
+    Justification = "It's a REST API method call.")]
+[assembly: SuppressMessage(
+    "Microsoft.Naming",
+    "CA1703:ResourceStringsShouldBeSpelledCorrectly",
+    MessageId = "tfspullrequest",
+    Scope = "resource",
+    Target = "Metamorphic.Sensor.Http.Properties.Resources.resources",
+    Justification = "It's a REST API method call.")]
