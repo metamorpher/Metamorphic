@@ -28,7 +28,7 @@ namespace Metamorphic.Storage
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "storage.error.{0}.log";
+        private const string DefaultErrorFileName = "storage.error.log";
 
         /// <summary>
         /// Defines the error code for a normal application exit (i.e without errors).
@@ -81,8 +81,8 @@ namespace Metamorphic.Storage
 
                     c.EnableShutdown();
 
-                    c.SetServiceName(Resources.Service_ServiceName);
-                    c.SetDisplayName(Resources.Service_DisplayName);
+                    c.SetServiceName(Settings.Default.ServiceName);
+                    c.SetDisplayName(Settings.Default.ServiceDisplayName);
                     c.SetDescription(Resources.Service_Description);
                 });
 

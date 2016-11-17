@@ -229,7 +229,7 @@
       <Project>{48fd1176-8944-4424-911f-76903b0bd61f}</Project>
       <Name>Metamorphic.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Metamorphic.Server\Metamorphic.Agent.csproj">
+    <ProjectReference Include="..\Metamorphic.Agent\Metamorphic.Agent.csproj">
       <Project>{5083e0c3-486c-48d7-971c-7f04cec98b11}</Project>
       <Name>Metamorphic.Agent</Name>
     </ProjectReference>
