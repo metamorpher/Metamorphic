@@ -9,15 +9,15 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Metamorphic.Core;
-using Metamorphic.Storage.Nuclei;
-using Metamorphic.Storage.Nuclei.ExceptionHandling;
-using Metamorphic.Storage.Properties;
+using Metamorphic.Agent.Nuclei;
+using Metamorphic.Agent.Nuclei.ExceptionHandling;
+using Metamorphic.Agent.Properties;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics.Logging;
 using Topshelf;
 using Topshelf.ServiceConfigurators;
 
-namespace Metamorphic.Storage
+namespace Metamorphic.Agent
 {
     [SuppressMessage(
         "Microsoft.StyleCop.CSharp.MaintainabilityRules",
@@ -28,7 +28,7 @@ namespace Metamorphic.Storage
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "storage.error.log";
+        private const string DefaultErrorFileName = "agent.error.log";
 
         /// <summary>
         /// Defines the error code for a normal application exit (i.e without errors).
@@ -40,6 +40,7 @@ namespace Metamorphic.Storage
         /// </summary>
         private const int UnhandledExceptionApplicationExitCode = 1;
 
+        [STAThread]
         static int Main()
         {
             int functionReturnResult = -1;

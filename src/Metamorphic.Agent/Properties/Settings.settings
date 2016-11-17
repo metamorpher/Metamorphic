@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Metamorphic.Agent.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ServiceName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Metamorphic.Agent</Value>
+    </Setting>
+    <Setting Name="ServiceDisplayName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Metamorphic.Agent</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

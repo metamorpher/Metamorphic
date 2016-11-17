@@ -7,11 +7,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7C3451D-6382-4BA5-B01A-B18DFC7AE9B8}</ProjectGuid>
+    <ProjectGuid>{5083E0C3-486C-48D7-971C-7F04CEC98B11}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Metamorphic.Storage</RootNamespace>
-    <AssemblyName>Metamorphic.Storage</AssemblyName>
+    <RootNamespace>Metamorphic.Agent</RootNamespace>
+    <AssemblyName>Metamorphic.Server</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -71,6 +71,10 @@
     </Reference>
     <Reference Include="Lokad.Testing, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -175,24 +179,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\ActionPackageDetector.cs" />
-    <Compile Include="Actions\ActionStorage.cs" />
-    <Compile Include="Actions\AppDomainOwningActionPackageScanner.cs" />
-    <Compile Include="Actions\AppDomainPackageClassLoader.cs" />
-    <Compile Include="Discovery\FileSystem\DirectoryFileListener.cs" />
-    <Compile Include="Discovery\FileSystem\DirectoryPackageListener.cs" />
-    <Compile Include="Actions\DuplicateActionDefinitionException.cs" />
-    <Compile Include="Actions\ILoadPackageScannersInRemoteAppDomains.cs" />
-    <Compile Include="Actions\IScanActionPackageFiles.cs" />
-    <Compile Include="Actions\IScanActionPackages.cs" />
-    <Compile Include="Actions\IStoreActions.cs" />
-    <Compile Include="Actions\ActionStorageProxy.cs" />
-    <Compile Include="Discovery\IProcessFileChanges.cs" />
-    <Compile Include="Discovery\IProcessPackageChanges.cs" />
-    <Compile Include="Discovery\IWatchPackages.cs" />
-    <Compile Include="Actions\RemotePackageScanner.cs" />
+    <Compile Include="ActionParameterValue.cs" />
+    <Compile Include="ActionStorageProxy.cs" />
+    <Compile Include="AppDomainActionClassLoader.cs" />
     <Compile Include="CommunicationInitializer.cs" />
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="FailedToConnectToStorageException.cs" />
+    <Compile Include="IExecuteActions.cs" />
+    <Compile Include="IActionStorageProxy.cs" />
+    <Compile Include="ILoadActionExecutorsInRemoteAppDomains.cs" />
+    <Compile Include="InvalidRuleDefinitionException.cs" />
+    <Compile Include="InvalidSignalForRuleException.cs" />
+    <Compile Include="IRuleStorageProxy.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.FileBasedResolver.cs" />
@@ -221,22 +219,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Rules\ILoadRules.cs" />
-    <Compile Include="Rules\IStoreRules.cs" />
-    <Compile Include="Rules\RuleAlreadyExistsException.cs" />
-    <Compile Include="Rules\RuleCollection.cs" />
-    <Compile Include="Rules\RuleDefinitionCheck.cs" />
-    <Compile Include="Rules\RuleFileDetector.cs" />
-    <Compile Include="Rules\RuleLoader.cs" />
-    <Compile Include="Rules\RuleOrigin.cs" />
-    <Compile Include="Rules\RulePackageDetector.cs" />
-    <Compile Include="Rules\ScalarYamlNodeTypeResolver.cs" />
+    <Compile Include="RemoteActionExecutor.cs" />
+    <Compile Include="Rule.cs" />
+    <Compile Include="RuleStorageProxy.cs" />
+    <Compile Include="AgentConfigurationKeys.cs" />
+    <Compile Include="AgentConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
-    <Compile Include="StorageConfigurationKeys.cs" />
-    <Compile Include="StorageConstants.cs" />
+    <Compile Include="SignalProcessor.cs" />
+    <Compile Include="UnableToLoadActionTypeException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="metamorphic.agent.zipspec" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -249,9 +243,20 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Metamorphic.Core.Commands\Metamorphic.Core.Commands.csproj">
-      <Project>{a893bd41-a429-4382-ba2b-6d766ba70c60}</Project>
+      <Project>{A893BD41-A429-4382-BA2B-6D766BA70C60}</Project>
       <Name>Metamorphic.Core.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metamorphic.Core.Queueing\Metamorphic.Core.Queueing.csproj">
+      <Project>{113b00bc-537a-4ae7-b844-fbf18f1a4e20}</Project>
+      <Name>Metamorphic.Core.Queueing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Metamorphic.Core.Rules\Metamorphic.Core.Rules.csproj">
       <Project>{390bb6a3-61a6-4a89-9550-7d62b59bc78c}</Project>
@@ -262,13 +267,6 @@
       <Name>Metamorphic.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
