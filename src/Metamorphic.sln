@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{38E97CAA-B0BB-4DF6-B1F3-62972C7AA06B}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{38E97CAA
 		..\test.settings.props = ..\test.settings.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Server", "Metamorphic.Server\Metamorphic.Server.csproj", "{5083E0C3-486C-48D7-971C-7F04CEC98B11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Agent", "Metamorphic.Agent\Metamorphic.Agent.csproj", "{5083E0C3-486C-48D7-971C-7F04CEC98B11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metamorphic.Core", "Metamorphic.Core\Metamorphic.Core.csproj", "{48FD1176-8944-4424-911F-76903B0BD61F}"
 EndProject
@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{967C
 		..\samples\example.mmrule = ..\samples\example.mmrule
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Server", "Test.Unit.Server\Test.Unit.Server.csproj", "{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Agent", "Test.Unit.Agent\Test.Unit.Agent.csproj", "{63A5EAAC-305B-461E-A5E5-A5FF70FB986F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{B658E693-98FC-40DF-B017-46F8296A4F56}"
 	ProjectSection(SolutionItems) = preProject
