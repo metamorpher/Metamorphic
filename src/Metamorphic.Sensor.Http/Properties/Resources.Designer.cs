@@ -176,5 +176,79 @@ namespace Metamorphic.Sensor.Http.Properties {
                 return ResourceManager.GetString("Log_Messages_TfsController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfsgit by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_TfsGitController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsGitController_PostMethodInputDataInvalid_WithOriginAndBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/tfsgit by {0}.
+        /// </summary>
+        internal static string Log_Messages_TfsGitController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsGitController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing signal {0} with parameters ({1}).
+        /// </summary>
+        internal static string Log_Messages_TfsGitController_PostMethodPublishingSignal_WithSignalInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsGitController_PostMethodPublishingSignal_WithSignalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfspullrequest by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_TfsPullRequestController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsPullRequestController_PostMethodInputDataInvalid_WithOriginAndBod" +
+                        "y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/tfspullrequest by {0}.
+        /// </summary>
+        internal static string Log_Messages_TfsPullRequestController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsPullRequestController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The HTTP POST triggered for /api/tfsworkitem by {0} was not provided with valid data. Body was: {1}.
+        /// </summary>
+        internal static string Log_Messages_TfsWorkItemController_PostMethodInputDataInvalid_WithOriginAndBody {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsWorkItemController_PostMethodInputDataInvalid_WithOriginAndBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A HTTP POST was triggered for /api/tfsworkitem by {0}.
+        /// </summary>
+        internal static string Log_Messages_TfsWorkItemController_PostMethodInvoked_WithOrigin {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsWorkItemController_PostMethodInvoked_WithOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publishing signal {0} with parameters ({1}).
+        /// </summary>
+        internal static string Log_Messages_TfsWorkItemController_PostMethodPublishingSignal_WithSignalInformation {
+            get {
+                return ResourceManager.GetString("Log_Messages_TfsWorkItemController_PostMethodPublishingSignal_WithSignalInformati" +
+                        "on", resourceCulture);
+            }
+        }
     }
 }
