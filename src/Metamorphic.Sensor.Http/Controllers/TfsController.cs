@@ -20,7 +20,6 @@ using Metamorphic.Core.Queueing.Signals;
 using Metamorphic.Core.Signals;
 using Metamorphic.Sensor.Http.Properties;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 

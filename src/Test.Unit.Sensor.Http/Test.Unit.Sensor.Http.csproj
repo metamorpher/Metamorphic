@@ -193,6 +193,9 @@
   <ItemGroup>
     <Compile Include="Controllers\JenkinsControllerTest.cs" />
     <Compile Include="Controllers\TfsControllerTest.cs" />
+    <Compile Include="Controllers\TfsGitControllerTest.cs" />
+    <Compile Include="Controllers\TfsPullRequestControllerTest.cs" />
+    <Compile Include="Controllers\TfsWorkItemControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\SignalControllerTest.cs" />
