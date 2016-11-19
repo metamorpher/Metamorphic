@@ -12,8 +12,6 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http.Tracing;
 using Autofac;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.WebApi;
 using Metamorphic.Core;
 using Metamorphic.Core.Queueing;
 using Metamorphic.Sensor.Http.Models;
@@ -68,11 +66,8 @@ namespace Metamorphic.Sensor.Http
 
         private static void RegisterControllers(ContainerBuilder builder)
         {
-            // ASP MVC
-            builder.RegisterControllers(Assembly.GetExecutingAssembly());
-
-            // ASP WebApi
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.Register(c => new SignalController(c.Resolve<IPublishSignals>()))
+                .InstancePerRequest();
         }
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
@@ -113,7 +108,7 @@ namespace Metamorphic.Sensor.Http
         {
             var assemblyInfo = Assembly.GetExecutingAssembly().GetName();
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), @"..\App_Data", DefaultInfoFileName),
+                    Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), foobar(), DefaultInfoFileName),
                     new DebugLogTemplate(
                         c.Resolve<IConfiguration>(),
                         () => DateTimeOffset.Now),

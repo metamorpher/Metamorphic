@@ -11,7 +11,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Owin;
 
-namespace Metamorphic.Server.Signals
+namespace Metamorphic.Sensor.Http
 {
     internal sealed class WebCallStartup
     {
